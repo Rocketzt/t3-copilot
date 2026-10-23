@@ -1,0 +1,81 @@
+# Log
+
+Newest first. Written the same day the work happens.
+
+## 2026-10-23 — PLAN.md checked against the workbook: numbers correct except the missing-weather rows; local git repo created
+
+**Setup:** A teammate added `PLAN.md` (Track 3 build plan). Recomputed its Appendix A from `Track 3 Data.xlsx` with a
+new stdlib parser that reads cells by column letter (scratchpad `verify_plan.py`). Then ran `git init -b main` in
+the project root, with `.gitignore` and `.gitattributes`.
+**Result:**
+- These PLAN.md figures match the workbook exactly:
+  - 14 sheets, 192 airport-months;
+  - 12 rules (RULE001–012) and 15 tests (TEST001–015);
+  - column I = (E − H) × 100, and column G = the same-size mean of column E, both with 0 mismatches;
+  - 12 RULE003 flags; signal counts {0: 179, 1: 11, 2: 1, 3: 1};
+  - Hailing 2025-07 at −15.62 / −5.46 / −11.48 pp; Yunchuan 2025-07 YoY at −0.80 pp;
+  - the network's monthly averages.
+- **PLAN.md is wrong about the missing weather rows.** It lists Hailing 2025-03, Gaoyuan 2025-09, Yunchuan 2025-11 and
+  Beiling 2025-11. The workbook marks Qinglan 2025-03, Gaoyuan 2025-09, Hailing 2025-11 and Linjiang 2025-11
+  (rows 119, 169, 179, 184 of `03_机场天气月度`).
+- Minor PLAN.md issues:
+  - Appendix A.1 shows the peer gap as "n/a" for 2024 rows, but it can be computed (only YoY is n/a).
+  - It refers to a `CONTRACT.md` that is not in the folder.
+- Git: the first commit holds the records, PLAN.md, the shortlist PDF and the Track 3 data file. The registration
+  guide (it contains the campus code), the zip, the tutorial and the other organizer PDFs are git-ignored. No remote
+  has been added.
+**Anomalies:** My earlier entries were wrong on four counts, because the first dump script stopped at 12 rows per
+sheet and I miscounted the flags. They said 11 rules (actually 12), 11 tests (15), 13 sheets (14) and 11 RULE003 flags
+(12). `Track3_Shortlist.pdf` was regenerated with the corrected counts.
+
+## 2026-10-23 — Mini Airways researched as design inspiration for Track 3 (team now leaning to T3)
+
+**Setup:** Two web searches (Steam, App Store, Nintendo listings; GamingOnLinux and a blog review).
+**Result:** Mini Airways (CCC Games / Erabit, PC release 2024-07-30) is a minimalist real-time air-traffic-control
+game. It has colour-coded aircraft, click-and-drag routing, peak hours that ramp up difficulty, about 19 maps based
+on real airports including Beijing Capital and Shanghai Hongqiao, and random historical events. It has no native
+weather system that could be confirmed. It is relevant to Track 3 only as UI and demo inspiration; Track 3 asks for
+airline decision support, not air-traffic control.
+**Anomalies:** The weather mechanics and the depth of the upgrade system could not be verified.
+
+## 2026-10-23 — Track 3 data: RULE003 flags 11 airport-months; Hailing Jul 2025 is the outlier at −15.6 pp
+
+**Setup:** Stdlib Python over `Track 3 Data.xlsx`. Read sheet `01_机场月度运行基线` (192 airport-months), column
+"与自身平均差" (gap to own 12-month average, in percentage points), and the "是否缺少数据" (missing data) flag in
+`03_机场天气月度`.
+**Result:**
+- 11 airport-months are more than 5 pp below their own average, which triggers RULE003 (flag for review).
+- Hailing (海陵) is −15.62 pp in Jul 2025 and −10.99 pp in Aug 2025, the planted anomaly DQ004. Every other drop
+  is between −5.4 and −6.5 pp.
+- 4 weather rows are marked missing: Qinglan 2025-03, Gaoyuan 2025-09, Hailing 2025-11, Linjiang 2025-11.
+**Anomalies:** None.
+
+## 2026-10-23 — ClawsGO Science is allowed under the AI-tool rule, but cost and onboarding are unknown
+
+**Setup:** Two web searches plus the 36Kr article of 2026-09-23 (the only substantive source found; no official
+English site found).
+**Result:** ClawsGO Science (北京比特奇迹科技) is a cloud research agent. It runs literature search, code, plots and LaTeX
+writing from one prompt, in its own cloud server, for hours. It is publicly open for sign-up. It is paid by usage or
+plan; no free tier is mentioned and prices are not published. The hackathon rules allow AI tools if their use is
+disclosed and the team checks the output and can explain it.
+**Anomalies:** Every detail rests on one news article. Its URL, price and success rate could not be verified.
+
+## 2026-10-23 — Project records set up; track decision pending a team meeting
+
+**Setup:** Created `OVERVIEW.md`, `LOG.md`, `TASKS.md` and `DECISIONS.md` in the project root.
+**Result:** The team (3 people) has not chosen a track yet. A meeting is planned to decide.
+**Anomalies:** None.
+
+## 2026-10-23 — Reviewed all organizer materials; deadline is 2026-10-24 23:59
+
+**Setup:** Read the 3 track statements, the registration/submission guide and the GitHub tutorial. Parsed every sheet
+of `Track 3 Data.xlsx` with a stdlib-only Python script (openpyxl is not installed). Listed the zip contents.
+**Result:**
+- T1 timetable and T2 data-centre scheduling give no data. T3 gives 13 sheets: 8 fictional airports with monthly
+  baselines and weather for 2024–25 (192 rows each), yearly airport sizes, 5 simulated events, 11 operating rules,
+  an output template (EVT001 filled as an example), a human-feedback log, 11 test questions and a list of 8 required
+  deliverables.
+- T3 has deliberate traps: missing weather records (DQ002), a source conflict in EVT003 (DQ003) and a designed drop
+  at Hailing airport in Jul–Aug 2025 (DQ004).
+- The zip duplicates the folder.
+**Anomalies:** None.

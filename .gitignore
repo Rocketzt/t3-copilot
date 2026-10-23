@@ -1,0 +1,25 @@
+# Secrets: API keys live in .env, never in git (the repo will be public)
+.env
+.env.*
+!.env.example
+
+# Local tools and environments
+.venv/
+venv/
+__pycache__/
+*.pyc
+.claude/
+.vscode/
+.idea/
+
+# Organizer materials not needed in a public repo.
+# The registration guide contains the campus verification code.
+Registration & Submission Instructions*.pdf
+github_tutorial*.pdf
+HackSHSID 2026*.zip
+HackSHSID 2026/*
+!HackSHSID 2026/Track 3 Data.xlsx
+
+# OS clutter
+Thumbs.db
+.DS_Store
