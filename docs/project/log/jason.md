@@ -16,6 +16,13 @@ Entry format (copy for each new entry):
 
 ---
 
+## 2026-10-24 00:13 — Phase 3 runner ready; integration run blocked
+
+**Setup:** Mapped all 15 workbook TEST IDs to English acceptance checks, added five own events plus the fabricated-number negative case, and built the exam runner against `engine.pipeline.analyze()/ask()`.
+**Result:** `python -m unittest tests.test_runner_selfcheck -v` ran 3 tests: OK. `python tests/run_tests.py --writer-mode offline --out exports/test_results.json` printed `pipeline not available` and exited 2, as required. No exam result file or pass rate was fabricated.
+**Anomalies:** `engine/pipeline.py` is not present on this branch, so the real 15 official and five own cases cannot run yet. `evidence/ai/` contains no ClawsGO CSV, so the optional cross-check was skipped.
+**AI:** Codex implemented the runner and specifications; the fake pipeline was used only in the runner self-check.
+
 ## 2026-10-24 00:10 — Phase 2 fact sheets and feedback verified
 
 **Setup:** Added deterministic RULE001–012 evaluation, source-backed facts and risk, PII redaction, append-only feedback, and five generated EVT fact-sheet fixtures.
