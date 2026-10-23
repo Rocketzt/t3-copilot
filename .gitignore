@@ -1,4 +1,4 @@
-# Secrets: API keys live in .env, never in git (the repo will be public)
+# Secrets: API keys live in .env, never in git (the repo is public)
 .env
 .env.*
 !.env.example
@@ -12,13 +12,20 @@ __pycache__/
 .vscode/
 .idea/
 
-# Organizer materials not needed in a public repo.
-# The registration guide contains the campus verification code.
+# Organizer materials kept locally only (the registration guide contains the campus verification code)
+organizer_materials/
+HackSHSID 2026/
+HackSHSID 2026*.zip
 Registration & Submission Instructions*.pdf
 github_tutorial*.pdf
-HackSHSID 2026*.zip
-HackSHSID 2026/*
-!HackSHSID 2026/Track 3 Data.xlsx
+
+# Final submission bundle is assembled locally, not committed
+submission/
+
+# Scratch output
+*.tmp
+.tmp/
+scratch/
 
 # OS clutter
 Thumbs.db

@@ -1,0 +1,4 @@
+# Build-time and evidence scripts only. The app and the exam runner use the Python 3.10+ standard library.
+openpyxl>=3.1   # scripts/build_data.py, scripts/build_excel_exports.py
+pandas>=2.0     # scripts/crosscheck_detector.py (independent second implementation)
+Pillow>=10.0    # scripts/make_chart.py

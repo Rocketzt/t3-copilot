@@ -2,6 +2,36 @@
 
 Newest first. Written the same day the work happens.
 
+## 2026-10-23 — EXECUTION_PLAN.md and CONTRACT.md checked: 9 + 9 errata; repo reorganized into the contract layout
+
+**Setup:** Read both new teammate files in full. Rechecked their figures against the workbook with the cell-ref
+parser (scratchpad `verify_plan.py`) and a short extra script. The extra script covered:
+- the ±0.01 pp rounding rows;
+- the peer gaps for the 2024 rows;
+- Beiling's size class;
+- which packages the repo `.venv` has.
+**Result:**
+- Their core numbers are correct. That includes the rounding note: exactly 6 of 192 rows differ from (E − H) × 100
+  by more than 0.005 pp.
+- Errors are listed in `docs/planning/ERRATA.md`:
+  - CONTRACT keeps the wrong missing-weather rows;
+  - CONTRACT calls Beiling (medium) a small airport;
+  - CONTRACT says there is no git requirement;
+  - the machine-specific paths, and the owner tables that conflict between the two files;
+  - EXECUTION_PLAN wants a private repo and omits the thumbnail and AI statement from the submission;
+  - EXECUTION_PLAN quotes test results as achieved before any run.
+- The repo `.venv` (Python 3.13.5) has no openpyxl, pandas or Pillow.
+- Repo reorganized:
+  - added the directories and a README in each;
+  - `Track 3 Data.xlsx` moved to the repo root (CONTRACT §3 `DATA_PATH`);
+  - records moved to `docs/project/` and the shortlist PDF to `docs/planning/`;
+  - PLAN.md removed;
+  - added `README.md`, `.env.example`, `requirements.txt`, stubs for deliverables D01 and D03–D07, and
+    `docs/AI_USAGE.md`;
+  - organizer files moved to the git-ignored `organizer_materials/`.
+**Anomalies:** The Track 1 and Track 2 PDFs could not be moved ("Device or resource busy"; open in another program).
+They stay in `HackSHSID 2026/`, which is git-ignored.
+
 ## 2026-10-23 — Public GitHub repo created and main pushed
 
 **Setup:** Scanned the committed files for keys, tokens, the campus code, the join code, G-numbers, emails and phone
