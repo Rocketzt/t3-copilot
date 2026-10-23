@@ -16,6 +16,13 @@ Entry format (copy for each new entry):
 
 ---
 
+## 2026-10-24 00:14 — Build hand-off complete with exam integration pending
+
+**Setup:** Phase 1 exported and validated the organizer workbook, implemented the detector, and generated `docs/NUMBERS.md`. Phase 2 implemented deterministic rules, source-backed fact sheets, PII redaction, append-only feedback, and five real event fixtures. Phase 3 added the 15 official cases, five own cases, negative test, exam runner, and `docs/test_specs.md`.
+**Result:** From the repo root, set `PYTHONIOENCODING=utf-8` and rerun: `.venv\Scripts\python.exe scripts/build_data.py` (192 baselines, 192 weather rows, 5 events, 12 rules, 15 tests); `.venv\Scripts\python.exe -m unittest tests.test_detector -v` (4 tests, OK); `.venv\Scripts\python.exe -m unittest tests.test_facts -v` (5 tests, OK); `.venv\Scripts\python.exe -m unittest tests.test_runner_selfcheck -v` (3 tests, OK); `.venv\Scripts\python.exe -m unittest discover -s tests -v` (12 tests, OK).
+**Anomalies:** BLOCKED: `.venv\Scripts\python.exe tests/run_tests.py --writer-mode offline --out exports/test_results.json` printed `pipeline not available` and exited 2 because `engine/pipeline.py` is absent; no real exam pass rate exists yet. SKIPPED: no ClawsGO CSV under `evidence/ai/`, so no optional detector cross-check report was made. No other final test failures.
+**AI:** Codex implemented and verified these phases. The self-check fake pipeline is limited to `tests/test_runner_selfcheck.py` and is not an exam result.
+
 ## 2026-10-24 00:13 — Phase 3 runner ready; integration run blocked
 
 **Setup:** Mapped all 15 workbook TEST IDs to English acceptance checks, added five own events plus the fabricated-number negative case, and built the exam runner against `engine.pipeline.analyze()/ask()`.
