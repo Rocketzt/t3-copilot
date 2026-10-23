@@ -1,8 +1,16 @@
 # Team log
 
-**Team-level events only:** gate results, merges to `main`, scope cuts, submission. **One writer:** Jonathan, as
-integration captain at each gate. Individual work goes in `log/<name>.md`, one file per person, so logs never
+**Team-level events only:** gate results, merges to `main`, scope cuts, submission. This is a shared file, so edit
+it on `main` only: pull first, make one small commit, push immediately (`ROLES.md`). Jonathan updates it at each gate. Individual work goes in `log/<name>.md`, one file per person, so logs never
 conflict on merge. Newest first. The entries below, dated before 2026-10-23 10:30, are project-setup history.
+
+## 2026-10-23 — Roles distributed; per-person branches created
+
+**Setup:** Wrote `ROLES.md`: the owner of every path, the git workflow and the hand-offs. Created the branches
+`ziyu`, `jonathan` and `jason` from `main` on GitHub.
+**Result:** CONTRACT §0 and EXECUTION_PLAN §2 now map to one owner table (ERRATA C6 resolved). Jason and Jonathan
+have pulled the repo; Jason is running the ClawsGO cross-check.
+**Anomalies:** Jason and Jonathan are not yet repo collaborators, so they cannot push until invited.
 
 ## 2026-10-23 — Logs split into one file per member
 

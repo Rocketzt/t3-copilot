@@ -1,6 +1,7 @@
 # AI usage log
 
-The source for the submission's AI statement. Add one line each time an AI tool shapes something in the repo.
+The source for the submission's AI statement. Only Jason edits this file (see `ROLES.md`). Everyone else logs each
+AI use in their own `project/log/<name>.md` with the tag **AI:**, and Jason copies those entries here.
 Raw outputs go in `../evidence/ai/`.
 
 | Date | Who | Tool | What it did | What we kept / changed | Checked by |

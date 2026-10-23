@@ -10,7 +10,7 @@
 | `D06_Risk_Card.md` | D06 Risk card | Jason | Not started |
 | `D07_Rollout_Roadmap.md` | D07 Rollout roadmap | Jason | Not started |
 | D08: `../README.md` + `../requirements.txt` + `../.env.example` | D08 Reproducibility package | Jonathan | Started |
-| `AI_USAGE.md` | Source for the submission's AI statement | Everyone | Ongoing |
+| `AI_USAGE.md` | Source for the submission's AI statement | Jason, compiled from everyone's **AI:** log entries | Ongoing |
 
 Other folders:
 - `planning/`: the shortlist PDF and `ERRATA.md`, the known errors in `EXECUTION_PLAN.md` and `CONTRACT.md`.

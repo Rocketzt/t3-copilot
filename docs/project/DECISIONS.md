@@ -2,6 +2,22 @@
 
 Newest first. A reversal is a new entry.
 
+## 2026-10-23 — Track 3 confirmed; roles fixed in ROLES.md; shared records edited on main only
+
+**Decision:**
+- The team builds Track 3.
+- Ziyu: engine and AI core. Jonathan: product and integration (integration captain). Jason: evidence and delivery.
+- `ROLES.md` is the single file-owner table and replaces CONTRACT §0.
+- Each person works on their own branch.
+- Shared records are edited on `main` only (pull, one small commit, push). This replaces the earlier
+  "only Jonathan writes LOG/TASKS" rule; Jonathan still updates them at each gate.
+**Why:**
+- CONTRACT §0 (5 roles) and EXECUTION_PLAN §2 (3 named people) disagreed, which would cause file clashes.
+- Small, immediate commits on `main` avoid conflicts without making one person a bottleneck.
+**Consequence:**
+- `engine/exports.py` and `/api/export/sheet06` are dropped; the exports live in `scripts/build_excel_exports.py`.
+- `docs/AI_USAGE.md` is compiled by Jason from **AI:** log entries.
+
 ## 2026-10-23 — One work log per member; shared records get a single writer; no conda
 
 **Decision:**

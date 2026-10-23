@@ -11,6 +11,7 @@ Entry format (copy for each new entry):
 **Setup:** what you did, which files/commit, inputs and settings, how you checked it.
 **Result:** the outcome, with numbers and how many cases; what changed because of it.
 **Anomalies:** anything surprising, failed or skipped ("None." if none).
+**AI:** (only if an AI tool helped) tool, what it did, what you kept or changed.
 ```
 
 ---

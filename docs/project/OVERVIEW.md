@@ -8,7 +8,7 @@ Submit a runnable prototype for one HackSHSID 2026 track by **2026-10-24 23:59**
 26–28 Oct presentations (5 min talk + live demo, 3 min Q&A).
 
 ## Approach / design
-The team is building Track 3, the flight-disruption AI assistant "T3 Ops Copilot", following `EXECUTION_PLAN.md`. The
+The team is building Track 3 (confirmed 2026-10-23), the flight-disruption AI assistant "T3 Ops Copilot", following `EXECUTION_PLAN.md`. The
 assistant has four parts:
 1. a detector;
 2. a fact sheet → writer → checker;
@@ -19,7 +19,9 @@ It is a Python stdlib web app with vanilla JS.
 
 ## Status
 - Planning documents and the repo skeleton (directories plus a README in each) are in place. No code yet.
-- Public GitHub repo: https://github.com/Rocketzt/t3-copilot (branch `main`). Teammates not yet invited.
+- Public GitHub repo: https://github.com/Rocketzt/t3-copilot (`main`, plus branches `ziyu`, `jonathan` and `jason`).
+  Jason and Jonathan have pulled it but are not yet collaborators, so they cannot push.
+- Roles distributed (`ROLES.md`). Jason is running the ClawsGO detector cross-check.
 
 ## Results so far
 - `EXECUTION_PLAN.md` and `CONTRACT.md` were checked against the workbook. Their numbers are correct except for the
@@ -27,7 +29,6 @@ It is a Python stdlib web app with vanilla JS.
 
 ## Open questions
 - Is the offline template the default writer? Both plans say yes; the earlier shortlist had dropped "backup mode".
-- One file-owner table: CONTRACT §0 and EXECUTION_PLAN §2 disagree.
 - Has every member registered on study.standardcas.org and joined one project?
 
 ## Settled facts
@@ -48,19 +49,19 @@ It is a Python stdlib web app with vanilla JS.
 - The repo `.venv` has no openpyxl, pandas or Pillow; install them from `requirements.txt`.
 
 ## Who does what
-Per `EXECUTION_PLAN.md` §2:
+`ROLES.md` holds the single file-owner table and the git workflow. In short:
 - **Ziyu** — engine and AI core;
 - **Jonathan** — product and integration;
 - **Jason** — evidence and delivery.
 
 ## Where things are
-- Repo layout: `README.md` (root)
+- Repo layout: `README.md` (root); roles and file owners: `ROLES.md`
 - Build plan: `EXECUTION_PLAN.md`; interface contract: `CONTRACT.md`; errata: `docs/planning/ERRATA.md`
 - Records: `docs/project/`:
   - this file;
-  - `LOG.md`, team events only, written by Jonathan;
+  - `LOG.md`, team events only (shared; edited on `main`, updated by Jonathan at gates);
   - `log/<name>.md`, one work log per member;
-  - `TASKS.md`, written by Jonathan at gates;
+  - `TASKS.md` (shared; edited on `main`, updated by Jonathan at gates);
   - `DECISIONS.md`.
 - Deliverable drafts: `docs/D01…D07`; AI-use log: `docs/AI_USAGE.md`
 - Data: `Track 3 Data.xlsx` (repo root, read-only)

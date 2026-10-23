@@ -57,7 +57,8 @@ needs only the standard library. The optional live-AI writer reads its settings 
 
 ## Team
 
-Ziyu (engine and AI core) · Jonathan (product and integration) · Jason (evidence and delivery).
+Ziyu (engine and AI core) · Jonathan (product and integration) · Jason (evidence and delivery). File owners and the
+git workflow: [`ROLES.md`](ROLES.md).
 Each person commits from their own GitHub account on their own branch; branches are merged to `main` at each gate.
 
 ## Use of AI tools
