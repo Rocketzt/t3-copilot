@@ -2,6 +2,8 @@
 
 Status: TODO / DOING / BLOCKED / PARKED / DONE. Deadline: **2026-10-24 23:59**.
 The build tasks themselves (Z1–Z10, J1–J9, A1–A8) live in `EXECUTION_PLAN.md` §5; this list tracks the rest.
+**One writer:** Jonathan updates this file at gates; everyone else reports task changes at the gate standup or in
+their own `log/<name>.md`.
 
 ## Team
 - [ ] **Confirm Track 3 and roles** — make the choice in `EXECUTION_PLAN.md` official and record it in DECISIONS.md.

@@ -2,6 +2,19 @@
 
 Newest first. A reversal is a new entry.
 
+## 2026-10-23 — One work log per member; shared records get a single writer; no conda
+
+**Decision:**
+- Each member logs in `docs/project/log/<name>.md`.
+- `LOG.md` (team events) and `TASKS.md` are written only by Jonathan, the integration captain, at gates.
+- Environments: `.venv` + `requirements.txt`; no conda environment file.
+**Why:**
+- With three branches inserting entries at the top of one file, every gate merge would conflict.
+- The app needs only the standard library, and the build scripts need three pip packages. A conda file would be a
+  second environment definition to keep in sync.
+**Consequence:** Merges at gates touch disjoint log files. Conda users can still create a Python 3.10+ env and run
+`pip install -r requirements.txt`.
+
 ## 2026-10-23 — Repo layout follows CONTRACT.md; records move to docs/project/; PLAN.md removed
 
 **Decision:**

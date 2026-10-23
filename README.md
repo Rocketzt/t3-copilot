@@ -51,7 +51,8 @@ python app/server.py                   # http://127.0.0.1:8803
 python tests/run_tests.py --writer-mode offline --out exports/test_results.json
 ```
 
-The app itself needs only the Python 3.10+ standard library. The optional live-AI writer reads its settings from
+Any Python 3.10+ environment works (the repo's `.venv`, or a conda env if you already use conda). The app itself
+needs only the standard library. The optional live-AI writer reads its settings from
 `.env` (copy `.env.example`). Never commit a real key.
 
 ## Team

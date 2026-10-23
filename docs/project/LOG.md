@@ -1,6 +1,15 @@
-# Log
+# Team log
 
-Newest first. Written the same day the work happens.
+**Team-level events only:** gate results, merges to `main`, scope cuts, submission. **One writer:** Jonathan, as
+integration captain at each gate. Individual work goes in `log/<name>.md`, one file per person, so logs never
+conflict on merge. Newest first. The entries below, dated before 2026-10-23 10:30, are project-setup history.
+
+## 2026-10-23 — Logs split into one file per member
+
+**Setup:** Created `log/ziyu.md`, `log/jonathan.md` and `log/jason.md`, each with the same entry format. This file
+is limited to team events with a single writer.
+**Result:** Each member appends only to their own file, so merges at gates no longer conflict on the log.
+**Anomalies:** None.
 
 ## 2026-10-23 — EXECUTION_PLAN.md and CONTRACT.md checked: 9 + 9 errata; repo reorganized into the contract layout
 

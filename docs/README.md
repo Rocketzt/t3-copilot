@@ -14,7 +14,7 @@
 
 Other folders:
 - `planning/`: the shortlist PDF and `ERRATA.md`, the known errors in `EXECUTION_PLAN.md` and `CONTRACT.md`.
-- `project/`: running records (`OVERVIEW.md` current state, `LOG.md`, `TASKS.md`, `DECISIONS.md`).
+- `project/`: running records: `OVERVIEW.md` (current state), `LOG.md` (team events, one writer), `log/<name>.md` (one work log per member), `TASKS.md`, `DECISIONS.md`.
 
 Rules for every document: every number comes from the workbook or the app's own output; every document carries the
 `模拟 / SIMULATED` note and a short "what we did not build" section.

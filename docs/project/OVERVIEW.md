@@ -56,7 +56,12 @@ Per `EXECUTION_PLAN.md` §2:
 ## Where things are
 - Repo layout: `README.md` (root)
 - Build plan: `EXECUTION_PLAN.md`; interface contract: `CONTRACT.md`; errata: `docs/planning/ERRATA.md`
-- Records: `docs/project/` (this file, `LOG.md`, `TASKS.md`, `DECISIONS.md`)
+- Records: `docs/project/`:
+  - this file;
+  - `LOG.md`, team events only, written by Jonathan;
+  - `log/<name>.md`, one work log per member;
+  - `TASKS.md`, written by Jonathan at gates;
+  - `DECISIONS.md`.
 - Deliverable drafts: `docs/D01…D07`; AI-use log: `docs/AI_USAGE.md`
 - Data: `Track 3 Data.xlsx` (repo root, read-only)
 - Organizer materials (local only, git-ignored): `organizer_materials/`. The Track 1 and 2 PDFs are still in
