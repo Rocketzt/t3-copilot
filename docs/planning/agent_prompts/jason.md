@@ -1,5 +1,48 @@
 # Agent prompt — Jason (data, detector, rules, fact sheet, feedback, tests)
 
+## Tonight: the one prompt to paste
+
+Before you start:
+1. If you have the ClawsGO cross-check files (CSV, report, chart, script), copy them into the repo folder
+   `evidence/ai/clawsgo/`.
+2. Open a terminal in the repo folder and start your agent (for example `claude`).
+3. Paste the box below. It gets everything ready, then runs the full build prompt further down this file.
+4. Let it run. Allow it to edit files and run commands without asking each time.
+
+````text
+Get this repo ready, then do tonight's build. Work unattended; do not wait for me.
+
+SETUP (stop and write down the reason if any step fails; never discard my files or force anything)
+1. Run `git status`. If there are uncommitted changes to tracked files, STOP and tell me what they are.
+2. Run `git fetch origin`. Then switch to my branch with `git switch jason` (if it does not exist locally:
+   `git switch -c jason --track origin/jason`). Then run `git merge origin/main`. If the merge has conflicts,
+   run `git merge --abort`, STOP and tell me.
+3. Check that `python --version` is 3.10 or newer. Create a virtual environment if `.venv` is missing:
+   `python -m venv .venv`. Install packages with the venv's own Python:
+   - Windows: `.venv\Scripts\python -m pip install -r requirements.txt`
+   - Mac/Linux: `.venv/bin/python -m pip install -r requirements.txt`
+   Use that Python for every command from now on. Confirm that `import openpyxl, pandas` works.
+4. Check that these exist: `Track 3 Data.xlsx` (repo root), ROLES.md, CONTRACT.md, EXECUTION_PLAN.md,
+   docs/planning/ERRATA.md. If any is missing, STOP and tell me.
+5. If `evidence/ai/clawsgo/` contains files, commit only that folder: `git add evidence/ai/clawsgo`, then
+   `git commit -m "Add raw ClawsGO detector cross-check output"`. Do not edit those files.
+6. Add a short "Setup" entry at the top of docs/project/log/jason.md, using the format in that file: Python
+   version, packages installed, the commit you merged from main, and whether the ClawsGO files were present.
+   Commit it.
+
+BUILD
+7. Open docs/planning/agent_prompts/jason.md. Follow the prompt in the SECOND box (the one starting "You are working
+   unattended…") exactly as if I had pasted it to you: Phases 1–3, then FINISH. Its HARD RULES apply to everything
+   you do, including the file list you may edit and "never push to main".
+8. At the very end, run `git push origin jason` and print a 5-line summary:
+   - which phases finished;
+   - the test results;
+   - anything BLOCKED or FAILED;
+   - the commands I should run in the morning to check.
+````
+
+## The full build prompt (used by step 7 above)
+
 Copy everything inside the box into your agent, in the repo root, on branch `jason`.
 
 ````text
