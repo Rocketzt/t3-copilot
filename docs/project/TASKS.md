@@ -11,8 +11,6 @@ This is a shared file: edit it on `main` only (pull, one small commit, push). Jo
 - [ ] **Register** — each member registers on study.standardcas.org with their real name. `TODO` owner: each member
 - [ ] **Create project and join** — the leader creates the project and shares the join code privately; the others join.
       `TODO` owner: leader + members
-- [ ] **Invite teammates to the repo** — add the two teammates as collaborators on
-      https://github.com/Rocketzt/t3-copilot so each can push to their own branch. Both have pulled, but they cannot push until invited. `TODO` owner: Rocketzt
 - [ ] **Install build packages** — `pip install -r requirements.txt` in `.venv` (it has none of them). `TODO`
       owner: whoever runs the build scripts
 - [ ] **Move the last two organizer PDFs** — close the Track 1/2 PDFs and move `HackSHSID 2026/` into
@@ -24,6 +22,7 @@ This is a shared file: edit it on `main` only (pull, one small commit, push). Jo
       EXECUTION_PLAN)
 
 ## Done
+- [x] **Teammates are repo collaborators** — `DONE 2026-10-23`: chrochrohoho and JasonXiao7, checked through the GitHub API.
 - [x] **Confirm Track 3 and roles** — `DONE 2026-10-23` (DECISIONS.md, `ROLES.md`).
 - [x] **Settle file owners** — `DONE 2026-10-23`: `ROLES.md` is the single owner table (ERRATA C6).
 - [x] **Repo skeleton** — `DONE 2026-10-23` (LOG.md): directories, a README in each, deliverable stubs,

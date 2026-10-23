@@ -20,7 +20,7 @@ It is a Python stdlib web app with vanilla JS.
 ## Status
 - Planning documents and the repo skeleton (directories plus a README in each) are in place. No code yet.
 - Public GitHub repo: https://github.com/Rocketzt/t3-copilot (`main`, plus branches `ziyu`, `jonathan` and `jason`).
-  Jason and Jonathan have pulled it but are not yet collaborators, so they cannot push.
+  Collaborators: Rocketzt, chrochrohoho and JasonXiao7, all able to push.
 - Roles distributed (`ROLES.md`). Jason is running the ClawsGO detector cross-check.
 
 ## Results so far

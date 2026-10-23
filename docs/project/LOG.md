@@ -4,6 +4,13 @@
 it on `main` only: pull first, make one small commit, push immediately (`ROLES.md`). Jonathan updates it at each gate. Individual work goes in `log/<name>.md`, one file per person, so logs never
 conflict on merge. Newest first. The entries below, dated before 2026-10-23 10:30, are project-setup history.
 
+## 2026-10-23 — Correction: both teammates are already collaborators
+
+**Setup:** Listed the repo's collaborators through the GitHub API.
+**Result:** Rocketzt, chrochrohoho and JasonXiao7 are collaborators, with no pending invites. The previous entry's
+anomaly ("not yet collaborators, cannot push") was wrong; it was assumed rather than checked.
+**Anomalies:** None.
+
 ## 2026-10-23 — Roles distributed; per-person branches created
 
 **Setup:** Wrote `ROLES.md`: the owner of every path, the git workflow and the hand-offs. Created the branches
