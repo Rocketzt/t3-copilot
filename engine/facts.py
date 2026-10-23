@@ -16,6 +16,7 @@ _PII_PATTERNS = (
     re.compile(r"(?<!\d)\d{17}[\dXx](?!\w)"),
     re.compile(r"[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}"),
     re.compile(r"(?i)(Passenger\s+)[\u4e00-\u9fff]{2,4}"),
+    re.compile(r"(旅客\s*[:：]?\s*)(?!信息|服务|提示|草案|状态)([\u4e00-\u9fff]{2,4})(?=\s|[,，。;；]|$|表示|说|称|反馈|询问|要求|的)"),
     re.compile(r"(姓名\s*[:：]\s*)[\u4e00-\u9fff]{2,4}"),
 )
 
@@ -84,16 +85,36 @@ def build_facts(data: Data, event: dict, context: dict | None = None,
         fact_id = f'F{len(facts) + 1:02d}'
         facts.append({"id": fact_id, "text": text, "source": source, **({"value": values[0][0], "unit": values[0][1]} if values else {})})
         for value, unit in values:
-            display = f'{value:+.2f} {unit}' if unit == "pp" else f'{value:.2f}{unit}'
-            numbers.append({"value": value, "display": display, "source": source, "fact_id": fact_id})
+            display = f'{value:+.2f} {unit}' if unit == "pp" else f'{value:.2f}{unit}' if unit == "%" else f'{value:g} {unit}'
+            numbers.append({"value": value, "unit": unit, "display": display, "source": source, "fact_id": fact_id})
 
     for row in relevant:
         completion = round(row["completion"] * 100, 2)
         avg = round(row["own_avg12"] * 100, 2)
-        add(f'{AIRPORT_EN.get(airport, airport)} {row["month_label"]}: completion {completion:.2f}% versus own average {avg:.2f}% ({row["delta_pp"]:+.2f} pp).',
-            "SIM-BASE", [(completion, "%"), (avg, "%"), (row["delta_pp"], "pp")])
+        text = (f'{AIRPORT_EN.get(airport, airport)} {row["month_label"]}: completion {completion:.2f}% '
+                f'versus own average {avg:.2f}% ({row["delta_pp"]:+.2f} pp); '
+                f'peer gap {row["peer_delta_pp"]:+.2f} pp')
+        values = [(completion, "%"), (avg, "%"), (row["delta_pp"], "pp"), (row["peer_delta_pp"], "pp")]
+        if row["yoy_delta_pp"] is not None:
+            text += f'; YoY gap {row["yoy_delta_pp"]:+.2f} pp'
+            values.append((row["yoy_delta_pp"], "pp"))
+        add(text + ".", "SIM-BASE", values)
     airport_info = next(a for a in data.airports if a["name"] == airport)
     add(f'{AIRPORT_EN.get(airport, airport)} is a {airport_info["tier"]} airport; airline importance {IMPORTANCE_EN.get(clean.get("importance"), clean.get("importance"))}.', "SIM-SCALE")
+    weather_row = next((r for r in data.weather if (r["airport"], r["year"], r["month"]) ==
+                        (airport, context["year"], context["month"])), None)
+    if weather_row is None:
+        raise ValueError(f'Weather row absent for {airport} {context["month_label"]}')
+    if weather_row["missing"]:
+        add(f'Weather observation for {AIRPORT_EN.get(airport, airport)} {context["month_label"]} is marked missing; no precipitation, wind, or bad-weather-day values are used.', "SIM-WEATHER")
+    else:
+        precipitation = weather_row["precipitation_mm"]
+        wind = weather_row["max_wind_ms"]
+        bad_days = weather_row["bad_weather_days"]
+        add(f'Weather observation for {AIRPORT_EN.get(airport, airport)} {context["month_label"]}: '
+            f'precipitation {precipitation:g} mm, max wind {wind:g} m/s, '
+            f'bad-weather days {bad_days:g}.',
+            "SIM-WEATHER", [(precipitation, "mm"), (wind, "m/s"), (bad_days, "days")])
     add(f'Event weather description: {clean.get("weather_text") or "not supplied"}. Forecast is not proof of per-flight impact.', source_event)
     unknowns = [redact_text(s.strip()) for s in re.split(r"[、;,；]", str(clean.get("unknown") or "")) if s.strip()]
     missing_data = ["Monthly baselines cannot establish per-flight causation or current aircraft, crew, and gate status"]

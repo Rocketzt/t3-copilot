@@ -154,7 +154,7 @@
     "facts": [
       {
         "id": "F01",
-        "text": "Gaoyuan Airport 2025-02: completion 72.88% versus own average 78.98% (-6.10 pp).",
+        "text": "Gaoyuan Airport 2025-02: completion 72.88% versus own average 78.98% (-6.10 pp); peer gap -4.14 pp; YoY gap -1.14 pp.",
         "source": "SIM-BASE",
         "value": 72.88,
         "unit": "%"
@@ -166,6 +166,13 @@
       },
       {
         "id": "F03",
+        "text": "Weather observation for Gaoyuan Airport 2025-02: precipitation 52.6 mm, max wind 19 m/s, bad-weather days 3.",
+        "source": "SIM-WEATHER",
+        "value": 52.6,
+        "unit": "mm"
+      },
+      {
+        "id": "F04",
         "text": "Event weather description: 低温并有较大风速. Forecast is not proof of per-flight impact.",
         "source": "EVT005"
       }
@@ -173,21 +180,59 @@
     "numbers": [
       {
         "value": 72.88,
+        "unit": "%",
         "display": "72.88%",
         "source": "SIM-BASE",
         "fact_id": "F01"
       },
       {
         "value": 78.98,
+        "unit": "%",
         "display": "78.98%",
         "source": "SIM-BASE",
         "fact_id": "F01"
       },
       {
         "value": -6.1,
+        "unit": "pp",
         "display": "-6.10 pp",
         "source": "SIM-BASE",
         "fact_id": "F01"
+      },
+      {
+        "value": -4.14,
+        "unit": "pp",
+        "display": "-4.14 pp",
+        "source": "SIM-BASE",
+        "fact_id": "F01"
+      },
+      {
+        "value": -1.14,
+        "unit": "pp",
+        "display": "-1.14 pp",
+        "source": "SIM-BASE",
+        "fact_id": "F01"
+      },
+      {
+        "value": 52.6,
+        "unit": "mm",
+        "display": "52.6 mm",
+        "source": "SIM-WEATHER",
+        "fact_id": "F03"
+      },
+      {
+        "value": 19,
+        "unit": "m/s",
+        "display": "19 m/s",
+        "source": "SIM-WEATHER",
+        "fact_id": "F03"
+      },
+      {
+        "value": 3,
+        "unit": "days",
+        "display": "3 days",
+        "source": "SIM-WEATHER",
+        "fact_id": "F03"
       }
     ],
     "assumptions": [
@@ -210,7 +255,8 @@
       "RULE009",
       "RULE010",
       "SIM-BASE",
-      "SIM-SCALE"
+      "SIM-SCALE",
+      "SIM-WEATHER"
     ],
     "risk": {
       "level": "Low",

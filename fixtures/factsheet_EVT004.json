@@ -189,7 +189,7 @@
     "facts": [
       {
         "id": "F01",
-        "text": "Nanwan Airport 2025-12: completion 82.65% versus own average 82.78% (-0.13 pp).",
+        "text": "Nanwan Airport 2025-12: completion 82.65% versus own average 82.78% (-0.13 pp); peer gap +0.30 pp; YoY gap -2.71 pp.",
         "source": "SIM-BASE",
         "value": 82.65,
         "unit": "%"
@@ -201,6 +201,13 @@
       },
       {
         "id": "F03",
+        "text": "Weather observation for Nanwan Airport 2025-12: precipitation 48.1 mm, max wind 12.6 m/s, bad-weather days 2.",
+        "source": "SIM-WEATHER",
+        "value": 48.1,
+        "unit": "mm"
+      },
+      {
+        "id": "F04",
         "text": "Event weather description: 预计傍晚有短时雷雨. Forecast is not proof of per-flight impact.",
         "source": "EVT004"
       }
@@ -208,21 +215,59 @@
     "numbers": [
       {
         "value": 82.65,
+        "unit": "%",
         "display": "82.65%",
         "source": "SIM-BASE",
         "fact_id": "F01"
       },
       {
         "value": 82.78,
+        "unit": "%",
         "display": "82.78%",
         "source": "SIM-BASE",
         "fact_id": "F01"
       },
       {
         "value": -0.13,
+        "unit": "pp",
         "display": "-0.13 pp",
         "source": "SIM-BASE",
         "fact_id": "F01"
+      },
+      {
+        "value": 0.3,
+        "unit": "pp",
+        "display": "+0.30 pp",
+        "source": "SIM-BASE",
+        "fact_id": "F01"
+      },
+      {
+        "value": -2.71,
+        "unit": "pp",
+        "display": "-2.71 pp",
+        "source": "SIM-BASE",
+        "fact_id": "F01"
+      },
+      {
+        "value": 48.1,
+        "unit": "mm",
+        "display": "48.1 mm",
+        "source": "SIM-WEATHER",
+        "fact_id": "F03"
+      },
+      {
+        "value": 12.6,
+        "unit": "m/s",
+        "display": "12.6 m/s",
+        "source": "SIM-WEATHER",
+        "fact_id": "F03"
+      },
+      {
+        "value": 2,
+        "unit": "days",
+        "display": "2 days",
+        "source": "SIM-WEATHER",
+        "fact_id": "F03"
       }
     ],
     "assumptions": [
@@ -250,7 +295,8 @@
       "RULE009",
       "RULE010",
       "SIM-BASE",
-      "SIM-SCALE"
+      "SIM-SCALE",
+      "SIM-WEATHER"
     ],
     "risk": {
       "level": "Low",

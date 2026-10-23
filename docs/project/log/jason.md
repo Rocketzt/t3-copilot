@@ -16,6 +16,13 @@ Entry format (copy for each new entry):
 
 ---
 
+## 2026-10-24 01:13 — Fact sheets now whitelist all comparison and weather numbers
+
+**Setup:** Pulled `origin/jason` (already up to date). Added peer and available YoY gaps to each SIM-BASE month fact and number whitelist; added a selected-month SIM-WEATHER fact with precipitation, max wind, and bad-weather days, or an explicit missing-data fact without weather numbers. Redacted Chinese names after `旅客`. Regenerated the five `fixtures/factsheet_EVT001..005.json` files.
+**Result:** `.venv\Scripts\python.exe -m unittest tests.test_facts -v` ran 9 tests: OK. `.venv\Scripts\python.exe -m unittest discover -s tests -v` ran 16 tests: OK. `git diff --check` exited 0.
+**Anomalies:** The separate exam command `.venv\Scripts\python.exe tests/run_tests.py --writer-mode offline --out exports/test_results.json` still printed `pipeline not available` and exited 2 because `engine/pipeline.py` is absent; no exam result was written. Existing untracked files were untouched.
+**AI:** Codex added the source-backed facts and regression tests, then regenerated fixtures from the implementation.
+
 ## 2026-10-24 00:14 — Build hand-off complete with exam integration pending
 
 **Setup:** Phase 1 exported and validated the organizer workbook, implemented the detector, and generated `docs/NUMBERS.md`. Phase 2 implemented deterministic rules, source-backed fact sheets, PII redaction, append-only feedback, and five real event fixtures. Phase 3 added the 15 official cases, five own cases, negative test, exam runner, and `docs/test_specs.md`.
