@@ -2,7 +2,7 @@
 
 Status: TODO / DOING / BLOCKED / PARKED / DONE. Deadline: **2026-10-24 23:59**.
 The build tasks themselves (Z1–Z10, J1–J9, A1–A8) live in `EXECUTION_PLAN.md` §5; this list tracks the rest.
-This is a shared file: edit it on `main` only (pull, one small commit, push). Jonathan updates it at each gate.
+This is a shared file: edit it on `main` only (pull, one small commit, push). Ziyu updates it at each gate.
 
 ## Team
 - [ ] **Decide the default writer** — offline template or live AI (ERRATA, open decision). `TODO` owner: whole team
@@ -18,8 +18,7 @@ This is a shared file: edit it on `main` only (pull, one small commit, push). Jo
 
 ## Submission
 - [ ] **Fill the submission form** — title, short description, track, thumbnail, description, repo link, testing
-      evidence, AI statement (from `docs/AI_USAGE.md`). Only one person edits at a time. `TODO` owner: Jason (per
-      EXECUTION_PLAN)
+      evidence, AI statement (from `docs/AI_USAGE.md`). Only one person edits at a time. `TODO` owner: Jason (ROLES.md)
 
 ## Done
 - [x] **Teammates are repo collaborators** — `DONE 2026-10-23`: chrochrohoho and JasonXiao7, checked through the GitHub API.

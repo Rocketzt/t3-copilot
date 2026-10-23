@@ -1,6 +1,6 @@
 # tests/ — the exam (Part 3)
 
-**Owners:** Ziyu builds the runner; Jason writes the plain-English must / must-not wording.
+**Owner:** Jason — the runner, the cases and the plain-English specs in `docs/test_specs.md` (see `ROLES.md`).
 
 - `runner.py` / `run_tests.py`: run every case through the same `engine.pipeline` the website uses (no answer bank).
   Run with `python tests/run_tests.py --writer-mode offline --out exports/test_results.json`.

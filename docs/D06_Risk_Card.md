@@ -2,7 +2,7 @@
 
 > 模拟 / SIMULATED — all airports, events and numbers are fictional (organizer data).
 
-**Owner:** Jason (review: Ziyu) · **Status:** Not started
+**Owner:** Ziyu · **Status:** Not started
 
 ## Must contain
 - 4 failure modes, each with signal, impact, likelihood and mitigation:

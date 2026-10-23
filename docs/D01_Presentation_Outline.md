@@ -2,7 +2,7 @@
 
 > 模拟 / SIMULATED — all airports, events and numbers are fictional (organizer data).
 
-**Owner:** Jason · **Status:** Not started
+**Owner:** Ziyu · **Status:** Not started
 
 ## Must contain
 - 10–12 slides with speaker notes, following the demo script in EXECUTION_PLAN §9.1.

@@ -1,6 +1,7 @@
 # engine/ — the assistant's core
 
-**Owner:** Ziyu (per EXECUTION_PLAN §2). Module APIs and JSON shapes are fixed in CONTRACT §3–§6.
+**Owners (see `ROLES.md`):** Jason — `data`, `detector`, `rules`, `facts`, `feedback`. Ziyu — `checker`.
+Jonathan — `writer`, `pipeline`. Module APIs and JSON shapes are fixed in CONTRACT §3–§6.
 
 | Module | Job |
 |---|---|

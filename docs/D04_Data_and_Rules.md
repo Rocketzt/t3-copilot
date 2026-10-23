@@ -2,7 +2,7 @@
 
 > 模拟 / SIMULATED — all airports, events and numbers are fictional (organizer data).
 
-**Owner:** Jason + Ziyu · **Status:** Not started
+**Owner:** Ziyu · **Status:** Not started
 
 ## Must contain
 - The data: 8 airports × 24 months, the sheets used, the 4 missing weather rows, column I in percentage points.

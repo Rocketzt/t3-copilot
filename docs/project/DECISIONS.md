@@ -2,6 +2,21 @@
 
 Newest first. A reversal is a new entry.
 
+## 2026-10-23 — Roles v2: build work moves to Jason and Jonathan; Ziyu becomes tech lead; Excel exports cut
+
+**Decision:**
+- Ziyu: the checker, merges and review, deliverables D01, D04, D06 and D07; updates the shared records at gates.
+- Jonathan: the web app, the writer and the pipeline; deliverables D02 and D08.
+- Jason: data, detector, rules, fact sheet, feedback and tests; deliverables D03 and D05; `NUMBERS.md`, the test
+  specs, the submission form.
+- Cut: the filled Excel copies of sheets 06 and 08, About-tab polish, and live AI on stage.
+**Why:**
+- Ziyu has the most AI experience but little usage left this week. Writing, review and merging need judgement more
+  than AI usage.
+- Jason's code (detector, rules, fact sheet) has exact expected numbers, so he can verify it with less AI experience.
+- Jonathan's first draft of the split was too heavy.
+**Consequence:** Replaces the role split in the entry below and in EXECUTION_PLAN §2. Each person is about 9–9.5 h.
+
 ## 2026-10-23 — Track 3 confirmed; roles fixed in ROLES.md; shared records edited on main only
 
 **Decision:**

@@ -1,8 +1,15 @@
 # Team log
 
 **Team-level events only:** gate results, merges to `main`, scope cuts, submission. This is a shared file, so edit
-it on `main` only: pull first, make one small commit, push immediately (`ROLES.md`). Jonathan updates it at each gate. Individual work goes in `log/<name>.md`, one file per person, so logs never
+it on `main` only: pull first, make one small commit, push immediately (`ROLES.md`). Ziyu updates it at each gate. Individual work goes in `log/<name>.md`, one file per person, so logs never
 conflict on merge. Newest first. The entries below, dated before 2026-10-23 10:30, are project-setup history.
+
+## 2026-10-23 — Roles v2 applied; agent prompts for unattended runs added
+
+**Setup:** Rewrote `ROLES.md` (v2) and updated the folder READMEs to match. Added
+`docs/planning/agent_prompts/` with one prompt per member, for AI agents to run unattended on their own branches.
+**Result:** Each member has about 9–9.5 h of work. The Excel exports are cut.
+**Anomalies:** None.
 
 ## 2026-10-23 — Correction: both teammates are already collaborators
 

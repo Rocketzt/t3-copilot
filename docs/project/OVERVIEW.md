@@ -21,7 +21,7 @@ It is a Python stdlib web app with vanilla JS.
 - Planning documents and the repo skeleton (directories plus a README in each) are in place. No code yet.
 - Public GitHub repo: https://github.com/Rocketzt/t3-copilot (`main`, plus branches `ziyu`, `jonathan` and `jason`).
   Collaborators: Rocketzt, chrochrohoho and JasonXiao7, all able to push.
-- Roles distributed (`ROLES.md`). Jason is running the ClawsGO detector cross-check.
+- Roles distributed (`ROLES.md` v2). Jason is running the ClawsGO detector cross-check.
 
 ## Results so far
 - `EXECUTION_PLAN.md` and `CONTRACT.md` were checked against the workbook. Their numbers are correct except for the
@@ -50,18 +50,19 @@ It is a Python stdlib web app with vanilla JS.
 
 ## Who does what
 `ROLES.md` holds the single file-owner table and the git workflow. In short:
-- **Ziyu** — engine and AI core;
-- **Jonathan** — product and integration;
-- **Jason** — evidence and delivery.
+- **Ziyu** — tech lead: the checker, merges at gates, code review, deliverables D01, D04, D06 and D07;
+- **Jonathan** — the web app, the writer and the pipeline; deliverables D02 and D08;
+- **Jason** — the data loader, detector, rules, fact sheet, feedback and tests; deliverables D03 and D05; the
+  submission form.
 
 ## Where things are
 - Repo layout: `README.md` (root); roles and file owners: `ROLES.md`
 - Build plan: `EXECUTION_PLAN.md`; interface contract: `CONTRACT.md`; errata: `docs/planning/ERRATA.md`
 - Records: `docs/project/`:
   - this file;
-  - `LOG.md`, team events only (shared; edited on `main`, updated by Jonathan at gates);
+  - `LOG.md`, team events only (shared; edited on `main`, updated by Ziyu at gates);
   - `log/<name>.md`, one work log per member;
-  - `TASKS.md` (shared; edited on `main`, updated by Jonathan at gates);
+  - `TASKS.md` (shared; edited on `main`, updated by Ziyu at gates);
   - `DECISIONS.md`.
 - Deliverable drafts: `docs/D01…D07`; AI-use log: `docs/AI_USAGE.md`
 - Data: `Track 3 Data.xlsx` (repo root, read-only)

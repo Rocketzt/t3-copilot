@@ -2,7 +2,7 @@
 
 > 模拟 / SIMULATED — all airports, events and numbers are fictional (organizer data).
 
-**Owner:** Jason (generated from the runner's JSON; runner by Ziyu) · **Status:** Not started
+**Owner:** Jason (generated from the runner's JSON) · **Status:** Not started
 
 ## Must contain
 - Method: must / must-not checks, plus a person's 1–3 score for tone and action order.
