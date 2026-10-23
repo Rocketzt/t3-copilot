@@ -4,6 +4,31 @@
 it on `main` only: pull first, make one small commit, push immediately (`ROLES.md`). Ziyu updates it at each gate. Individual work goes in `log/<name>.md`, one file per person, so logs never
 conflict on merge. Newest first. The entries below, dated before 2026-10-23 10:30, are project-setup history.
 
+## 2026-10-23 — Review of Jason's overnight branch (b5f506f): detector verified on all 192 rows; two fact-sheet gaps
+
+**Setup:** Checked out `origin/jason` in a scratch worktree. Then:
+- listed his commits and the files they changed against ROLES.md;
+- ran `python -m unittest discover -s tests -v` and `tests/run_tests.py`;
+- reran `scripts/build_data.py` and diffed the output against the committed `data/track3.json`;
+- recomputed own / peer / YoY gaps, signal counts and missing-weather flags straight from the workbook, with a
+  separate stdlib parser, and compared them with `detector.compute_all()` (tolerance 0.02 pp);
+- read `engine/rules.py` and `engine/facts.py`.
+**Result:**
+- All 5 commits are credited to JasonXiao7, and all 26 changed files are his in ROLES.md.
+- 12/12 unit tests pass. The runner exits with code 2 and prints "pipeline not available": correct, because
+  `engine/pipeline.py` (Jonathan's) is not merged.
+- The rebuild reproduces `track3.json` exactly.
+- Detector: 192 rows, 0 mismatches.
+- No event IDs are hard-coded in the rules or the fact sheet. RULE003 is own-only and RULE007 uses the decision
+  words only, as ERRATA C7/C8 asked.
+- Gaps found:
+  1. The fact sheet's `numbers` whitelist holds only completion, own average and own gap. Peer and YoY gaps
+     (Hailing 2025-08: −3.66 / −9.14 pp) are missing, so the checker would block the writer for citing them.
+  2. No fact carries the source SIM-WEATHER, and the monthly weather values are not included. TEST002 expects a
+     SIM-WEATHER citation.
+- Minor: PII redaction catches "Passenger 张伟" but not "旅客张伟".
+**Anomalies:** The ClawsGO cross-check was skipped because its CSV is not yet in `evidence/ai/`.
+
 ## 2026-10-23 — Roles v2 applied; agent prompts for unattended runs added
 
 **Setup:** Rewrote `ROLES.md` (v2) and updated the folder READMEs to match. Added
