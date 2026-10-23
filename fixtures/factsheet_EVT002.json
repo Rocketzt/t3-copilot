@@ -1,0 +1,263 @@
+{
+  "event": {
+    "id": "EVT002",
+    "name": "运行压力持续",
+    "time_text": "第4天晚上18:30",
+    "airport": "北岭机场",
+    "weather_text": "天气未出现明显恶化",
+    "ops_text": "上午按计划完成航班的比例下降，晚间仍有较多计划航班",
+    "importance": "中",
+    "notes": "现场反馈登机口调整频繁",
+    "known": "月度基线、现场备注",
+    "unknown": "具体受影响航班、登机口资源、前序飞机位置",
+    "status": "待处理",
+    "tag": "模拟",
+    "airport_en": "Beiling Airport",
+    "importance_en": "Medium",
+    "is_custom": false
+  },
+  "detector": {
+    "airport": "北岭机场",
+    "airport_en": "Beiling Airport",
+    "year": 2025,
+    "month": 12,
+    "month_label": "2025-12",
+    "tier": "中型机场",
+    "selection_reason": "Latest anomalous month used as context (1 signal); event date was not supplied",
+    "comparisons": [
+      {
+        "key": "own",
+        "label": "Own 12-month average",
+        "value_pp": -4.74,
+        "threshold_pp": -5.0,
+        "signal": false,
+        "detail": "78.49% vs 83.23% = -4.74 pp"
+      },
+      {
+        "key": "peer",
+        "label": "Same-size peer average",
+        "value_pp": -3.86,
+        "threshold_pp": -5.0,
+        "signal": false,
+        "detail": "78.49% vs 82.35% = -3.86 pp"
+      },
+      {
+        "key": "yoy",
+        "label": "Same month previous year",
+        "value_pp": -5.59,
+        "threshold_pp": -5.0,
+        "signal": true,
+        "detail": "78.49% vs 84.08% = -5.59 pp"
+      }
+    ],
+    "signal_count": 1,
+    "verdict": "watch",
+    "confidence": 1.0,
+    "confidence_notes": [
+      "3 of 3 comparisons available",
+      "weather record present"
+    ],
+    "weather_missing": false,
+    "recent_anomalies": [
+      {
+        "year": 2025,
+        "month": 8,
+        "month_label": "2025-08",
+        "signal_count": 1,
+        "delta_pp": -5.61,
+        "verdict": "watch"
+      },
+      {
+        "year": 2025,
+        "month": 12,
+        "month_label": "2025-12",
+        "signal_count": 1,
+        "delta_pp": -4.74,
+        "verdict": "watch"
+      }
+    ],
+    "flagged_airport_months": [
+      {
+        "year": 2025,
+        "month": 8,
+        "month_label": "2025-08",
+        "signal_count": 1,
+        "delta_pp": -5.61,
+        "verdict": "watch"
+      },
+      {
+        "year": 2025,
+        "month": 12,
+        "month_label": "2025-12",
+        "signal_count": 1,
+        "delta_pp": -4.74,
+        "verdict": "watch"
+      }
+    ]
+  },
+  "rules": [
+    {
+      "id": "RULE004",
+      "topic": "持续运行压力",
+      "topic_en": "Sustained operational pressure",
+      "trigger": "上一时段表现下降且后续任务仍集中",
+      "checks": [
+        "核查前序飞机",
+        "登机口和地面保障承压情况"
+      ],
+      "action": "按时间顺序列出核查事项",
+      "action_en": "",
+      "escalate_to": "运营负责人",
+      "escalate_to_en": "",
+      "manual_approval": true,
+      "forbidden": "不得调整真实航班计划",
+      "forbidden_en": "",
+      "source": "赛事规则"
+    },
+    {
+      "id": "RULE009",
+      "topic": "引用要求",
+      "topic_en": "Citations",
+      "trigger": "输出包含数字或正式状态",
+      "checks": [
+        "检查来源编号和时间范围"
+      ],
+      "action": "在输出中列出来源",
+      "action_en": "",
+      "escalate_to": "输出复核人",
+      "escalate_to_en": "",
+      "manual_approval": true,
+      "forbidden": "不得无来源生成事实",
+      "forbidden_en": "",
+      "source": "赛事规则"
+    },
+    {
+      "id": "RULE010",
+      "topic": "模拟标识",
+      "topic_en": "Simulation label",
+      "trigger": "使用模拟事件或模拟数值",
+      "checks": [
+        "检查页面和输出标识"
+      ],
+      "action": "统一标注“模拟”",
+      "action_en": "",
+      "escalate_to": "项目负责人",
+      "escalate_to_en": "",
+      "manual_approval": false,
+      "forbidden": "不得称为真实事件",
+      "forbidden_en": "",
+      "source": "赛事规则"
+    }
+  ],
+  "facts": {
+    "facts": [
+      {
+        "id": "F01",
+        "text": "Beiling Airport 2025-12: completion 78.49% versus own average 83.23% (-4.74 pp).",
+        "source": "SIM-BASE",
+        "value": 78.49,
+        "unit": "%"
+      },
+      {
+        "id": "F02",
+        "text": "Beiling Airport 2025-08: completion 78.20% versus own average 83.81% (-5.61 pp).",
+        "source": "SIM-BASE",
+        "value": 78.2,
+        "unit": "%"
+      },
+      {
+        "id": "F03",
+        "text": "Beiling Airport is a 中型机场 airport; airline importance Medium.",
+        "source": "SIM-SCALE"
+      },
+      {
+        "id": "F04",
+        "text": "Event weather description: 天气未出现明显恶化. Forecast is not proof of per-flight impact.",
+        "source": "EVT002"
+      }
+    ],
+    "numbers": [
+      {
+        "value": 78.49,
+        "display": "78.49%",
+        "source": "SIM-BASE",
+        "fact_id": "F01"
+      },
+      {
+        "value": 83.23,
+        "display": "83.23%",
+        "source": "SIM-BASE",
+        "fact_id": "F01"
+      },
+      {
+        "value": -4.74,
+        "display": "-4.74 pp",
+        "source": "SIM-BASE",
+        "fact_id": "F01"
+      },
+      {
+        "value": 78.2,
+        "display": "78.20%",
+        "source": "SIM-BASE",
+        "fact_id": "F02"
+      },
+      {
+        "value": 83.81,
+        "display": "83.81%",
+        "source": "SIM-BASE",
+        "fact_id": "F02"
+      },
+      {
+        "value": -5.61,
+        "display": "-5.61 pp",
+        "source": "SIM-BASE",
+        "fact_id": "F02"
+      }
+    ],
+    "assumptions": [
+      "[ASSUMPTION] Monthly patterns may indicate risk but do not prove a current flight impact"
+    ],
+    "unknowns": [
+      "具体受影响航班",
+      "登机口资源",
+      "前序飞机位置"
+    ],
+    "missing_data": [
+      "Monthly baselines cannot establish per-flight causation or current aircraft, crew, and gate status"
+    ],
+    "forbidden_actions": [
+      "Cancel, release, dispatch, maintain, or compensate flights without human approval [RULE007]",
+      "Publish a passenger notice without human review [RULE005]"
+    ],
+    "sources": [
+      "EVT002",
+      "RULE004",
+      "RULE009",
+      "RULE010",
+      "SIM-BASE",
+      "SIM-SCALE"
+    ],
+    "risk": {
+      "level": "Low",
+      "level_zh": "低",
+      "score": 2.25,
+      "reasons": [
+        {
+          "text": "1 detector signals for 2025-12",
+          "source": "SIM-BASE"
+        },
+        {
+          "text": "Operational pressure is described in the event",
+          "source": "EVT002"
+        }
+      ],
+      "can_tell": true,
+      "can_tell_zh": "可判断"
+    },
+    "pii_redacted": false,
+    "feedback_matches": [],
+    "conflict": false,
+    "sim_label": "模拟 / SIMULATED",
+    "first_action": "verify current operational status with the responsible team"
+  }
+}
