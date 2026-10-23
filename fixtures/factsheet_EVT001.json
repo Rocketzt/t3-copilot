@@ -1,0 +1,372 @@
+{
+  "event": {
+    "id": "EVT001",
+    "name": "天气风险上升",
+    "time_text": "第4天下午14:00",
+    "airport": "海陵国际机场",
+    "weather_text": "未来六小时预计强降雨并伴有阵风",
+    "ops_text": "上午运行接近通常水平，下午航班量较集中",
+    "importance": "高",
+    "notes": "机场协同团队尚未给出最新保障能力确认",
+    "known": "天气预报、历史月度基线、机场规模",
+    "unknown": "逐航班计划、飞机连续执行、机组和地面保障状态",
+    "status": "待处理",
+    "tag": "模拟",
+    "has_feedback": true,
+    "airport_en": "Hailing International Airport",
+    "importance_en": "High",
+    "is_custom": false
+  },
+  "detector": {
+    "airport": "海陵国际机场",
+    "airport_en": "Hailing International Airport",
+    "year": 2025,
+    "month": 8,
+    "month_label": "2025-08",
+    "tier": "大型机场",
+    "selection_reason": "Latest anomalous month used as context (2+ signals); event date was not supplied",
+    "comparisons": [
+      {
+        "key": "own",
+        "label": "Own 12-month average",
+        "value_pp": -10.99,
+        "threshold_pp": -5.0,
+        "signal": true,
+        "detail": "73.16% vs 84.15% = -10.99 pp"
+      },
+      {
+        "key": "peer",
+        "label": "Same-size peer average",
+        "value_pp": -3.66,
+        "threshold_pp": -5.0,
+        "signal": false,
+        "detail": "73.16% vs 76.82% = -3.66 pp"
+      },
+      {
+        "key": "yoy",
+        "label": "Same month previous year",
+        "value_pp": -9.14,
+        "threshold_pp": -5.0,
+        "signal": true,
+        "detail": "73.16% vs 82.30% = -9.14 pp"
+      }
+    ],
+    "signal_count": 2,
+    "verdict": "unusual",
+    "confidence": 1.0,
+    "confidence_notes": [
+      "3 of 3 comparisons available",
+      "weather record present"
+    ],
+    "weather_missing": false,
+    "recent_anomalies": [
+      {
+        "year": 2025,
+        "month": 7,
+        "month_label": "2025-07",
+        "signal_count": 3,
+        "delta_pp": -15.62,
+        "verdict": "clearly unusual"
+      },
+      {
+        "year": 2025,
+        "month": 8,
+        "month_label": "2025-08",
+        "signal_count": 2,
+        "delta_pp": -10.99,
+        "verdict": "unusual"
+      }
+    ],
+    "flagged_airport_months": [
+      {
+        "year": 2025,
+        "month": 7,
+        "month_label": "2025-07",
+        "signal_count": 3,
+        "delta_pp": -15.62,
+        "verdict": "clearly unusual"
+      },
+      {
+        "year": 2025,
+        "month": 8,
+        "month_label": "2025-08",
+        "signal_count": 2,
+        "delta_pp": -10.99,
+        "verdict": "unusual"
+      }
+    ]
+  },
+  "rules": [
+    {
+      "id": "RULE002",
+      "topic": "天气风险",
+      "topic_en": "Weather risk",
+      "trigger": "天气提示达到中高风险但尚无正式运行状态",
+      "checks": [
+        "核查机场保障",
+        "前序运行和后续航班集中程度"
+      ],
+      "action": "准备监测清单与沟通草案",
+      "action_en": "",
+      "escalate_to": "运行协调人员",
+      "escalate_to_en": "",
+      "manual_approval": true,
+      "forbidden": "不得声称航班一定延误",
+      "forbidden_en": "",
+      "source": "赛事规则"
+    },
+    {
+      "id": "RULE003",
+      "topic": "异常波动",
+      "topic_en": "Own-history anomaly",
+      "trigger": "当前指标低于过去十二个月平均五个百分点以上",
+      "checks": [
+        "核查数据完整性和同类机场变化"
+      ],
+      "action": "标记为重点复核",
+      "action_en": "",
+      "escalate_to": "运营分析人员",
+      "escalate_to_en": "",
+      "manual_approval": false,
+      "forbidden": "不得直接归因于天气",
+      "forbidden_en": "",
+      "source": "赛事规则"
+    },
+    {
+      "id": "RULE004",
+      "topic": "持续运行压力",
+      "topic_en": "Sustained operational pressure",
+      "trigger": "上一时段表现下降且后续任务仍集中",
+      "checks": [
+        "核查前序飞机",
+        "登机口和地面保障承压情况"
+      ],
+      "action": "按时间顺序列出核查事项",
+      "action_en": "",
+      "escalate_to": "运营负责人",
+      "escalate_to_en": "",
+      "manual_approval": true,
+      "forbidden": "不得调整真实航班计划",
+      "forbidden_en": "",
+      "source": "赛事规则"
+    },
+    {
+      "id": "RULE005",
+      "topic": "旅客沟通",
+      "topic_en": "Passenger communication",
+      "trigger": "存在风险但没有正式航班状态",
+      "checks": [
+        "核查可公开事实和更新时间"
+      ],
+      "action": "生成明确标注“草案”的提示",
+      "action_en": "",
+      "escalate_to": "旅客服务负责人",
+      "escalate_to_en": "",
+      "manual_approval": true,
+      "forbidden": "不得作为正式通知自动发送",
+      "forbidden_en": "",
+      "source": "赛事规则"
+    },
+    {
+      "id": "RULE006",
+      "topic": "人工否决",
+      "topic_en": "Human overrule",
+      "trigger": "专业人员拒绝建议",
+      "checks": [
+        "记录拒绝原因和补充事实"
+      ],
+      "action": "根据新事实调整建议并保留原记录",
+      "action_en": "",
+      "escalate_to": "模型负责人",
+      "escalate_to_en": "",
+      "manual_approval": true,
+      "forbidden": "不得覆盖或删除人工意见",
+      "forbidden_en": "",
+      "source": "赛事规则"
+    },
+    {
+      "id": "RULE008",
+      "topic": "高风险升级",
+      "topic_en": "High-risk escalation",
+      "trigger": "多个独立风险信号同时存在且影响范围可能扩大",
+      "checks": [
+        "核查信息是否至少来自两个可靠来源"
+      ],
+      "action": "建议升级并说明触发依据",
+      "action_en": "",
+      "escalate_to": "运营负责人",
+      "escalate_to_en": "",
+      "manual_approval": true,
+      "forbidden": "不得跳过人工审批",
+      "forbidden_en": "",
+      "source": "赛事规则"
+    },
+    {
+      "id": "RULE009",
+      "topic": "引用要求",
+      "topic_en": "Citations",
+      "trigger": "输出包含数字或正式状态",
+      "checks": [
+        "检查来源编号和时间范围"
+      ],
+      "action": "在输出中列出来源",
+      "action_en": "",
+      "escalate_to": "输出复核人",
+      "escalate_to_en": "",
+      "manual_approval": true,
+      "forbidden": "不得无来源生成事实",
+      "forbidden_en": "",
+      "source": "赛事规则"
+    },
+    {
+      "id": "RULE010",
+      "topic": "模拟标识",
+      "topic_en": "Simulation label",
+      "trigger": "使用模拟事件或模拟数值",
+      "checks": [
+        "检查页面和输出标识"
+      ],
+      "action": "统一标注“模拟”",
+      "action_en": "",
+      "escalate_to": "项目负责人",
+      "escalate_to_en": "",
+      "manual_approval": false,
+      "forbidden": "不得称为真实事件",
+      "forbidden_en": "",
+      "source": "赛事规则"
+    }
+  ],
+  "facts": {
+    "facts": [
+      {
+        "id": "F01",
+        "text": "Hailing International Airport 2025-08: completion 73.16% versus own average 84.15% (-10.99 pp).",
+        "source": "SIM-BASE",
+        "value": 73.16,
+        "unit": "%"
+      },
+      {
+        "id": "F02",
+        "text": "Hailing International Airport 2025-07: completion 69.49% versus own average 85.11% (-15.62 pp).",
+        "source": "SIM-BASE",
+        "value": 69.49,
+        "unit": "%"
+      },
+      {
+        "id": "F03",
+        "text": "Hailing International Airport is a 大型机场 airport; airline importance High.",
+        "source": "SIM-SCALE"
+      },
+      {
+        "id": "F04",
+        "text": "Event weather description: 未来六小时预计强降雨并伴有阵风. Forecast is not proof of per-flight impact.",
+        "source": "EVT001"
+      }
+    ],
+    "numbers": [
+      {
+        "value": 73.16,
+        "display": "73.16%",
+        "source": "SIM-BASE",
+        "fact_id": "F01"
+      },
+      {
+        "value": 84.15,
+        "display": "84.15%",
+        "source": "SIM-BASE",
+        "fact_id": "F01"
+      },
+      {
+        "value": -10.99,
+        "display": "-10.99 pp",
+        "source": "SIM-BASE",
+        "fact_id": "F01"
+      },
+      {
+        "value": 69.49,
+        "display": "69.49%",
+        "source": "SIM-BASE",
+        "fact_id": "F02"
+      },
+      {
+        "value": 85.11,
+        "display": "85.11%",
+        "source": "SIM-BASE",
+        "fact_id": "F02"
+      },
+      {
+        "value": -15.62,
+        "display": "-15.62 pp",
+        "source": "SIM-BASE",
+        "fact_id": "F02"
+      }
+    ],
+    "assumptions": [
+      "[ASSUMPTION] Monthly patterns may indicate risk but do not prove a current flight impact"
+    ],
+    "unknowns": [
+      "逐航班计划",
+      "飞机连续执行",
+      "机组和地面保障状态"
+    ],
+    "missing_data": [
+      "Monthly baselines cannot establish per-flight causation or current aircraft, crew, and gate status"
+    ],
+    "forbidden_actions": [
+      "Cancel, release, dispatch, maintain, or compensate flights without human approval [RULE007]",
+      "Publish a passenger notice without human review [RULE005]"
+    ],
+    "sources": [
+      "EVT001",
+      "RULE002",
+      "RULE003",
+      "RULE004",
+      "RULE005",
+      "RULE006",
+      "RULE008",
+      "RULE009",
+      "RULE010",
+      "SIM-BASE",
+      "SIM-SCALE"
+    ],
+    "risk": {
+      "level": "Medium",
+      "level_zh": "中",
+      "score": 6.5,
+      "reasons": [
+        {
+          "text": "2 detector signals for 2025-08",
+          "source": "SIM-BASE"
+        },
+        {
+          "text": "Weather risk is described in the event, not proven flight impact",
+          "source": "EVT001"
+        },
+        {
+          "text": "Operational pressure is described in the event",
+          "source": "EVT001"
+        }
+      ],
+      "can_tell": true,
+      "can_tell_zh": "可判断"
+    },
+    "pii_redacted": false,
+    "feedback_matches": [
+      {
+        "event_id": "EVT001",
+        "rec_id": "REC001",
+        "result": "Accept",
+        "reason": null,
+        "final_action": "核查机场保障能力并保留旅客提示草案",
+        "outcome": "模拟：获得更新后风险仍为中等",
+        "improvement": "保持先核查后升级的顺序",
+        "reviewer": "赛事导师",
+        "date": "第4天",
+        "source": "organizer_seed"
+      }
+    ],
+    "conflict": false,
+    "sim_label": "模拟 / SIMULATED",
+    "first_action": "confirm ground-support capacity and weather update time with airport coordination"
+  }
+}

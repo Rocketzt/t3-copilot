@@ -16,6 +16,13 @@ Entry format (copy for each new entry):
 
 ---
 
+## 2026-10-24 00:10 — Phase 2 fact sheets and feedback verified
+
+**Setup:** Added deterministic RULE001–012 evaluation, source-backed facts and risk, PII redaction, append-only feedback, and five generated EVT fact-sheet fixtures.
+**Result:** `python -m unittest tests.test_facts -v` ran 5 tests: OK. EVT001 is Medium; EVT003 is Can't tell with conflict; EVT005 is Low after the seed rejection and first checks current resources.
+**Anomalies:** Initial test run had a false `pii_redacted` flag and a sandbox temp-path permission error. Both were fixed; the final run passes.
+**AI:** Codex implemented and checked this phase against the contract and organizer seeds.
+
 ## 2026-10-24 00:06 — Phase 1 detector matches workbook checks
 
 **Setup:** Exported all required workbook sheets with `python scripts/build_data.py`; generated `data/track3.json`, `data/feedback_seed.json`, and `docs/NUMBERS.md` from detector output.

@@ -1,0 +1,295 @@
+{
+  "event": {
+    "id": "EVT004",
+    "name": "旅客沟通准备",
+    "time_text": "第6天下午15:00",
+    "airport": "南湾机场",
+    "weather_text": "预计傍晚有短时雷雨",
+    "ops_text": "风险正在上升但没有正式延误通知",
+    "importance": "中",
+    "notes": "旅客服务团队希望提前准备文字",
+    "known": "天气风险提示、历史波动",
+    "unknown": "正式航班状态、预计恢复时间、具体受影响旅客",
+    "status": "待处理",
+    "tag": "模拟",
+    "has_feedback": true,
+    "airport_en": "Nanwan Airport",
+    "importance_en": "Medium",
+    "is_custom": false
+  },
+  "detector": {
+    "airport": "南湾机场",
+    "airport_en": "Nanwan Airport",
+    "year": 2025,
+    "month": 12,
+    "month_label": "2025-12",
+    "tier": "中型机场",
+    "selection_reason": "Latest 2025 month used as context; event date was not supplied",
+    "comparisons": [
+      {
+        "key": "own",
+        "label": "Own 12-month average",
+        "value_pp": -0.13,
+        "threshold_pp": -5.0,
+        "signal": false,
+        "detail": "82.65% vs 82.78% = -0.13 pp"
+      },
+      {
+        "key": "peer",
+        "label": "Same-size peer average",
+        "value_pp": 0.3,
+        "threshold_pp": -5.0,
+        "signal": false,
+        "detail": "82.65% vs 82.35% = +0.30 pp"
+      },
+      {
+        "key": "yoy",
+        "label": "Same month previous year",
+        "value_pp": -2.71,
+        "threshold_pp": -5.0,
+        "signal": false,
+        "detail": "82.65% vs 85.36% = -2.71 pp"
+      }
+    ],
+    "signal_count": 0,
+    "verdict": "normal",
+    "confidence": 1.0,
+    "confidence_notes": [
+      "3 of 3 comparisons available",
+      "weather record present"
+    ],
+    "weather_missing": false,
+    "recent_anomalies": [],
+    "flagged_airport_months": []
+  },
+  "rules": [
+    {
+      "id": "RULE002",
+      "topic": "天气风险",
+      "topic_en": "Weather risk",
+      "trigger": "天气提示达到中高风险但尚无正式运行状态",
+      "checks": [
+        "核查机场保障",
+        "前序运行和后续航班集中程度"
+      ],
+      "action": "准备监测清单与沟通草案",
+      "action_en": "",
+      "escalate_to": "运行协调人员",
+      "escalate_to_en": "",
+      "manual_approval": true,
+      "forbidden": "不得声称航班一定延误",
+      "forbidden_en": "",
+      "source": "赛事规则"
+    },
+    {
+      "id": "RULE004",
+      "topic": "持续运行压力",
+      "topic_en": "Sustained operational pressure",
+      "trigger": "上一时段表现下降且后续任务仍集中",
+      "checks": [
+        "核查前序飞机",
+        "登机口和地面保障承压情况"
+      ],
+      "action": "按时间顺序列出核查事项",
+      "action_en": "",
+      "escalate_to": "运营负责人",
+      "escalate_to_en": "",
+      "manual_approval": true,
+      "forbidden": "不得调整真实航班计划",
+      "forbidden_en": "",
+      "source": "赛事规则"
+    },
+    {
+      "id": "RULE005",
+      "topic": "旅客沟通",
+      "topic_en": "Passenger communication",
+      "trigger": "存在风险但没有正式航班状态",
+      "checks": [
+        "核查可公开事实和更新时间"
+      ],
+      "action": "生成明确标注“草案”的提示",
+      "action_en": "",
+      "escalate_to": "旅客服务负责人",
+      "escalate_to_en": "",
+      "manual_approval": true,
+      "forbidden": "不得作为正式通知自动发送",
+      "forbidden_en": "",
+      "source": "赛事规则"
+    },
+    {
+      "id": "RULE006",
+      "topic": "人工否决",
+      "topic_en": "Human overrule",
+      "trigger": "专业人员拒绝建议",
+      "checks": [
+        "记录拒绝原因和补充事实"
+      ],
+      "action": "根据新事实调整建议并保留原记录",
+      "action_en": "",
+      "escalate_to": "模型负责人",
+      "escalate_to_en": "",
+      "manual_approval": true,
+      "forbidden": "不得覆盖或删除人工意见",
+      "forbidden_en": "",
+      "source": "赛事规则"
+    },
+    {
+      "id": "RULE008",
+      "topic": "高风险升级",
+      "topic_en": "High-risk escalation",
+      "trigger": "多个独立风险信号同时存在且影响范围可能扩大",
+      "checks": [
+        "核查信息是否至少来自两个可靠来源"
+      ],
+      "action": "建议升级并说明触发依据",
+      "action_en": "",
+      "escalate_to": "运营负责人",
+      "escalate_to_en": "",
+      "manual_approval": true,
+      "forbidden": "不得跳过人工审批",
+      "forbidden_en": "",
+      "source": "赛事规则"
+    },
+    {
+      "id": "RULE009",
+      "topic": "引用要求",
+      "topic_en": "Citations",
+      "trigger": "输出包含数字或正式状态",
+      "checks": [
+        "检查来源编号和时间范围"
+      ],
+      "action": "在输出中列出来源",
+      "action_en": "",
+      "escalate_to": "输出复核人",
+      "escalate_to_en": "",
+      "manual_approval": true,
+      "forbidden": "不得无来源生成事实",
+      "forbidden_en": "",
+      "source": "赛事规则"
+    },
+    {
+      "id": "RULE010",
+      "topic": "模拟标识",
+      "topic_en": "Simulation label",
+      "trigger": "使用模拟事件或模拟数值",
+      "checks": [
+        "检查页面和输出标识"
+      ],
+      "action": "统一标注“模拟”",
+      "action_en": "",
+      "escalate_to": "项目负责人",
+      "escalate_to_en": "",
+      "manual_approval": false,
+      "forbidden": "不得称为真实事件",
+      "forbidden_en": "",
+      "source": "赛事规则"
+    }
+  ],
+  "facts": {
+    "facts": [
+      {
+        "id": "F01",
+        "text": "Nanwan Airport 2025-12: completion 82.65% versus own average 82.78% (-0.13 pp).",
+        "source": "SIM-BASE",
+        "value": 82.65,
+        "unit": "%"
+      },
+      {
+        "id": "F02",
+        "text": "Nanwan Airport is a 中型机场 airport; airline importance Medium.",
+        "source": "SIM-SCALE"
+      },
+      {
+        "id": "F03",
+        "text": "Event weather description: 预计傍晚有短时雷雨. Forecast is not proof of per-flight impact.",
+        "source": "EVT004"
+      }
+    ],
+    "numbers": [
+      {
+        "value": 82.65,
+        "display": "82.65%",
+        "source": "SIM-BASE",
+        "fact_id": "F01"
+      },
+      {
+        "value": 82.78,
+        "display": "82.78%",
+        "source": "SIM-BASE",
+        "fact_id": "F01"
+      },
+      {
+        "value": -0.13,
+        "display": "-0.13 pp",
+        "source": "SIM-BASE",
+        "fact_id": "F01"
+      }
+    ],
+    "assumptions": [
+      "[ASSUMPTION] Monthly patterns may indicate risk but do not prove a current flight impact"
+    ],
+    "unknowns": [
+      "正式航班状态",
+      "预计恢复时间",
+      "具体受影响旅客"
+    ],
+    "missing_data": [
+      "Monthly baselines cannot establish per-flight causation or current aircraft, crew, and gate status"
+    ],
+    "forbidden_actions": [
+      "Cancel, release, dispatch, maintain, or compensate flights without human approval [RULE007]",
+      "Publish a passenger notice without human review [RULE005]"
+    ],
+    "sources": [
+      "EVT004",
+      "RULE002",
+      "RULE004",
+      "RULE005",
+      "RULE006",
+      "RULE008",
+      "RULE009",
+      "RULE010",
+      "SIM-BASE",
+      "SIM-SCALE"
+    ],
+    "risk": {
+      "level": "Low",
+      "level_zh": "低",
+      "score": 3.0,
+      "reasons": [
+        {
+          "text": "0 detector signals for 2025-12",
+          "source": "SIM-BASE"
+        },
+        {
+          "text": "Weather risk is described in the event, not proven flight impact",
+          "source": "EVT004"
+        },
+        {
+          "text": "Operational pressure is described in the event",
+          "source": "EVT004"
+        }
+      ],
+      "can_tell": true,
+      "can_tell_zh": "可判断"
+    },
+    "pii_redacted": false,
+    "feedback_matches": [
+      {
+        "event_id": "EVT004",
+        "rec_id": "REC002",
+        "result": "Edit",
+        "reason": "原草案容易让旅客理解为已经延误",
+        "final_action": "将文字改为风险提示，强调以正式通知为准",
+        "outcome": "模拟：避免提前发布确定性信息",
+        "improvement": "增加“风险提示”和“正式状态”区分测试",
+        "reviewer": "赛事导师",
+        "date": "第6天",
+        "source": "organizer_seed"
+      }
+    ],
+    "conflict": false,
+    "sim_label": "模拟 / SIMULATED",
+    "first_action": "confirm ground-support capacity and weather update time with airport coordination"
+  }
+}
