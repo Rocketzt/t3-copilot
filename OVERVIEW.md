@@ -12,7 +12,7 @@ The team is leaning to Track 3 (flight-disruption AI assistant). A teammate's de
 
 ## Status
 - Team: 3 people. The track and roles are not yet formally recorded.
-- Local git repo created (branch `main`); no GitHub remote yet. No code yet.
+- Public GitHub repo: https://github.com/Rocketzt/t3-copilot (branch `main`). Teammates not yet invited. No code yet.
 
 ## Results so far
 None.

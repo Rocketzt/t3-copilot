@@ -2,6 +2,15 @@
 
 Newest first. Written the same day the work happens.
 
+## 2026-10-23 — Public GitHub repo created and main pushed
+
+**Setup:** Scanned the committed files for keys, tokens, the campus code, the join code, G-numbers, emails and phone
+numbers. Then ran `gh repo create Rocketzt/t3-copilot --public --source . --push`.
+**Result:** https://github.com/Rocketzt/t3-copilot is PUBLIC with default branch `main`, and the 9 committed files
+are visible through the GitHub API. The scan found only the deliberately fake test number in PLAN.md's adversarial
+test.
+**Anomalies:** None.
+
 ## 2026-10-23 — PLAN.md checked against the workbook: numbers correct except the missing-weather rows; local git repo created
 
 **Setup:** A teammate added `PLAN.md` (Track 3 build plan). Recomputed its Appendix A from `Track 3 Data.xlsx` with a

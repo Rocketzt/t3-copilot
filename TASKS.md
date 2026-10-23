@@ -8,8 +8,9 @@ Status: TODO / DOING / BLOCKED / PARKED / DONE. Deadline: **2026-10-24 23:59**.
 - [ ] **Register** — each member registers on study.standardcas.org with their real name. `TODO` owner: each member
 - [ ] **Create project and join** — the leader creates the project and shares the join code privately; the others join.
       `TODO` owner: leader + members
-- [ ] **Public GitHub repo** — local repo and `.gitignore` done 2026-10-23. Still to do: create the GitHub repo, add the
-      remote, push, add a README, and invite the two teammates. `TODO` owner: TBD
+- [ ] **Invite teammates to the repo** — add the two teammates as collaborators on
+      https://github.com/Rocketzt/t3-copilot so each can push from their own account. `TODO` owner: Rocketzt
+- [ ] **README** — what the project is, how to run it, and the simulated-data note. `TODO` owner: TBD
 - [ ] **Fix PLAN.md missing-weather rows** — its Appendix A lists the wrong 4 rows (see LOG.md 2026-10-23); the plan's
       author should correct it. `TODO` owner: PLAN.md author
 - [ ] **AI-use log** — keep notes on AI use during the build, for the AI statement. `TODO` owner: TBD
@@ -23,5 +24,6 @@ Status: TODO / DOING / BLOCKED / PARKED / DONE. Deadline: **2026-10-24 23:59**.
 
 ## Done
 - [x] **Review organizer materials** — `DONE 2026-10-23` (LOG.md): all files read; deadline is 2026-10-24 23:59.
+- [x] **Public GitHub repo** — `DONE 2026-10-23` (LOG.md): https://github.com/Rocketzt/t3-copilot, public, `main` pushed.
 - [x] **Review PLAN.md** — `DONE 2026-10-23` (LOG.md): numbers verified; the missing-weather rows are wrong.
 - [x] **Set up project records** — `DONE 2026-10-23` (OVERVIEW/LOG/TASKS/DECISIONS.md).
