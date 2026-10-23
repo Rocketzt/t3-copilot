@@ -1,0 +1,35 @@
+[
+  {
+    "event_id": "EVT001",
+    "rec_id": "REC001",
+    "result": "接受",
+    "reason": null,
+    "final_action": "核查机场保障能力并保留旅客提示草案",
+    "outcome": "模拟：获得更新后风险仍为中等",
+    "improvement": "保持先核查后升级的顺序",
+    "reviewer": "赛事导师",
+    "date": "第4天"
+  },
+  {
+    "event_id": "EVT004",
+    "rec_id": "REC002",
+    "result": "修改",
+    "reason": "原草案容易让旅客理解为已经延误",
+    "final_action": "将文字改为风险提示，强调以正式通知为准",
+    "outcome": "模拟：避免提前发布确定性信息",
+    "improvement": "增加“风险提示”和“正式状态”区分测试",
+    "reviewer": "赛事导师",
+    "date": "第6天"
+  },
+  {
+    "event_id": "EVT005",
+    "rec_id": "REC003",
+    "result": "拒绝",
+    "reason": "运营人员补充现场资源充足且风速尚在可控范围",
+    "final_action": "不升级为高风险，改为持续监测",
+    "outcome": "模拟：未触发升级条件",
+    "improvement": "把现场资源和人工判断依据加入输入字段",
+    "reviewer": "赛事导师",
+    "date": "第6天"
+  }
+]

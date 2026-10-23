@@ -16,6 +16,13 @@ Entry format (copy for each new entry):
 
 ---
 
+## 2026-10-24 00:06 — Phase 1 detector matches workbook checks
+
+**Setup:** Exported all required workbook sheets with `python scripts/build_data.py`; generated `data/track3.json`, `data/feedback_seed.json`, and `docs/NUMBERS.md` from detector output.
+**Result:** `python -m unittest tests.test_detector -v` ran 4 tests: OK. Verified 192 airport-months, 12 own-history flags, 13 any-signal flags, signal counts 179/11/1/1, and the four missing-weather rows.
+**Anomalies:** None.
+**AI:** Codex implemented the export, detector, generated numbers, and tests; kept workbook values as the source of numeric claims.
+
 ## 2026-10-23 23:52 — Setup completed on jason
 
 **Setup:** Merged origin/main at f70aecf. Python 3.12.8 in .venv; installed requirements.txt with openpyxl 3.1.5, pandas 3.1.0, and Pillow 13.0.0. Confirmed openpyxl and pandas import. All required source documents and workbook are present.
