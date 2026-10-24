@@ -103,36 +103,40 @@
     <div class="status-line" id="assistant-status" role="status"></div>
 
     <div id="result" hidden>
-      <div class="two-col">
+      <div class="result-summary">
         <div class="card risk-card" id="risk-card"></div>
-        <div class="card" id="detector-card"></div>
       </div>
-      <div class="card" id="facts-card"></div>
-
-      <div class="card">
-        <div class="card-head">
-          <h2 data-i18n="assistant.fieldsTitle">17-field advice</h2>
-          <span class="hint" data-i18n="assistant.fieldsHint">Every FACT carries a source ID; assumptions and unknowns are labelled.</span>
+      <div class="result-columns">
+        <div class="result-evidence">
+          <div class="card" id="detector-card"></div>
+          <div class="card" id="facts-card"></div>
         </div>
-        <div class="fields-grid" id="fields-grid"></div>
+        <div class="result-guidance">
+          <div class="card" id="checker-card"></div>
+          <div class="card advice-card">
+            <div class="card-head">
+              <h2 data-i18n="assistant.fieldsTitle">17-field advice</h2>
+              <span class="hint" data-i18n="assistant.fieldsHint">Every FACT carries a source ID; assumptions and unknowns are labelled.</span>
+            </div>
+            <div class="fields-grid" id="fields-grid"></div>
+          </div>
+
+          <div class="card messages-card">
+            <div class="card-head">
+              <h2 data-i18n="assistant.msgTitle">3 audience drafts</h2>
+              <span class="hint" id="msg-lang-hint" data-i18n="assistant.msgHint">Drafts only — a person reviews and sends through official channels.</span>
+            </div>
+            <div class="msg-tabs" id="msg-tabs">
+              <button class="msg-tab active" data-msg="ops" data-i18n="assistant.msgOps">Operations</button>
+              <button class="msg-tab" data-msg="airport" data-i18n="assistant.msgAirport">Airport coordination</button>
+              <button class="msg-tab" data-msg="passengers" data-i18n="assistant.msgPassengers">Passengers</button>
+              <button class="btn ghost small" id="toggle-original" hidden data-i18n="common.showOriginal">Show original</button>
+              <button class="btn ghost small" id="copy-msg" data-i18n="common.copy">Copy</button>
+            </div>
+            <pre class="message-box" id="msg-body"></pre>
+          </div>
+        </div>
       </div>
-
-      <div class="card">
-        <div class="card-head">
-          <h2 data-i18n="assistant.msgTitle">3 audience drafts</h2>
-          <span class="hint" id="msg-lang-hint" data-i18n="assistant.msgHint">Drafts only — a person reviews and sends through official channels.</span>
-        </div>
-        <div class="msg-tabs" id="msg-tabs">
-          <button class="msg-tab active" data-msg="ops" data-i18n="assistant.msgOps">Operations</button>
-          <button class="msg-tab" data-msg="airport" data-i18n="assistant.msgAirport">Airport coordination</button>
-          <button class="msg-tab" data-msg="passengers" data-i18n="assistant.msgPassengers">Passengers</button>
-          <button class="btn ghost small" id="toggle-original" hidden data-i18n="common.showOriginal">Show original</button>
-          <button class="btn ghost small" id="copy-msg" data-i18n="common.copy">Copy</button>
-        </div>
-        <pre class="message-box" id="msg-body"></pre>
-      </div>
-
-      <div class="card" id="checker-card"></div>
 
       <div class="card" id="feedback-card">
         <div class="card-head">

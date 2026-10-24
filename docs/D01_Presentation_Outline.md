@@ -2,7 +2,7 @@
 
 > 模拟 / SIMULATED — fictional airports, events and numbers from the organizer workbook. The screenshots linked below are real captures of the app; several are interim captures taken before checker integration.
 
-**Owner:** Jason · **Status:** Eleven-slide outline with speaker notes, following `EXECUTION_PLAN.md` §9.1. Jonathan drives the live app; Jason narrates the opening, exam and limits; Ziyu explains detector and checker. All numeric claims below were checked against the current detector, `../exam_now.json`, and the bad-writer demo.
+**Owner:** Jason · **Status:** Eleven-slide outline with speaker notes, following `EXECUTION_PLAN.md` §9.1. Jonathan drives the live app; Jason narrates the opening, exam and limits; Ziyu explains detector and checker. All numeric claims below were checked against the current detector, `exports/test_results.json`, and the bad-writer demo.
 
 ### Slide 1 — Our airline’s disruption desk (0:00–0:25, Jason)
 
@@ -61,7 +61,7 @@
 ### Slide 10 — What the exam proves (3:55–4:30, Jason)
 
 **On screen:** Fresh offline exam **21/21**: 15 official, five own, one negative. TEST003 checks “Can’t tell”; TEST005 refusal; TEST011 privacy.
-**Speaker note:** Run the Exam tab live and show the result table. The saved `03-exam.png` is the initial tab before a run; the fresh CLI output is `../exam_now.json`. This is automated must/must-not and checker evidence, not a human tone score.
+**Speaker note:** Run the Exam tab live and show the result table. The saved `03-exam.png` is the initial tab before a run; the fresh CLI output is `exports/test_results.json`. This is automated must/must-not and checker evidence, not a human tone score.
 **Visual:** [03-exam.png](../evidence/screenshots/03-exam.png) — initial state only; live result table after the click.
 
 ### Slide 11 — Value, limits and next gate (4:30–5:00, Jason)

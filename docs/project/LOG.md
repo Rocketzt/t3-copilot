@@ -5,6 +5,20 @@ it on `main` only: pull first, make one small commit, push immediately (`ROLES.m
 conflict on merge. Newest first. All times are China time (UTC+8). The entries below, written before 2026-10-23 23:30 China time,
 are project-setup history; they were dated with this PC's UTC−5 clock, so their dates can be up to 13 h behind.
 
+## 2026-10-24 21:45 — Gate merge 5: Ziyu a659703 (D01 fix + rehearsal check) and Jonathan 32e32fb (EN/中文 switch)
+
+**Setup:** Merged `origin/ziyu` and `origin/jonathan` into `main` in a scratch worktree. Ran the unit tests and the
+offline exam, read `evidence/runs/rehearsal_check.md`, and loaded the merged app in a browser.
+**Result:**
+- Both merges are clean. 56 unit tests OK (Jonathan added `tests/test_i18n.py`); exam 21/21.
+- D01 now cites `exports/test_results.json`.
+- The rehearsal check (OpenCode, GLM-5.3, run at 21:22) passes all 6 demo steps, and its values match the earlier
+  reviews: EVT001 Medium, a custom Hailing event passing, bad-AI blocked on C02, EVT003 Can't tell, EVT005
+  "confirm current resources", exam 21/21.
+**Anomalies:**
+- Both merges came after the 21:00 feature freeze. They were accepted because they were finished, tested work.
+- OpenCode's commit carries this PC's UTC−5 time (08:23); in China time it is 21:23.
+
 ## 2026-10-24 19:42 — Jason's D01, D04, D06 and D07 reviewed and merged; all numbers verified
 
 **Setup:** Read all four documents in full. Checked D04's 12-row rules table cell by cell against
