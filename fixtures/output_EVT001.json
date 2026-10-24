@@ -1,0 +1,131 @@
+{
+ "event_id": "EVT001",
+ "generated_at": "2026-10-24 00:36",
+ "mode": "offline",
+ "fields": [
+  {
+   "key": "f01",
+   "label_en": "Event ID",
+   "label_zh": "事件编号",
+   "value": "EVT001"
+  },
+  {
+   "key": "f02",
+   "label_en": "Generated At",
+   "label_zh": "生成时间",
+   "value": "2026-10-24 00:36"
+  },
+  {
+   "key": "f03",
+   "label_en": "Risk Level",
+   "label_zh": "风险等级",
+   "value": "Medium (中)"
+  },
+  {
+   "key": "f04",
+   "label_en": "Airport & Time Window",
+   "label_zh": "适用机场与时间",
+   "value": "Hailing International Airport - Day 4, 14:00 (afternoon)"
+  },
+  {
+   "key": "f05",
+   "label_en": "Evidence",
+   "label_zh": "判断依据",
+   "value": "[FACT: SIM-SCALE] Hailing International Airport is a large airport with 4577 ten-thousand annual passengers (45.77 million) and 70926 aircraft movements in 2025; airline business importance: High.\n[FACT: SIM-BASE] 海陵国际机场 2025-08: completion 73.16% vs own 12-month average 84.15% = -10.99 pp.\n[FACT: SIM-BASE] Same-size peer comparison 2025-08: 73.16% vs same-class average 76.82% = -3.66 pp.\n[FACT: SIM-BASE] Same month last year: 2025-08 completion 73.16% vs the same month in 2024 (82.30%) = -9.14 pp.\n[FACT: SIM-BASE] Peak anomaly for 海陵国际机场 in 2025: 2025-07 was -15.62 pp below its own 12-month average (69.49% vs 85.11%).\n[FACT: DETECTOR] Anomaly detector: 2 of 3 comparisons signal a drop of 5.00 pp or more; verdict: unusual; confidence 1.00."
+  },
+  {
+   "key": "f06",
+   "label_en": "Possible Impact",
+   "label_zh": "可能影响",
+   "value": "Ground support and downstream rotations may come under pressure, but no formal delay status has been issued. [ASSUMPTION] Impact is a risk statement, not a confirmed operational status."
+  },
+  {
+   "key": "f07",
+   "label_en": "Assumptions to Verify",
+   "label_zh": "待核查假设",
+   "value": "[ASSUMPTION] Weather conditions reduce ground-handling and apron capacity; the data cannot prove that the weather caused this event (assumption to verify).\n[ASSUMPTION] If the weather window extends, evening rotations and the next day's first wave may be affected.\n[ASSUMPTION] The airport's own-history flag is compared against network seasonality; a summer dip alone is not treated as abnormal."
+  },
+  {
+   "key": "f08",
+   "label_en": "Information Gaps",
+   "label_zh": "信息缺口",
+   "value": "[UNKNOWN] Flight-by-flight schedule; aircraft rotations; crew and ground-support status.\n[UNKNOWN] Detailed flight-level information was not part of the input.\n[UNKNOWN] The organizer data is monthly and airport-level: it cannot identify which individual flights or crews are affected."
+  },
+  {
+   "key": "f09",
+   "label_en": "First Action",
+   "label_zh": "第一步行动",
+   "value": "Ask the airport coordination team to confirm the latest ground-support capacity and the weather update time."
+  },
+  {
+   "key": "f10",
+   "label_en": "Follow-up Actions",
+   "label_zh": "后续行动",
+   "value": "1) Check how concentrated the afternoon and evening flights are.\n2) Prepare the internal monitoring checklist and the passenger draft.\n3) Record the decision and reason in the feedback log.\n4) Previous staff decision (EVT001, REC001): 接受 - no reason recorded; apply it to the first action."
+  },
+  {
+   "key": "f11",
+   "label_en": "Escalation Conditions",
+   "label_zh": "升级条件",
+   "value": "If ground-support capacity falls and a formal operating irregularity is confirmed, escalate to the Operations Lead."
+  },
+  {
+   "key": "f12",
+   "label_en": "Decisions Requiring a Human",
+   "label_zh": "必须人工决定事项",
+   "value": "[HUMAN] Cancellation, release, dispatch, maintenance and compensation decisions, and the formal passenger notification, require the responsible qualified professional (RULE007)."
+  },
+  {
+   "key": "f13",
+   "label_en": "Internal Ops Note",
+   "label_zh": "内部运营提示",
+   "value": "Simulated operations note: Hailing faces heavy rain and gusts over the next six hours with a concentrated afternoon peak. Check ground support first; no formal delay conclusion."
+  },
+  {
+   "key": "f14",
+   "label_en": "Airport Coordination Message",
+   "label_zh": "机场协调信息",
+   "value": "Simulated coordination request: please confirm the latest weather update time, ground-support capacity and the peak workload window for Hailing."
+  },
+  {
+   "key": "f15",
+   "label_en": "Passenger Message Draft",
+   "label_zh": "旅客信息草案",
+   "value": "Simulated draft passenger message: Hailing may experience possible delays over the next six hours. Flight status has not been confirmed. Please check official airline and airport channels for updates."
+  },
+  {
+   "key": "f16",
+   "label_en": "Cited Sources",
+   "label_zh": "引用来源",
+   "value": "SIM-BASE; SIM-SCALE; SIM-WEATHER; DETECTOR; FEEDBACK-HISTORY; EVT001; RULE002; RULE003; RULE005; RULE007; RULE008; RULE009; RULE010"
+  },
+  {
+   "key": "f17",
+   "label_en": "Output Status",
+   "label_zh": "输出状态",
+   "value": "Pending human review 待复核 - 模拟 / SIMULATED"
+  }
+ ],
+ "sources": [
+  "SIM-BASE",
+  "SIM-SCALE",
+  "SIM-WEATHER",
+  "DETECTOR",
+  "FEEDBACK-HISTORY",
+  "EVT001",
+  "RULE002",
+  "RULE003",
+  "RULE005",
+  "RULE007",
+  "RULE008",
+  "RULE009",
+  "RULE010"
+ ],
+ "status": "Pending human review 待复核 - 模拟 / SIMULATED",
+ "messages": {
+  "ops": "Simulated operations note: Hailing faces heavy rain and gusts over the next six hours with a concentrated afternoon peak. Check ground support first; no formal delay conclusion.",
+  "airport": "Simulated coordination request: please confirm the latest weather update time, ground-support capacity and the peak workload window for Hailing.",
+  "passengers": "Simulated draft passenger message: Hailing may experience possible delays over the next six hours. Flight status has not been confirmed. Please check official airline and airport channels for updates."
+ },
+ "risk_level": "Medium (中)"
+}
