@@ -16,6 +16,13 @@ Entry format (copy for each new entry):
 
 ---
 
+## 2026-10-24 19:28 — D01, D04, D06 and D07 completed from merged evidence
+
+**Setup:** Confirmed no tracked changes, fetched origin, switched to `jason`, and fast-forwarded to `origin/main` at `a0806ec`. Ran `.venv\Scripts\python.exe -m unittest discover -s tests` and `.venv\Scripts\python.exe tests/run_tests.py --writer-mode offline --out ../exam_now.json`; read `docs/NUMBERS.md`, the saved exam/D03, team log, code, organizer rule records and screenshot inventory. Preserved D04 sections 1–2 byte for byte; completed its remaining sections and wrote D06, D07 and D01 in separate commits.
+**Result:** 41 unit tests: OK; offline exam: 21/21. The current bad-writer demo returned `blocked: true` with C02 naming the fabricated 20 in f05. D04 has 12 source rules, 13 checker gates and 17 bilingual fields. D01 outlines 11 slides in five minutes using real screenshot filenames; D06 and D07 state controls and proposed gates.
+**Anomalies:** Current screenshot `03-exam.png` shows the exam tab before a run, and the result screenshots were captured before checker integration. D01 uses live clicks for those later states and does not claim the interim images prove them. No real airline error rate, human tone score or staff sign-off is available. Pre-existing untracked files were untouched.
+**AI:** Codex drafted D01/D04/D06/D07 from the verified code, organizer data, exam and screenshot inventory; kept Ziyu's checked D04 sections unchanged, corrected the AI usage timestamps, and marked unsupported deployment claims as future gates.
+
 ## 2026-10-24 16:56 — Integrated exam passes; submission evidence updated
 
 **Setup:** Confirmed no tracked changes, fetched origin, switched to `jason`, and fast-forwarded to `origin/main` at `07c50a3`. Ran the offline exam into `exports/test_results.json`, filled D03 from that file, and compared every number in `docs/NUMBERS.md` with `engine.detector` output. Added three simulated Accept/Edit/Reject records through `append_record()` in an isolated `tests/` store, re-ran EVT005 against it, and prepared D05, AI usage, and the submission draft.

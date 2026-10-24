@@ -1,9 +1,10 @@
 # AI usage log
 
-Compiled from every **AI:** entry in `docs/project/log/jason.md`, `jonathan.md`, and `ziyu.md` through the integrated exam run. Entries below preserve each contributor’s wording; the logs contain the verification details. Raw outputs are kept under `evidence/ai/` where available.
+Compiled from every **AI:** entry in `docs/project/log/jason.md`, `jonathan.md`, and `ziyu.md` through this document run. Entries preserve each contributor’s AI description; the logs contain the verification details. Raw outputs are kept under `evidence/ai/` where available. Ziyu’s three 03:xx log headings used a UTC−5 clock; the times below are corrected to China time (UTC+8), as recorded in `docs/project/LOG.md`.
 
 ## Jason
 
+- **2026-10-24 19:28 — D01, D04, D06 and D07 completed from merged evidence:** Codex drafted D01/D04/D06/D07 from the verified code, organizer data, exam and screenshot inventory; kept Ziyu's checked D04 sections unchanged, corrected the AI usage timestamps, and marked unsupported deployment claims as future gates.
 - **2026-10-24 16:56 — Integrated exam passes; submission evidence updated:** Codex populated D03 from the runner JSON, checked detector numbers, entered simulated feedback through the append-only helper, compared real EVT005 outputs, compiled log evidence, and drafted the submission text; all reported scores were taken from command output.
 - **2026-10-24 16:42 — Network priority view ranks eight airports from detector context:** Codex implemented the deterministic view, checked its output against detector rows, and wrote the regression tests.
 - **2026-10-24 16:31 — Hostile operational request is neutralized in the fact sheet:** Codex updated fact presentation, added the regression test, checked the fixture output, and recorded the actual test and exam results.
@@ -29,9 +30,9 @@ Compiled from every **AI:** entry in `docs/project/log/jason.md`, `jonathan.md`,
 
 ## Ziyu
 
-- **2026-10-24 03:36 — C02 false positive fixed: letters+digits identifiers no longer read as numbers:** OpenCode (GLM-5.3) applied the general identifier mask and the two new test cases as specified; no other check was loosened.
-- **2026-10-24 03:17 — C05 false positive fixed: "official airline and airport channels" now accepted:** OpenCode (GLM-5.3) applied the one-pattern fix and the new test as specified; no other checks were loosened.
-- **2026-10-24 03:05 — Checker built: all 13 rules C01-C13 block on cue and pass on a good output:** OpenCode (GLM-5.3) implemented the checker and tests unattended from the ziyu.md prompt; I reviewed the spec compliance (mask list, tolerance, "20 points" negative case) and kept the good/bad inline outputs number-clean against both fact sheets.
+- **2026-10-24 16:36 — C02 false positive fixed: letters+digits identifiers no longer read as numbers:** OpenCode (GLM-5.3) applied the general identifier mask and the two new test cases as specified; no other check was loosened.
+- **2026-10-24 16:17 — C05 false positive fixed: "official airline and airport channels" now accepted:** OpenCode (GLM-5.3) applied the one-pattern fix and the new test as specified; no other checks were loosened.
+- **2026-10-24 16:05 — Checker built: all 13 rules C01-C13 block on cue and pass on a good output:** OpenCode (GLM-5.3) implemented the checker and tests unattended from the ziyu.md prompt; I reviewed the spec compliance (mask list, tolerance, "20 points" negative case) and kept the good/bad inline outputs number-clean against both fact sheets.
 
 ## Earlier setup provenance
 
