@@ -131,3 +131,24 @@ instead.
 - The checker is not merged on this branch, so checker-gated claims (exam pass rate, bad-AI block) are pending.
 - No API keys are committed (`.env` is git-ignored). The hostile-input test cases use an invented name and phone
   number as test data; the writer's output redacts them.
+
+## 7. Language switch (EN / 中文)
+
+The UI is bilingual. `app/static/i18n.js` (loaded before `app.js`) holds the UI strings, the curated zh↔en tables and
+the translation rules; `app/server.py` serves it through the static whitelist. Switching needs no reload and is
+persisted in `localStorage`; `?lang=zh` / `?lang=en` deep-links a language (used by the screenshots below).
+
+- **Always bilingual:** airport names, verdicts, tiers, importance and role names are shown in both languages at
+  once (`Hailing International Airport · 海陵国际机场`), in every tab and inside generated facts/messages.
+- **Translated and marked:** text that exists in only one language is translated for display. A superscript **译**
+  badge marks it; hover it (or focus it — the span is keyboard reachable) to see the original, which is also in the
+  `aria-label`. A **≈** inside the badge means the translation came from a rule/glossary; without ≈ it came from the
+  organizer's own bilingual data or the curated dictionary.
+- **Display only:** the switch never changes request payloads, `/api/analyze` input, the feedback JSONL, the checker
+  or the exam. Numbers, IDs (`EVT001`, `RULE003`, `f04`) and source codes are never translated, and
+  `模拟 / SIMULATED` stays verbatim.
+- **Verify it:** `python app/server.py` → `http://127.0.0.1:8803/?lang=zh`, toggle with **EN / 中文** in the header;
+  `python -m unittest discover -s tests` runs `tests/test_i18n.py` (UI key parity, bilingual pair integrity, static
+  whitelist). Screenshots: `evidence/screenshots/lang-assistant-en.png`, `lang-assistant-zh.png`,
+  `lang-detector-zh.png`, `lang-exam-zh.png`, `lang-about-zh.png`.
+

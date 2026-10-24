@@ -16,6 +16,31 @@ Entry format (copy for each new entry):
 
 ---
 
+## 2026-10-24 21:10 — Language switch (EN / 中文): bilingual entities and 译-marked translations
+
+**Setup:** Followed `docs/planning/LANGUAGE_SWITCH_PLAN.md`, written from a measured inventory of `index.html`,
+`app.js` and `server.py`. Added `app/static/i18n.js` (229 UI keys per language, curated zh↔en tables, regex pattern
+rules, phrase glossary, `t`/`pair`/`bi`/`tr`/`renderTr`); rewrote `index.html` with `data-i18n*` attributes and an
+EN/中文 toggle; rewrote the renderers in `app.js` to use those helpers and re-render from cached state on
+`t3:langchange`; added CSS for the toggle, the 译 badge and bilingual pairs; one whitelist line in `app/server.py`
+(`"/i18n.js": "i18n.js"`); new `tests/test_i18n.py`. Checked with `node --check`, the unit suite, the exam, headless
+Chrome screenshots of `?lang=en|zh`, and a Chrome DevTools Protocol script that clicks the toggle, analyses EVT001,
+runs the exam and switches back.
+**Result:** **56/56 unit tests** (41 existing + 15 new), exam **21/21** unchanged, **0** browser exceptions. The toggle
+switches without reload, persists (`localStorage`), honours `?lang=zh` and updates `<html lang>`/`<title>`. Airport
+names are bilingual everywhere (event cards, selects, tables, SVG map labels, facts, messages). Chinese-only source
+text in EN mode and English-only generated text in ZH mode is translated and marked with a **译** badge (≈ for
+rule/glossary quality) whose `title`/`aria-label` carries the original; message drafts add a translated badge and a
+"Show original" toggle; About gains a Translations note explaining the two quality tiers. Evidence:
+`evidence/screenshots/lang-assistant-en.png`, `lang-assistant-zh.png`, `lang-detector-zh.png`, `lang-exam-zh.png`,
+`lang-about-zh.png`.
+**Anomalies:** The first glossary fallback mangled English sentences ("Will 航班s definitely be 延误ed?") — removed
+for EN→ZH; unmatched English now stays as the original rather than being word-swapped. `D02_Prototype.md` does not
+exist in this repo, so the language-switch notes went into `D08_Reproducibility.md` §7. Native `title` tooltips cannot
+be captured headlessly, so hover evidence is the DOM check (63 translated spans with 原文 titles on EVT001 in ZH).
+Port 8803 was held by an older instance; testing used 8810 and the server was stopped afterwards.
+**AI:** DeepSeek Harness — wrote `i18n.js`, rewrote the UI, added the tests, ran the browser checks and this entry.
+
 ## 2026-10-24 17:05 — Network priority map added; `/api/network` self-tested with a real browser
 
 **Setup:** First committed the pending working-tree polish (`b4ba664`: README, UI tag/health polish, evidence
