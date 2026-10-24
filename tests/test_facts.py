@@ -11,6 +11,7 @@ from engine.detector import compute_all
 from engine.facts import build_factsheet, redact_text
 from engine.feedback import append_record, load_records, match
 from engine.rules import evaluate
+from tests.own_events import OWN_EVENTS
 
 
 class FactSheetTests(unittest.TestCase):
@@ -82,6 +83,49 @@ class FactSheetTests(unittest.TestCase):
         old = build_factsheet("EVT001", self.data, 2024, 7)
         selected = next(f for f in old["facts"]["facts"] if f["source"] == "SIM-BASE" and "2024-07" in f["text"])
         self.assertNotIn("YoY gap", selected["text"])
+
+    def test_signal_count_is_whitelisted_for_every_quoted_month(self):
+        lookup = {(r["airport"], r["month_label"]): r for r in compute_all(self.data)}
+        for event_id in ("EVT001", "EVT002", "EVT003", "EVT004", "EVT005"):
+            sheet = build_factsheet(event_id, self.data)
+            airport = sheet["event"]["airport"]
+            for fact in sheet["facts"]["facts"]:
+                if fact["source"] != "SIM-BASE":
+                    continue
+                label = re.search(r"20\d{2}-\d{2}", fact["text"]).group(0)
+                count = lookup[(airport, label)]["signal_count"]
+                self.assertIn(f"{count} detector signals", fact["text"])
+                self.assertIn((count, "signals", "SIM-BASE"),
+                              {(n["value"], n["unit"], n["source"]) for n in sheet["facts"]["numbers"]
+                               if n["fact_id"] == fact["id"]})
+        old = build_factsheet("EVT001", self.data, 2024, 7)
+        old_fact = next(f for f in old["facts"]["facts"] if f["source"] == "SIM-BASE" and "2024-07" in f["text"])
+        self.assertIn("0 detector signals", old_fact["text"])
+        self.assertTrue(any(n["value"] == 0 and n["unit"] == "signals" and n["fact_id"] == old_fact["id"]
+                            for n in old["facts"]["numbers"]))
+
+    def test_arabic_digits_in_each_event_text_field_are_whitelisted(self):
+        event = {"id": "CUSTOM", "airport": "海陵国际机场", "importance": "中", "time_text": "99 hours",
+                 "weather_text": "rain for 6 hours", "ops_text": "2 gates", "known": "3.5 crews",
+                 "unknown": "4 aircraft", "notes": "5 updates"}
+        sheet = build_factsheet(event, self.data)
+        event_facts = [f for f in sheet["facts"]["facts"] if f["source"] == "CUSTOM"]
+        event_numbers = [n for n in sheet["facts"]["numbers"] if n["source"] == "CUSTOM"]
+        self.assertEqual({n["value"] for n in event_numbers}, {2, 3.5, 4, 5, 6})
+        self.assertNotIn(99, {n["value"] for n in event_numbers})
+        self.assertTrue(all(any(f["id"] == n["fact_id"] and str(n["display"]) in f["text"]
+                                for f in event_facts) for n in event_numbers))
+
+    def test_hostile_own005_decision_request_is_not_quoted(self):
+        own005 = next(e for e in OWN_EVENTS if e["id"] == "OWN005")
+        sheet = build_factsheet(own005["custom"], self.data)
+        payload = json.dumps(sheet, ensure_ascii=False).lower()
+        self.assertNotIn("weather caused it", payload)
+        self.assertNotIn("cancel flight", payload)
+        self.assertNotIn("张伟", payload)
+        self.assertNotIn("13812345678", payload)
+        self.assertIn("the event text requests an operational decision", payload)
+        self.assertIn("RULE007", {rule["id"] for rule in sheet["rules"]})
 
     def test_selected_month_weather_numbers(self):
         sheet = build_factsheet("EVT001", self.data)

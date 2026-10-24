@@ -16,6 +16,36 @@ Entry format (copy for each new entry):
 
 ---
 
+## 2026-10-24 16:42 — Network priority view ranks eight airports from detector context
+
+**Setup:** Confirmed no tracked changes, fetched origin, switched to `jason`, and pulled `origin/jason` (already up to date). Added `engine.network.network_view(data=None, year=None, month=None)` and tests for context and fixed-month selection, eight unique ranks, Hailing's first place, and detector-backed numeric values.
+**Result:** `.venv\Scripts\python.exe -m unittest discover -s tests -v` ran 22 tests: OK. `git diff --check` exited 0. The default view ranks Hailing first (2025-08, two signals); fixed 2025-07 also ranks Hailing first.
+**Anomalies:** None. Pre-existing untracked exports and script were left untouched.
+**AI:** Codex implemented the deterministic view, checked its output against detector rows, and wrote the regression tests.
+
+**Handoff for Jonathan:** Import `network_view` from `engine.network`. It returns `{"month_mode": "context" | "fixed", "airports": [eight ranked records], "sim_label": "模拟 / SIMULATED"}`. Each airport record has `airport`, `airport_en`, `tier_en`, `importance`, `importance_en`, `month_label`, `signal_count`, `verdict`, `confidence`, `own_pp`, `peer_pp`, `yoy_pp`, `weather_missing`, `priority_rank`, and `reason`. Pass both `year` and `month` for a common month across all airports; omit both for each airport's detector context.
+
+## 2026-10-24 16:31 — Hostile operational request is neutralized in the fact sheet
+
+**Setup:** Confirmed no tracked changes, fetched origin, switched to `jason`, and pulled `origin/jason` (already up to date). Changed the fact builder to replace event text containing RULE007 decision words with a neutral professional-review notice in the displayed event and sourced facts, while checking the original redacted text for rules. Added an OWN005 regression test and regenerated EVT001–EVT005 fixtures; none changed.
+**Result:** `.venv\Scripts\python.exe -m unittest discover -s tests -v` ran 19 tests: OK. The OWN005 fact sheet contains neither `cancel flight` nor `weather caused it`, still redacts PII, and still fires RULE007. `git diff --check` exited 0. Exam score: unavailable; `.venv\Scripts\python.exe tests/run_tests.py --writer-mode offline` printed `pipeline not available`, so no exam cases or score were produced.
+**Anomalies:** BLOCKED: `engine/pipeline.py` is absent on `jason`; the offline exam cannot run to completion. Pre-existing untracked exports and script were left untouched.
+**AI:** Codex updated fact presentation, added the regression test, checked the fixture output, and recorded the actual test and exam results.
+
+## 2026-10-24 16:18 — Fact sheets whitelist detector signals and event-text numbers
+
+**Setup:** Confirmed no tracked changes, fetched origin, switched to `jason`, and pulled `origin/jason` (already up to date). Added each quoted detector month's signal count to its SIM-BASE fact and number list, and added Arabic numeric literals from sanitized `weather_text`, `ops_text`, `known`, `unknown`, and `notes` with the event ID as source. Regenerated the five EVT001–EVT005 fact-sheet fixtures.
+**Result:** `.venv\Scripts\python.exe -m unittest discover -s tests -v` ran 18 tests: OK, including new tests for every quoted detector month and all five event-text fields. `git diff --check` exited 0.
+**Anomalies:** None. Pre-existing untracked exports and script were left untouched.
+**AI:** Codex updated the fact builder, added regression tests, regenerated fixtures, and checked the test and diff results.
+
+## 2026-10-24 16:15 — ClawsGO cross-check agrees; D05 and D03 prepared
+
+**Setup:** Fetched origin, stayed on `jason`, and fast-forwarded to `origin/main` at 396598b. Extracted five zip files into `evidence/ai/clawsgo/crosscheck/`, verified their staged bytes against the extracted files, removed the requested zip, and committed that folder. Added `scripts/crosscheck_detector.py` and its generated report, then wrote D05 and the D03 skeleton in separate commits.
+**Result:** `.venv\Scripts\python.exe scripts/crosscheck_detector.py` exited 0: 192 CSV rows checked against 192 detector rows, 0 mismatches at 0.02 pp tolerance; the report includes the top 10 and the agreement note. D05 records all three organizer seeds, append-only recall, the EVT005 Gaoyuan result, and an empty live-record section. D03 lists 15 official cases and six own/negative cases; all 21 Result and Evidence cells are empty, verified by a local structure check.
+**Anomalies:** BLOCKED: `engine/pipeline.py` is not merged, so D03 has no exam results or human scores and D05 has no live app records. The other pre-existing untracked files were not changed.
+**AI:** Codex wrote the comparison script and report, checked the seed and fixture values for D05, and prepared the D03 tables without inventing results.
+
 ## 2026-10-24 01:13 — Fact sheets now whitelist all comparison and weather numbers
 
 **Setup:** Pulled `origin/jason` (already up to date). Added peer and available YoY gaps to each SIM-BASE month fact and number whitelist; added a selected-month SIM-WEATHER fact with precipitation, max wind, and bad-weather days, or an explicit missing-data fact without weather numbers. Redacted Chinese names after `旅客`. Regenerated the five `fixtures/factsheet_EVT001..005.json` files.
