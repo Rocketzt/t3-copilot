@@ -1,6 +1,6 @@
 # AI usage log
 
-Compiled from every **AI:** entry in `docs/project/log/jason.md`, `jonathan.md`, and `ziyu.md` through this document run. Entries preserve each contributor’s AI description; the logs contain the verification details. Raw outputs are kept under `evidence/ai/` where available. Ziyu’s three 03:xx log headings used a UTC−5 clock; the times below are corrected to China time (UTC+8), as recorded in `docs/project/LOG.md`.
+Compiled from every **AI:** entry in `docs/project/log/jason.md`, `jonathan.md`, and `ziyu.md` through this document run. Entries preserve each contributor's AI description; the logs contain the verification details. Raw outputs are kept under `evidence/ai/` where available. Ziyu's three 03:xx log headings used a UTC−5 clock; the times below are corrected to China time (UTC+8), as recorded in `docs/project/LOG.md`. Commits made from Rocketzt's PC also carry UTC−5 commit times (+13 h = China time).
 
 ## Jason
 
@@ -19,6 +19,8 @@ Compiled from every **AI:** entry in `docs/project/log/jason.md`, `jonathan.md`,
 
 ## Jonathan
 
+- **2026-10-24 21:10 — Language switch (EN / 中文): bilingual entities and 译-marked translations:** DeepSeek Harness — wrote `i18n.js`, rewrote the UI, added the tests, ran the browser checks and this entry.
+- **2026-10-24 17:05 — Network priority map added; `/api/network` self-tested with a real browser:** DeepSeek Harness — committed the pending handover, generated the fixture, implemented `/api/network`, then checked it and wrote this entry.
 - **2026-10-24 16:30 — Repo updated; self-check found 13 small issues; plain-language plan written:** DeepSeek Harness — updated the repo, ran the checks, probed the checker and wrote the plan.
 - **2026-10-24 14:05 — Merged main; pipeline uses Jason's real engine; exam 0/21 (checker-only failures):** DeepSeek Harness — merged, rewired the pipeline/writer/QA, ran the exam and wrote this entry.
 - **2026-10-24 13:40 — PUSH COMPLETED: `jonathan` is on GitHub at `466f2d6`:** DeepSeek Harness — retried the push, diagnosed auth/email blocks, rewrote the author emails, pushed and wrote this entry.
@@ -30,6 +32,8 @@ Compiled from every **AI:** entry in `docs/project/log/jason.md`, `jonathan.md`,
 
 ## Ziyu
 
+- **2026-10-24 21:24 — D01 path fix and demo rehearsal checked (rehearsal run 21:22):** OpenCode (GLM-5.3) ran a throwaway script outside the repo through the six demo beats (EVT001 analyze, typed Hailing event, bad-writer demo, EVT003, EVT005, offline exam) and wrote `evidence/runs/rehearsal_check.md` only from the values the run actually printed; the D01 edit was the two `../exam_now.json` path fixes.
+- **2026-10-24 21:57 — Pre-submission tidy-up run:** OpenCode (GLM-5.3) — submission draft sections, AI-usage entries, a clean-clone rehearsal of the public repo, README refresh and project-record updates; ran all reported test/exam figures fresh in this session.
 - **2026-10-24 16:36 — C02 false positive fixed: letters+digits identifiers no longer read as numbers:** OpenCode (GLM-5.3) applied the general identifier mask and the two new test cases as specified; no other check was loosened.
 - **2026-10-24 16:17 — C05 false positive fixed: "official airline and airport channels" now accepted:** OpenCode (GLM-5.3) applied the one-pattern fix and the new test as specified; no other checks were loosened.
 - **2026-10-24 16:05 — Checker built: all 13 rules C01-C13 block on cue and pass on a good output:** OpenCode (GLM-5.3) implemented the checker and tests unattended from the ziyu.md prompt; I reviewed the spec compliance (mask list, tolerance, "20 points" negative case) and kept the good/bad inline outputs number-clean against both fact sheets.
