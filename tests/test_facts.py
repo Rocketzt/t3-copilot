@@ -36,6 +36,16 @@ class FactSheetTests(unittest.TestCase):
         self.assertTrue(any(r["result"] == "Reject" for r in sheet["facts"]["feedback_matches"]))
         self.assertIn("RULE006", {r["id"] for r in sheet["rules"]})
 
+    def test_isolated_live_feedback_records_are_recalled_without_rewriting_seed(self):
+        path = Path(__file__).parent / "feedback_live_records.jsonl"
+        before = build_factsheet("EVT005", self.data)
+        after = build_factsheet("EVT005", self.data, feedback_path=path)
+        self.assertEqual([r["rec_id"] for r in before["facts"]["feedback_matches"]], ["REC003"])
+        self.assertEqual([r["rec_id"] for r in after["facts"]["feedback_matches"]],
+                         ["REC003", "LIVE003"])
+        self.assertEqual(after["facts"]["risk"], before["facts"]["risk"])
+        self.assertEqual(after["facts"]["first_action"], "confirm current resources")
+
     def test_pii_is_redacted_from_facts(self):
         event = {"id": "CUSTOM", "airport": "海陵国际机场", "importance": "中", "time_text": "Tonight",
                  "weather_text": "heavy rain", "ops_text": "Passenger 张伟 13812345678, a@b.com, 12345678901234567X",

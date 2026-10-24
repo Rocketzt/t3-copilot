@@ -16,6 +16,13 @@ Entry format (copy for each new entry):
 
 ---
 
+## 2026-10-24 16:56 — Integrated exam passes; submission evidence updated
+
+**Setup:** Confirmed no tracked changes, fetched origin, switched to `jason`, and fast-forwarded to `origin/main` at `07c50a3`. Ran the offline exam into `exports/test_results.json`, filled D03 from that file, and compared every number in `docs/NUMBERS.md` with `engine.detector` output. Added three simulated Accept/Edit/Reject records through `append_record()` in an isolated `tests/` store, re-ran EVT005 against it, and prepared D05, AI usage, and the submission draft.
+**Result:** Offline exam: 21/21 passed (15 official, five own, one negative). `.venv\Scripts\python.exe -m unittest discover -s tests -v` ran 41 tests: OK. `docs/NUMBERS.md` had no detector mismatches. EVT005 recalled the new `LIVE003` Reject but stayed `Low`, score `0.75`, with first action `confirm current resources` because organizer seed `REC003` already rejected it.
+**Anomalies:** Human tone/action-order scores and real staff feedback remain pending. The three added feedback records are clearly labeled as an AI-assisted integration demonstration, not UI submissions or human decisions. Pre-existing untracked exports and script were left untouched.
+**AI:** Codex populated D03 from the runner JSON, checked detector numbers, entered simulated feedback through the append-only helper, compared real EVT005 outputs, compiled log evidence, and drafted the submission text; all reported scores were taken from command output.
+
 ## 2026-10-24 16:42 — Network priority view ranks eight airports from detector context
 
 **Setup:** Confirmed no tracked changes, fetched origin, switched to `jason`, and pulled `origin/jason` (already up to date). Added `engine.network.network_view(data=None, year=None, month=None)` and tests for context and fixed-month selection, eight unique ranks, Hailing's first place, and detector-backed numeric values.
