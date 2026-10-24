@@ -6,7 +6,7 @@ conflict on merge. Newest first. All times are China time (UTC+8). The entries b
 are project-setup history; they were dated with this PC's UTC−5 clock, so their dates can be up to 13 h behind.
 
 
-## 2026-10-24 08:49 — Gate merge: jason + ziyu + jonathan into main; exam 21/21
+## 2026-10-24 16:49 — Gate merge: jason + ziyu + jonathan into main; exam 21/21
 
 **Setup:** Merged origin/jason (fe7e0b5, network view), origin/ziyu (8ee881c, checker fixes + D01/D07 framing) and
 origin/jonathan (3d962de) onto main in a scratch worktree. Ran:
