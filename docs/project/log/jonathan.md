@@ -16,6 +16,88 @@ Entry format (copy for each new entry):
 
 ---
 
+## 2026-10-24 00:58 — FINISH: unattended build complete; 15/15 endpoint self-test passed
+
+**Setup:** Built Phases 1–3 unattended on branch `jonathan` from `main` at `f70aecf`. Inputs:
+`Track 3 Data.xlsx` (read-only), `CONTRACT.md` §6/§8, `EXECUTION_PLAN.md` §3/§9, `docs/planning/ERRATA.md`.
+Fixtures were generated from the workbook with the machine's bundled `openpyxl` (build-time only); the app runs on
+the Python 3.12.10 standard library. Started `python app/server.py` on **port 8803**, called every endpoint once
+with a stdlib `urllib` script, then stopped the server (port confirmed free afterwards) and removed the test
+feedback record.
+**Result:** **15/15** endpoint calls returned the expected status and valid JSON:
+health · bootstrap (8 airports / 192 airport-months / 12 rules / 15 tests) · detector ranking (192 rows, 12 official
+flags, 13 any-signal) · detector chart (24 months, 2 series) · detector airport (Hailing → 2025-08, unusual, 2
+signals) · feedback GET (3 seeds) · static index · sheet06 correctly 404 (cut) · analyze EVT001 (17 fields, risk
+Medium) · analyze custom (Linjiang, risk Medium) · analyze bad (contains the fabricated "20 points") · ask
+(delay-certainty answer) · feedback POST (append works) · tests run (clear "runner not available" message) ·
+checker demo (clear "checker not available" message). `node --check app/static/app.js` passes. All pages carry
+`模拟 / SIMULATED`.
+**What is real vs fixture:** real — writer, pipeline, server, UI, feedback log, detector ranking/chart data generated
+from the organizer workbook. Fixture-backed — `engine.data/detector/rules/facts/feedback` are not on this branch, so
+`engine/pipeline.py` reads `fixtures/mock_*.json` and reports `engine_mode = "fixture"`. Not available — Ziyu's
+`engine/checker.py` (the UI shows "not checked", never a fake pass) and Jason's exam runner (exam tab shows the
+message).
+**How to start it (morning):** `run_app.bat` (or `python app/server.py`) → open `http://127.0.0.1:8803`.
+**Requests for teammates:**
+- **Ziyu:** add `engine/checker.py` with `check_output(output, facts) -> {"passed": bool, "checks": [...], "failures": [...]}`;
+  the pipeline imports it automatically and the checker panel/demo will light up.
+- **Jason:** add `engine/data.py`, `detector.py`, `rules.py`, `facts.py`, `feedback.py` and `tests/runner.py`
+  (`run_all(writer_mode=...)`); the pipeline imports them in `try/except` and switches `engine_mode` when present.
+  The fixtures are only the fallback, not the answer.
+**Anomalies:** `pip install -r requirements.txt` could not reach PyPI (cancelled after ~20 min); the runtime does not
+need it. `git fetch`/`ls-remote` to github.com failed with connection reset; push is attempted via the remote/API
+route and its result is in the final summary. The local branch was `Jonathan`; `git switch jonathan` resolved it and
+the merge with `origin/main` was already up to date.
+**AI:** DeepSeek Harness — executed setup, generated fixtures, wrote the writer/pipeline/QA/server/UI, ran the
+self-test and this log.
+
+## 2026-10-24 00:52 — Phase 3: five-tab offline UI
+
+**Setup:** Wrote `app/static/index.html`, `app.js`, `styles.css` (vanilla JS, no CDN, no build step): header with the
+persistent `模拟 / SIMULATED` badge; tabs Assistant (default), Detector, Exam, Feedback, About. Assistant has the five
+event cards, the new-event form, writer mode (Offline / Demo bad AI), risk + detector cards, fact sheet with
+assumptions/unknowns/missing data, the 17-field grid with a tag parser, three message tabs with Copy, the checker
+panel, the Accept/Edit/Reject bar posting to `/api/feedback`, prior-feedback panel, and the bounded question chips.
+Detector has five stat cards, a 192-row ranking table with filter/verdict select, and an inline-SVG Hailing vs
+Yunchuan chart with the dashed peer line and 2025-07/08 highlight. Exam, Feedback and About render from the API.
+`node --check app/static/app.js` passes.
+**Result:** All five tabs work against the real endpoints; no external assets are requested. Empty/error/loading
+states are handled, and the checker panel shows "not checked" while Ziyu's checker is absent.
+**Anomalies:** No browser automation is available in this run; the UI was validated by the JS syntax check, static
+server check and the endpoint responses it consumes.
+**AI:** DeepSeek Harness — wrote the UI and checked it.
+
+## 2026-10-24 00:50 — Phase 2: pipeline, bounded QA and stdlib server
+
+**Setup:** Wrote `engine/pipeline.py` (`analyze`, `ask`, `bootstrap`, `detector_ranking`, `chart`,
+`detector_airport`, feedback read/append, `run_bad_writer_demo`, `run_tests`, `health`) with
+`try/except` imports of Jason's and Ziyu's modules and a fixture fallback. When `engine/checker.py` is missing,
+`check = {"passed": null, "detail": "checker not available ..."}` — never a fake pass. Wrote `engine/qa.py`
+(bounded bilingual intent router: delay certainty, why-risk, conflict, causality, auto action, PII, simulation,
+send, rejection, downgrade, time range, stop, two messages, new airport, fallback) and `app/server.py`
+(stdlib `ThreadingHTTPServer`, port `T3_PORT` default 8803, static files, JSON errors, every CONTRACT §8 endpoint
+except `/api/export/sheet06` which returns 404). Added `run_app.bat`.
+**Result:** Server boots and returns valid JSON for every endpoint; custom events are analysed from the airport's own
+monthly row; the bad writer contains the fabricated "20 points"; the smoke test later reached 15/15.
+**Anomalies:** None during the endpoint tests after one fix: `/api/detector/airport` initially forced 2025-12 and
+was changed to the latest flagged month (Hailing → 2025-08, unusual, 2 signals).
+**AI:** DeepSeek Harness — wrote the pipeline, QA and server.
+
+## 2026-10-24 00:45 — Phase 1: workbook fixtures and offline template writer
+
+**Setup:** Generated `fixtures/mock_bootstrap.json` (8 airports, 5 events, 12 rules, 15 tests, 3 feedback seeds,
+DQ001–004), `mock_detector_ranking.json` (192 airport-months; flags_own **12**; any-signal **13**; signal counts
+`{0:179,1:11,2:1,3:1}`; Hailing 2025-07 −15.62 pp / 2025-08 −10.99 pp; Yunchuan 2025-07 YoY −0.80 pp; missing-weather
+rows per ERRATA: Qinglan 2025-03, Gaoyuan 2025-09, Hailing 2025-11, Linjiang 2025-11), `mock_chart.json` (24 months,
+Hailing/Yunchuan + peer line) and `mock_factsheets.json` (EVT001–EVT005). Wrote `engine/writer.py`: 17 fields with
+English + Chinese labels, three distinct audience drafts, `[FACT: source]` / `[ASSUMPTION]` / `[UNKNOWN]` / `[HUMAN]`
+tags, only fact-sheet numbers, `模拟` in f13–f15/f17, feedback matches quoted in f10, and `bad` mode that injects the
+fabricated "20 points". Rendered `fixtures/output_EVT001.json` and `fixtures/output_bad.json` with the real writer.
+**Result:** EVT001 renders 17 fields with risk Medium and three different messages; the bad output contains the
+fabricated number for the checker demo. Fixture counts match Appendix A of the execution plan.
+**Anomalies:** The fixture generator used the bundled build-time Python (openpyxl); the app never imports openpyxl.
+**AI:** DeepSeek Harness — generated the fixtures and wrote the writer.
+
 ## 2026-10-24 00:40 — Setup for the unattended build: branch, merge, venv, port 8803
 
 **Setup:** Read `README.md`, `ROLES.md`, `CONTRACT.md`, `docs/planning/ERRATA.md` and `EXECUTION_PLAN.md` §3/§9.
@@ -32,4 +114,3 @@ network; `.venv` therefore has no third-party packages (fine for the app). `git 
 failed twice with "connection reset"/timeout to `github.com:443`, while `https://api.github.com` answered 200; there
 is no `gh` CLI and Git Credential Manager holds no GitHub credential, so a remote push may need the API route.
 **AI:** DeepSeek Harness — executed the setup commands and wrote this entry.
-
