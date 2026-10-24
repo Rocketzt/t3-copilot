@@ -25,7 +25,9 @@ Four parts in one local web app:
 4. **Feedback memory.** Accept / Edit / Reject plus a reason is appended to `data/feedback.jsonl` (never
    overwritten) and quoted the next time a similar event is analysed.
 
-Every page and output carries the `模拟 / SIMULATED` label.
+Every page and output carries the `模拟 / SIMULATED` label. The UI is bilingual: **EN / 中文** switch in the
+header (translation details in `docs/D08_Reproducibility.md` §7; display only — payloads, checks and the exam are
+not affected).
 
 ## Who it is for (airline voice)
 
@@ -38,7 +40,7 @@ prepares evidence and drafts for a human.
 
 ## Requirements
 
-- **Python 3.10+** (verified on Windows with Python 3.12.14).
+- **Python 3.10+** (verified on Windows with Python 3.12.14 and a fresh-clone virtualenv run).
 - **The app, engine and tests use the standard library only.** No `pip install`, no network, no API key.
 - `requirements.txt` lists **build-time only** packages (`openpyxl`, `pandas`, `Pillow`) for the optional
   workbook/evidence scripts. The app never imports them.
@@ -63,12 +65,16 @@ T3 OPS COPILOT - SIMULATED - http://127.0.0.1:8803
 Press Ctrl+C to stop.
 ```
 
-Observed `GET /api/health` response:
+Observed `GET /api/health` response (2026-10-24, fresh clone of the public repo):
 
 ```json
 {"ok": true, "engine": "ready", "writer_mode": "offline", "llm_configured": false,
- "checker_available": false, "runner_available": true, "sim_label": "模拟 / SIMULATED"}
+ "checker_available": true, "runner_available": true, "sim_label": "模拟 / SIMULATED"}
 ```
+
+> Note for this build machine only: a system proxy (Windows settings, not environment variables) can intercept
+> plain `urllib` calls to `127.0.0.1` and close them without a response. A browser or `curl --noproxy "*"` gets
+> clean 200s — as does any machine without that proxy. This is not an app defect.
 
 ## The five tabs
 
@@ -86,10 +92,10 @@ Observed `GET /api/health` response:
 python -m unittest discover -s tests
 ```
 
-Observed on 2026-10-24:
+Observed on 2026-10-24 (re-run today, clean clone as well):
 
 ```text
-Ran 16 tests in 0.229s
+Ran 56 tests in 0.866s
 OK
 ```
 
@@ -102,18 +108,12 @@ python tests/run_tests.py --writer-mode offline
 Observed on 2026-10-24 (writes `exports/test_results.json`; add `--out FILE` to write elsewhere):
 
 ```text
-Exam: 0/21 passed; output written to exports\test_results.json
+Exam: 21/21 passed; output written to exports\test_results.json
 ```
 
-Exit code: `1`. The run's own JSON summary was official `0/15`, own `0/5`, negative `0/1`.
-
-**How to read this honestly.** This is **not** 21 bad answers. All 21 cases currently fail for one reason: the
-checker is not merged on this branch (it lives on Ziyu's branch, see status). 20 of the 21 cases meet every
-expected/forbidden text pattern and fail only with `pipeline checker did not pass`; the fabricated-number
-negative case fails with `bad writer was not blocked`. The runner and the Exam tab are ready. After the checker
-is merged — together with the small writer/pipeline fixes listed in
-[`docs/planning/UPDATE_PLAN_2026-10-24.md`](docs/planning/UPDATE_PLAN_2026-10-24.md) — the exam will be re-run
-and the real number published, whatever it is. We do not claim 15/15 or 21/21.
+The summary is official **15/15**, own **5/5**, negative **1/1**; full per-case table and evidence in
+[`docs/D03_Test_Report.md`](docs/D03_Test_Report.md). The negative case proves the checker blocks the bad
+writer's fabricated "20 points" claim (check C02 names it).
 
 ## Optional: rebuild the data (build-time only)
 
@@ -151,8 +151,8 @@ the committed JSON is the source of truth for the app.
   cut to fit the schedule (see `ROLES.md`). Copy `.env.example` to `.env` only for experiments — `.env` is
   git-ignored. **Never commit a real key.**
 - The **bad writer mode** is a demo: it appends a deliberately fabricated "20 points" claim so the checker can
-  be shown blocking it. With the checker not yet merged it is not blocked today (that is the negative-test
-  failure above).
+  be shown blocking it — observed today: blocked with check **C02** naming "unwhitelisted number 20 in field
+  f05", then the output falls back to the deterministic draft marked for human review.
 
 ## Data and limits
 
@@ -168,51 +168,45 @@ the committed JSON is the source of truth for the app.
   Hailing 2025-07 = −15.62 pp vs own average, −5.46 pp vs peers, −11.48 pp vs last year; Yunchuan 2025-07 own
   −6.07 pp but YoY −0.80 pp (seasonal, not unusual).
 
-## Current status (2026-10-24, branch `jonathan`)
+## Current status (2026-10-24, merged on `main`)
 
 **Works now**
 
-- **Real engine end to end.** The analysis pipeline behind `/api/analyze` returns `engine_mode: "real"` for
-  EVT001–EVT005; every event returns 17 non-empty fields and 3 distinct audience drafts; risk labels are EVT001
-  `Medium`, EVT003 `Can't tell`, EVT002/EVT004/EVT005 `Low` (EVT001 and EVT003 were also re-checked through
-  `POST /api/analyze`). Outputs contain no "weather caused" claim; the writer output redacts phone numbers.
+- **Real engine end to end.** The analysis pipeline behind `/api/analyze` runs the real engine for EVT001–EVT005;
+  every event returns 17 non-empty fields and 3 distinct audience drafts; risk labels are EVT001 `Medium`,
+  EVT003 `Can't tell`, EVT002/EVT004/EVT005 `Low`; no "weather caused" claim; phone numbers are redacted.
+- **Checker merged.** `engine/checker.py` runs 13 checks (C01–C13) on every output; the bad-AI demo is blocked
+  (C02 names the fabricated "20 points"); the offline exam is **21/21** (15 official + 5 own + 1 negative).
 - **Offline web app.** stdlib server boots and serves the static UI and JSON API; `/api/health` is `ok`; no key
-  or network required; `checker_available: false` is shown honestly as "not checked" instead of a fake pass.
-- **Unit tests** 16/16 OK (above).
-- **Detector numbers** match the organizer workbook (counts and Hailing/Yunchuan values above).
-- **Data rebuild** is reproducible: `data/track3.json` regenerates byte-identically from the workbook.
-- `runner_available: true` — the exam runner exists on this branch (`tests/run_tests.py`).
+  or network required. **EN / 中文 switch** in the UI header is display-only (see D08 §7).
+- **Network priority map.** The Detector tab ranks all eight airports by anomaly × importance to our airline
+  (Hailing first today) with a schematic map, ranked table and the Hailing-vs-Yunchuan chart.
+- **Unit tests 56/56 OK**, exam 21/21 (both re-run today).
+- **Data rebuild** is reproducible: `data/track3.json` regenerates byte-identically from the workbook
+  (build-time `openpyxl` only; skip it if unavailable — the committed JSON works).
 
 **Pending**
 
-- **Checker merge (P0).** Ziyu's `engine/checker.py` exists on `origin/ziyu` (commit `ed1b336`) but is not merged
-  here. Until it is: the checker panel shows "not checked", the exam reports 0/21 (all cases are gated on the
-  missing checker), and the bad-AI demo cannot be shown as blocked. The four small writer/pipeline fixes in
-  [`docs/planning/UPDATE_PLAN_2026-10-24.md`](docs/planning/UPDATE_PLAN_2026-10-24.md) (§5, Step 2) are needed
-  before the normal outputs can pass the checker; then the exam will be re-run and reported honestly.
-- **Other UI integration fixes** (UPDATE_PLAN §4, B5–B8) remain: the `Can't tell` risk-card label/colour, the
-  Detector tab / event cards switching from fixture JSON to the real modules, the feedback-table language, and
-  typed-event IDs. The three Assistant-tab defects found in the 2026-10-24 review — the badge mode, the duplicated
-  `ASSUMPTION` chip in f07, and the Chinese tier inside English text — plus the stale About sentence are fixed in
-  the working tree and verified with headless-browser DOM checks (`engine: real`, one chip, "Large airport", 17
-  fields, all five tabs). These fixes are uncommitted in this branch.
+- **UI polish and fresh screenshots** (`evidence/screenshots/` has the current set; the submission thumbnail
+  waits on the polished UI).
+- **Submission form** (see `docs/SUBMISSION_DRAFT.md`) and confirming all three members are registered on
+  study.standardcas.org.
 - **Live LLM writer** is out of scope for this build; only the offline template is enabled.
 
-This verification was run on branch `jonathan` with an unchanged `data/track3.json`. Figures above were captured
-before the checker merge; the commands should be re-run after it.
+Figures in this README were captured from real runs on 2026-10-24 on a fresh clone of the public repo.
 
 ## Repository layout
 
 | Path | What lives there |
 |---|---|
-| `app/` | stdlib `http.server` server and the vanilla-JS UI in `app/static/` |
-| `engine/` | Data loader, detector, rules, fact sheet, writer, pipeline, feedback (`checker.py` pending merge) |
+| `app/` | stdlib `http.server` server and the vanilla-JS UI in `app/static/` (incl. `i18n.js` for the EN/中文 switch) |
+| `engine/` | Data loader, detector, rules, fact sheet, checker, writer, pipeline, feedback |
 | `scripts/` | One-off build/evidence scripts (`build_data.py` exports the workbook JSON) |
-| `tests/` | Exam runner, the 15 official cases, our 5 own events |
+| `tests/` | Exam runner, the 15 official cases, our 5 own events, checker/i18n tests |
 | `data/` | Generated JSON from the workbook, feedback seeds and the append-only decision log |
-| `fixtures/` | Generated JSON from the workbook, used as the pipeline fallback (and by the list endpoints on this branch) |
+| `fixtures/` | Generated JSON from the workbook, used as the pipeline fallback |
 | `exports/` | Generated evidence: exam results |
-| `evidence/` | Screenshots and raw AI-assisted outputs |
+| `evidence/` | Screenshots (`evidence/screenshots/`), demo-recording plan, run checks (`evidence/runs/`), raw AI-assisted outputs under `evidence/ai/` |
 | `docs/` | Deliverables D01–D08, AI-use log, canonical numbers, planning and project records |
 | `Track 3 Data.xlsx` | Organizer workbook, read-only. Never edit it; exports are copies |
 
@@ -220,8 +214,10 @@ before the checker merge; the commands should be re-run after it.
 
 - [`docs/README.md`](docs/README.md) — deliverable index (D01–D08)
 - [`docs/D08_Reproducibility.md`](docs/D08_Reproducibility.md) — one-page reproducibility package
+- [`docs/SUBMISSION_DRAFT.md`](docs/SUBMISSION_DRAFT.md) — submission text (title, description, track, evidence, AI statement)
 - [`docs/AI_USAGE.md`](docs/AI_USAGE.md) — AI-use log
 - [`docs/NUMBERS.md`](docs/NUMBERS.md) — canonical numbers (workbook-derived)
+- [`evidence/`](evidence/README.md) — screenshots, demo-recording plan, run checks and raw AI-assisted outputs
 - [`ROLES.md`](ROLES.md) — file owners and git workflow · [`CONTRACT.md`](CONTRACT.md) — module/JSON contract ·
   [`EXECUTION_PLAN.md`](EXECUTION_PLAN.md) — build plan and ground truth
 
