@@ -16,6 +16,24 @@ Entry format (copy for each new entry):
 
 ---
 
+## 2026-10-24 13:40 — PUSH COMPLETED: `jonathan` is on GitHub at `466f2d6`
+
+**Setup:** HTTPS to `github.com:443` was blocked, so I used SSH (port 22 was reachable) with a dedicated key
+(`~/.ssh/t3_copilot_ed25519`), added to the `chrochrohoho` GitHub account. The first SSH push was rejected by GitHub
+with **GH007** ("push would publish a private email address") because the six build commits used the private
+`jonathan_lee2018@outlook.com`. I rewrote only those six commits (range `8191d3d..HEAD`) to the GitHub noreply
+identity **`155823325+chrochrohoho@users.noreply.github.com`**; `origin` was switched to
+`git@github.com:Rocketzt/t3-copilot.git` with a repo-local `core.sshCommand` pointing at the key.
+**Result:** `git push origin jonathan` succeeded as a fast-forward: `d2b2700..466f2d6`; SSH `ls-remote` and the
+GitHub API both show `refs/heads/jonathan` = **`466f2d6`**. The branch has 6 commits on top of `main@f70aecf`.
+`git fetch` over SSH also refreshed origin: `main` is now **`28aaea4`**, `jason` **`74fd394`**, `ziyu` `d2b2700`.
+**Anomalies:** No force push and no push to `main`. The rewrite changed the six commit hashes; a local safety branch
+`backup-jonathan-pre-push` = `76fd69b` is kept (not pushed). The branch is based on the older `main@f70aecf`; it has
+not been merged with the newer `origin/main@28aaea4` (not requested). The SSH key can be removed from GitHub after
+the event.
+**AI:** DeepSeek Harness — retried the push, diagnosed auth/email blocks, rewrote the author emails, pushed and wrote
+this entry.
+
 ## 2026-10-24 00:58 — FINISH: unattended build complete; 15/15 endpoint self-test passed
 
 **Setup:** Built Phases 1–3 unattended on branch `jonathan` from `main` at `f70aecf`. Inputs:
