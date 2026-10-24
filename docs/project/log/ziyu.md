@@ -16,6 +16,13 @@ Entry format (copy for each new entry):
 
 ---
 
+## 2026-10-24 21:24 — D01 path fix + demo rehearsal checked: all six beats pass
+
+**Setup:** Merged `origin/main` into `ziyu` (fast-forward, no conflicts). Changed only the two `../exam_now.json` references in `docs/D01_Presentation_Outline.md` to `exports/test_results.json`. Ran a throwaway script kept outside the repo (temp folder): `engine.pipeline.analyze()` on EVT001, a typed Hailing event ("14:00, heavy rain and gusts next 6 h, busy afternoon"), `run_bad_writer_demo("EVT001")`, EVT003, EVT005, then `python tests/run_tests.py --writer-mode offline`. Saved the observed results to `evidence/runs/rehearsal_check.md` (21:22 China time).
+**Result:** Six of six demo beats PASS with real values: EVT001 risk Medium / check passed; typed event risk Medium / check passed; bad-writer demo blocked with C02; EVT003 Can't tell; EVT005 first action "confirm current resources"; exam 21/21 (15 official + 5 own + 1 negative).
+**Anomalies:** None for the run. Note: an earlier D04 draft I started was cancelled by the team before commit; nothing of it remains in the tree.
+**AI:** OpenCode (GLM-5.3) ran the rehearsal script unattended and wrote the evidence table only from values it actually observed; D04/D06/D07 were left untouched (Jason's).
+
 ## 2026-10-24 03:36 — C02 false positive fixed: letters+digits identifiers no longer read as numbers
 
 **Setup:** `git status` clean, `git pull origin ziyu` up to date (GitHub unreachable for ~4 min; retried until it connected). Replaced the fixed RULE/EVT/TEST/REC id mask in `engine/checker.py` with a general one, `(?i)\b[A-Za-z]{2,}[-_]?\d+\b`, so any identifier of letters directly followed by optional `-`/`_` and digits is masked before number extraction (RULE007, EVT001, TEST001, REC001, OWN002, MU123, CUSTOM-3). Bare numbers and numbers with units ("20 points", "6.5 mm", "-10.99 pp") are still never masked; SIM-* and Fxx/fxx masks unchanged. Added `test_c02_letters_digits_identifiers_are_masked`: text with "OWN002", "MU123" and "CUSTOM-3" passes C02 (and every other check), while "Hailing is 20 points below normal" still fails C02 only and names 20.
