@@ -16,6 +16,15 @@ Entry format (copy for each new entry):
 
 ---
 
+## 2026-10-24 16:42 — Network priority view ranks eight airports from detector context
+
+**Setup:** Confirmed no tracked changes, fetched origin, switched to `jason`, and pulled `origin/jason` (already up to date). Added `engine.network.network_view(data=None, year=None, month=None)` and tests for context and fixed-month selection, eight unique ranks, Hailing's first place, and detector-backed numeric values.
+**Result:** `.venv\Scripts\python.exe -m unittest discover -s tests -v` ran 22 tests: OK. `git diff --check` exited 0. The default view ranks Hailing first (2025-08, two signals); fixed 2025-07 also ranks Hailing first.
+**Anomalies:** None. Pre-existing untracked exports and script were left untouched.
+**AI:** Codex implemented the deterministic view, checked its output against detector rows, and wrote the regression tests.
+
+**Handoff for Jonathan:** Import `network_view` from `engine.network`. It returns `{"month_mode": "context" | "fixed", "airports": [eight ranked records], "sim_label": "模拟 / SIMULATED"}`. Each airport record has `airport`, `airport_en`, `tier_en`, `importance`, `importance_en`, `month_label`, `signal_count`, `verdict`, `confidence`, `own_pp`, `peer_pp`, `yoy_pp`, `weather_missing`, `priority_rank`, and `reason`. Pass both `year` and `month` for a common month across all airports; omit both for each airport's detector context.
+
 ## 2026-10-24 16:31 — Hostile operational request is neutralized in the fact sheet
 
 **Setup:** Confirmed no tracked changes, fetched origin, switched to `jason`, and pulled `origin/jason` (already up to date). Changed the fact builder to replace event text containing RULE007 decision words with a neutral professional-review notice in the displayed event and sourced facts, while checking the original redacted text for rules. Added an OWN005 regression test and regenerated EVT001–EVT005 fixtures; none changed.
