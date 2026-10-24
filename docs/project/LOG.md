@@ -5,6 +5,27 @@ it on `main` only: pull first, make one small commit, push immediately (`ROLES.m
 conflict on merge. Newest first. All times are China time (UTC+8). The entries below, written before 2026-10-23 23:30 China time,
 are project-setup history; they were dated with this PC's UTC−5 clock, so their dates can be up to 13 h behind.
 
+## 2026-10-24 18:45 — Gate merge 2: Jason ac024c0 + Jonathan b4ba664/51cabb9 into main; 41/41 tests, exam 21/21
+
+**Setup:** In a scratch worktree, merged `origin/jason` (D03/D05 evidence, submission draft, a fact-sheet tweak) and
+`origin/jonathan` (UI fixes, README, D08, screenshots, network map) into `main`. Ran the unit tests and
+`tests/run_tests.py --writer-mode offline`. Started the app on port 8819 and called:
+- `/` and `/api/health`, `bootstrap`, `detector/ranking`, `network`, `feedback`;
+- `analyze` for EVT001, EVT003 and EVT005;
+- `checker/demo`;
+- a custom Linjiang event with personal data in it;
+- `ask`.
+**Result:**
+- Both merges are clean, and every file belongs to its author. 41/41 unit tests pass; exam 21/21 (15 official,
+  5 own, 1 negative).
+- Every endpoint returns 200 offline; `engine_mode` is "real".
+- EVT001 Medium, EVT003 Can't tell, EVT005 Low with first action "confirm current resources"; the checker passes
+  all three.
+- The personal data is redacted from the custom-event response, and the ask answer passes the checker.
+**Anomalies:** `/api/checker/demo` returns `"blocked": false` although the checker failed the bad output on C02. In
+`pipeline.run_bad_writer_demo`, `blocked = check.get("passed")` is inverted; it should be `not passed`. The UI is not
+affected (it reads `check.passed`), and the exam's negative test passes. Fix requested from Jonathan.
+
 
 ## 2026-10-24 16:49 — Gate merge: jason + ziyu + jonathan into main; exam 21/21
 
