@@ -240,14 +240,14 @@
     "facts": [
       {
         "id": "F01",
-        "text": "Hailing International Airport 2025-08: completion 73.16% versus own average 84.15% (-10.99 pp).",
+        "text": "Hailing International Airport 2025-08: completion 73.16% versus own average 84.15% (-10.99 pp); peer gap -3.66 pp; YoY gap -9.14 pp.",
         "source": "SIM-BASE",
         "value": 73.16,
         "unit": "%"
       },
       {
         "id": "F02",
-        "text": "Hailing International Airport 2025-07: completion 69.49% versus own average 85.11% (-15.62 pp).",
+        "text": "Hailing International Airport 2025-07: completion 69.49% versus own average 85.11% (-15.62 pp); peer gap -5.46 pp; YoY gap -11.48 pp.",
         "source": "SIM-BASE",
         "value": 69.49,
         "unit": "%"
@@ -259,6 +259,13 @@
       },
       {
         "id": "F04",
+        "text": "Weather observation for Hailing International Airport 2025-08: precipitation 111.6 mm, max wind 15 m/s, bad-weather days 4.",
+        "source": "SIM-WEATHER",
+        "value": 111.6,
+        "unit": "mm"
+      },
+      {
+        "id": "F05",
         "text": "Event weather description: 未来六小时预计强降雨并伴有阵风. Forecast is not proof of per-flight impact.",
         "source": "EVT001"
       }
@@ -266,39 +273,94 @@
     "numbers": [
       {
         "value": 73.16,
+        "unit": "%",
         "display": "73.16%",
         "source": "SIM-BASE",
         "fact_id": "F01"
       },
       {
         "value": 84.15,
+        "unit": "%",
         "display": "84.15%",
         "source": "SIM-BASE",
         "fact_id": "F01"
       },
       {
         "value": -10.99,
+        "unit": "pp",
         "display": "-10.99 pp",
         "source": "SIM-BASE",
         "fact_id": "F01"
       },
       {
+        "value": -3.66,
+        "unit": "pp",
+        "display": "-3.66 pp",
+        "source": "SIM-BASE",
+        "fact_id": "F01"
+      },
+      {
+        "value": -9.14,
+        "unit": "pp",
+        "display": "-9.14 pp",
+        "source": "SIM-BASE",
+        "fact_id": "F01"
+      },
+      {
         "value": 69.49,
+        "unit": "%",
         "display": "69.49%",
         "source": "SIM-BASE",
         "fact_id": "F02"
       },
       {
         "value": 85.11,
+        "unit": "%",
         "display": "85.11%",
         "source": "SIM-BASE",
         "fact_id": "F02"
       },
       {
         "value": -15.62,
+        "unit": "pp",
         "display": "-15.62 pp",
         "source": "SIM-BASE",
         "fact_id": "F02"
+      },
+      {
+        "value": -5.46,
+        "unit": "pp",
+        "display": "-5.46 pp",
+        "source": "SIM-BASE",
+        "fact_id": "F02"
+      },
+      {
+        "value": -11.48,
+        "unit": "pp",
+        "display": "-11.48 pp",
+        "source": "SIM-BASE",
+        "fact_id": "F02"
+      },
+      {
+        "value": 111.6,
+        "unit": "mm",
+        "display": "111.6 mm",
+        "source": "SIM-WEATHER",
+        "fact_id": "F04"
+      },
+      {
+        "value": 15,
+        "unit": "m/s",
+        "display": "15 m/s",
+        "source": "SIM-WEATHER",
+        "fact_id": "F04"
+      },
+      {
+        "value": 4,
+        "unit": "days",
+        "display": "4 days",
+        "source": "SIM-WEATHER",
+        "fact_id": "F04"
       }
     ],
     "assumptions": [
@@ -327,7 +389,8 @@
       "RULE009",
       "RULE010",
       "SIM-BASE",
-      "SIM-SCALE"
+      "SIM-SCALE",
+      "SIM-WEATHER"
     ],
     "risk": {
       "level": "Medium",
