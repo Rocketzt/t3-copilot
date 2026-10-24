@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from pathlib import Path
 
 from .data import Data, load_data
 from .detector import airport_context, compute_all
@@ -67,12 +68,12 @@ def _risk(event: dict, context: dict, rules: list[dict], feedback_matches: list[
 
 
 def build_facts(data: Data, event: dict, context: dict | None = None,
-                rules: list[dict] | None = None) -> dict:
+                rules: list[dict] | None = None, feedback_path: str | Path | None = None) -> dict:
     clean, redacted = sanitize_event(event)
     if context is None:
         context = airport_context(data, clean["airport"])
     initial_rules = rules if rules is not None else evaluate(data, clean, context)
-    matches = match(clean, initial_rules)
+    matches = match(clean, initial_rules, path=feedback_path)
     if matches and rules is None:
         clean["has_feedback"] = True
         initial_rules = evaluate(data, clean, context)
@@ -167,12 +168,12 @@ def build_facts(data: Data, event: dict, context: dict | None = None,
 
 
 def build_factsheet(event: dict | str, data: Data | None = None, year: int | None = None,
-                    month: int | None = None) -> dict:
+                    month: int | None = None, feedback_path: str | Path | None = None) -> dict:
     data = data or load_data()
     selected_event = next(e for e in data.events if e["id"] == event) if isinstance(event, str) else event
     clean, input_redacted = sanitize_event(selected_event)
     context = airport_context(data, clean["airport"], year, month)
-    facts = build_facts(data, clean, context)
+    facts = build_facts(data, clean, context, feedback_path=feedback_path)
     facts["pii_redacted"] = facts["pii_redacted"] or input_redacted
     display_event = facts.pop("event")
     rules = evaluate(data, {**clean, "has_feedback": bool(facts["feedback_matches"])}, context)

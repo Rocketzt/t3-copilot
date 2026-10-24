@@ -24,9 +24,22 @@ The seeds are loaded from JSON and labeled `organizer_seed` at runtime. They are
 
 `fixtures/factsheet_EVT005.json` recalls `REC003` with result `Reject`. Its risk object says `Low` with score `0.75`; its reasons include the human rejection and the instruction to verify resources (`RULE006`). The fact sheet's first action is `confirm current resources`. This lowers the risk relative to the event's rejected High recommendation while keeping current resources subject to confirmation.
 
+## New append-only demonstration records
+
+These three simulated decisions for real organizer event IDs were added with `engine.feedback.append_record()` to `tests/feedback_live_records.jsonl`, an isolated Jason-owned store. The helper labeled each record `source: app`, but no UI user or airline employee submitted them. The production `data/feedback.jsonl` was not changed.
+
+| Record | Event | Result | Reason |
+|---|---|---|---|
+| LIVE001 | EVT001 | Accept | Risk is separated from formal status and numbers are sourced. |
+| LIVE002 | EVT004 | Edit | Clarify that forecast thunderstorm risk is not a confirmed delay. |
+| LIVE003 | EVT005 | Reject | Current resources are reported sufficient; verify them before escalation. |
+
+I ran `build_factsheet("EVT005")` before and after pointing its optional feedback path at that store. Before, the real output matched `REC003` (`Reject`); after, it matched `REC003` and `LIVE003` (`Reject`). Both outputs reported risk `Low`, score `0.75`, and first action `confirm current resources`. The reason remained `Human rejection reports adequate resources; verify current resources`. **The new record did not change this advice:** the organizer's earlier rejection already applied. No change is claimed where the output shows none.
+
 ## Live records from the app
 
+No feedback was submitted through the UI in this run. This section is reserved for an actual staff review with reviewer, date and outcome.
 
 ## What we did not build
 
-No live application feedback record is reported here before integration and a real app run. Feedback recall is a deterministic lookup over stored records; it is not model retraining or autonomous operational approval.
+The demonstration records are not a human evaluation or a model-training set. Feedback recall is a deterministic lookup over stored records; it is not model retraining or autonomous operational approval.
