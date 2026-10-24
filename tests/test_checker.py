@@ -198,6 +198,23 @@ class CheckerTests(unittest.TestCase):
         self.assertIn("20", self.detail_of(result, "C02"))
         self.assertIn("f05", self.detail_of(result, "C02"))
 
+    # -- C02: identifiers are masked, bare numbers are not -------------------
+
+    def test_c02_letters_digits_identifiers_are_masked(self):
+        def identifier_text(output):
+            self.set_field(output, "f05", "Event OWN002 cites flight MU123 and case CUSTOM-3; "
+                                          "completion 73.16% versus own average 84.15% "
+                                          "[FACT: SIM-BASE]")
+        result = self.variant(identifier_text)
+        self.assertEqual(self.failed_ids(result), [])
+
+        def bare_number(output):
+            self.set_field(output, "f06", "Hailing is 20 points below normal")
+        result = self.variant(bare_number)
+        self.assertOnlyFailure(result, "C02")
+        self.assertIn("20", self.detail_of(result, "C02"))
+        self.assertIn("f06", self.detail_of(result, "C02"))
+
     # -- one failing example per check C01, C03-C13 --------------------------
 
     def test_c01_field_missing_and_empty(self):

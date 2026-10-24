@@ -16,6 +16,13 @@ Entry format (copy for each new entry):
 
 ---
 
+## 2026-10-24 03:36 — C02 false positive fixed: letters+digits identifiers no longer read as numbers
+
+**Setup:** `git status` clean, `git pull origin ziyu` up to date (GitHub unreachable for ~4 min; retried until it connected). Replaced the fixed RULE/EVT/TEST/REC id mask in `engine/checker.py` with a general one, `(?i)\b[A-Za-z]{2,}[-_]?\d+\b`, so any identifier of letters directly followed by optional `-`/`_` and digits is masked before number extraction (RULE007, EVT001, TEST001, REC001, OWN002, MU123, CUSTOM-3). Bare numbers and numbers with units ("20 points", "6.5 mm", "-10.99 pp") are still never masked; SIM-* and Fxx/fxx masks unchanged. Added `test_c02_letters_digits_identifiers_are_masked`: text with "OWN002", "MU123" and "CUSTOM-3" passes C02 (and every other check), while "Hailing is 20 points below normal" still fails C02 only and names 20.
+**Result:** `python -m unittest discover -s tests -v` ran 36 tests: OK (18 checker tests + 18 others, no regressions; the PII tests confirm pure-digit phone/ID numbers still fail C02).
+**Anomalies:** The first four `git pull` attempts failed with github.com connection errors (network); the fifth succeeded with no changes.
+**AI:** OpenCode (GLM-5.3) applied the general identifier mask and the two new test cases as specified; no other check was loosened.
+
 ## 2026-10-24 03:17 — C05 false positive fixed: "official airline and airport channels" now accepted
 
 **Setup:** `git status` clean, `git pull origin ziyu` up to date (GitHub was unreachable for ~2 min; retried until it connected). Loosened only `_OFFICIAL_CHANNELS` in `engine/checker.py`: `official\s+(?:\w+\s+){0,3}channels`, so up to 3 words may sit between "official" and "channels"; Chinese alternatives unchanged; no other check touched. Added `test_c05_official_channels_phrase_flexibility` in `tests/test_checker.py`: "Please check official airline and airport channels for updates." passes C05 (and every other check), while a passenger message with no channels phrase still fails C05 only.

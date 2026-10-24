@@ -11,10 +11,14 @@ a whole fact-sheet dict is also accepted and unwrapped) and returns
 A failing check names the offending text in its ``detail``. Pure standard
 library, no LLM calls, no I/O: the same inputs always give the same result.
 
-Masking rules for C02 (numbers must be whitelisted): IDs (``SIM-*``,
-``RULE0xx``, ``EVT0xx``, ``TEST0xx``, ``REC0xx``, fact/field keys ``Fxx``),
-dates (ISO, slash, Chinese, bare years), times, and list numbering are removed
-before number extraction, so they are never treated as numeric claims.
+Masking rules for C02 (numbers must be whitelisted): identifiers made of
+letters directly followed by digits (organizer IDs ``RULE0xx``/``EVT0xx``/
+``TEST0xx``/``REC0xx``, custom event ids like ``OWN002``, flight numbers
+like ``MU123``, ``CUSTOM-3``), ``SIM-*`` source tags, fact/field keys
+``Fxx``, dates (ISO, slash, Chinese, bare years), times, and list numbering
+are removed before number extraction, so they are never treated as numeric
+claims. Bare numbers and numbers with units ("20 points", "6.5 mm",
+"-10.99 pp") are never masked.
 """
 
 from __future__ import annotations
@@ -31,7 +35,7 @@ TOLERANCE = 0.01
 # C02: masked (replaced with a space) before numbers are extracted.
 _MASKS = (
     re.compile(r"SIM-[A-Za-z]+"),                          # data source IDs
-    re.compile(r"(?i)\b(?:RULE|EVT|TEST|REC)\d+\b"),       # organizer IDs
+    re.compile(r"(?i)\b[A-Za-z]{2,}[-_]?\d+\b"),           # letters+digits identifiers: RULE007, EVT001, TEST001, REC001, OWN002, MU123, CUSTOM-3
     re.compile(r"(?i)\bf\d{1,2}\b"),                       # fact IDs F01.. and field keys f01..
     re.compile(r"\d{4}-\d{1,2}(?:-\d{1,2})?"),             # ISO dates 2025-08, 2026-10-24
     re.compile(r"\d{4}/\d{1,2}(?:/\d{1,2})?"),             # slash dates 2025/8
