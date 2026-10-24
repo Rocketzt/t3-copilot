@@ -666,10 +666,10 @@ def add_feedback(record: dict) -> dict:
 def run_bad_writer_demo(event_id: str = "EVT001") -> dict:
     result = analyze(event_id, writer_mode="bad")
     check = result["check"]
-    blocked = check.get("passed")
+    blocked = (check.get("passed") is False)
     return {
         "event_id": result["event"].get("id"),
-        "blocked": blocked if blocked is not None else None,
+        "blocked": blocked,
         "detail": check.get("detail") or "",
         "failures": check.get("failures") or [],
         "checks": check.get("checks") or [],
