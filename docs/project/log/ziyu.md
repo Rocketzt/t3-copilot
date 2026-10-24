@@ -16,6 +16,21 @@ Entry format (copy for each new entry):
 
 ---
 
+## 2026-10-24 22:11 — Pre-submission tidy-up: clean-clone of the public repo reproduces every result
+
+**Setup:** Merged `origin/main` into `ziyu` (fast-forward, no conflicts). Got the fresh numbers for this session: `python -m unittest discover -s tests` ran 56 tests OK; `python tests/run_tests.py --writer-mode offline` reported exam 21/21 (official 15/15, own 5/5, negative 1/1); `pipeline.run_bad_writer_demo('EVT001')` returned blocked `True` with failure C02. Clean-clone check in an outside temp folder:
+| # | Command (in the clone) | Result |
+|---|---|---|
+| 1 | `git clone https://github.com/Rocketzt/t3-copilot.git` | OK (first two attempts: "Connection was reset", this PC's network; third attempt clean) |
+| 2 | `python -m venv .venv` | OK — Python 3.13.11, pip 25.3 |
+| 3 | `.venv\Scripts\python.exe -m pip install -r requirements.txt` | OK — installed Pillow 13.0.0, openpyxl 3.1.5, pandas 3.1.0 (+ numpy etc.); PyPI reachable |
+| 4 | `.venv\Scripts\python.exe -m unittest discover -s tests` | `Ran 56 tests in 0.771s` — OK |
+| 5 | `.venv\Scripts\python.exe tests/run_tests.py --writer-mode offline` | `Exam: 21/21 passed; output written to exports\test_results.json`, exit 0 |
+| 6 | `.venv\Scripts\python.exe -u app/server.py` (`T3_PORT=8817`) | banner `T3 OPS COPILOT - SIMULATED - http://127.0.0.1:8817`; `GET /` → 200 (16,473 bytes); `GET /api/health` → 200 `{"ok": true, "engine": "ready", "writer_mode": "offline", "llm_configured": false, "checker_available": true, "runner_available": true, "sim_label": "模拟 / SIMULATED"}`; server stopped after the check |
+**Result:** The public repo reproduces itself from a clean clone exactly as `README.md` says: 56/56 unit tests, 21/21 exam, the app boots offline with the checker available. No README run-step was wrong or missing for a machine without a system proxy.
+**Anomalies:** On this PC (a system proxy is configured in Windows settings, not in environment variables) plain `urllib` requests to `http://127.0.0.1:*` from a fresh interpreter were answered with `RemoteDisconnected` because the proxy intercepted localhost; `curl.exe --noproxy *` and the browser got clean 200s. Appended a one-line note to README's health block so nobody mistakes this for an app defect. A pre-existing process (not started by this run) was listening on 8803 and was left untouched; the clone server ran on 8817 instead.
+**AI:** OpenCode (GLM-5.3) — ran the clone check unattended and recorded only observed output; no repo file outside the allowed list was touched.
+
 ## 2026-10-24 21:24 — D01 path fix + demo rehearsal checked: all six beats pass
 
 **Setup:** Merged `origin/main` into `ziyu` (fast-forward, no conflicts). Changed only the two `../exam_now.json` references in `docs/D01_Presentation_Outline.md` to `exports/test_results.json`. Ran a throwaway script kept outside the repo (temp folder): `engine.pipeline.analyze()` on EVT001, a typed Hailing event ("14:00, heavy rain and gusts next 6 h, busy afternoon"), `run_bad_writer_demo("EVT001")`, EVT003, EVT005, then `python tests/run_tests.py --writer-mode offline`. Saved the observed results to `evidence/runs/rehearsal_check.md` (21:22 China time).
