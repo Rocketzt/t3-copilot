@@ -16,6 +16,13 @@ Entry format (copy for each new entry):
 
 ---
 
+## 2026-10-24 23:11 — Blue and copper operations UI ready for review
+
+**Setup:** Saved four existing untracked cross-check files as WIP commit `dba1d00`, fetched origin, stayed on `jason`, and confirmed `origin/main` was already merged. The baseline ran 56 unit tests: OK, and the offline exam passed 21/21. Jason selected an airline operations console, light workspace with dark header/rail, blue and copper palette, spacious density, two-column results, system fonts with aligned numbers, no extra emphasis, and no judge-focus treatment.
+**Result:** Updated only `app/static/styles.css` and layout wrappers/classes in `app/static/index.html`. The Assistant now puts risk first, detector and facts on the left, and checker, 17-field advice, and messages on the right. The simulated badge stays visible; checker PASS is green and BLOCKED is red; risk labels remain visible. Final checks: 56 unit tests OK; offline exam 21/21. The root, `/api/health`, and three static assets returned HTTP 200; all five UI tabs opened. At 1366×768 and 1920×1080, EN and 中文 had no page-width overflow or clipped buttons.
+**Anomalies:** None in tests or exam. Push is pending Jason's visual review; the local preview server remains available for that review.
+**AI:** Codex implemented the visual styling and layout wrappers, checked the actual bilingual UI at both target sizes, and recorded the measured results. No application logic, IDs, data attributes, or visible text were changed.
+
 ## 2026-10-24 19:28 — D01, D04, D06 and D07 completed from merged evidence
 
 **Setup:** Confirmed no tracked changes, fetched origin, switched to `jason`, and fast-forwarded to `origin/main` at `a0806ec`. Ran `.venv\Scripts\python.exe -m unittest discover -s tests` and `.venv\Scripts\python.exe tests/run_tests.py --writer-mode offline --out ../exam_now.json`; read `docs/NUMBERS.md`, the saved exam/D03, team log, code, organizer rule records and screenshot inventory. Preserved D04 sections 1–2 byte for byte; completed its remaining sections and wrote D06, D07 and D01 in separate commits.
