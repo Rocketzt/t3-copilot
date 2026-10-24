@@ -4,6 +4,27 @@
 it on `main` only: pull first, make one small commit, push immediately (`ROLES.md`). Ziyu updates it at each gate. Individual work goes in `log/<name>.md`, one file per person, so logs never
 conflict on merge. Newest first. The entries below, dated before 2026-10-23 10:30, are project-setup history.
 
+## 2026-10-24 — Jason's fact-sheet fixes (74fd394) reviewed and merged to main
+
+**Setup:**
+- Checked out `origin/jason` in a scratch worktree and ran the full unit-test suite.
+- For EVT001–EVT005, built the fact sheets and checked that the detector's peer and YoY gaps and the selected
+  month's weather values are in `facts.numbers` and match the workbook.
+- Checked the missing-weather path (Qinglan 2025-03) and the redaction of "旅客张伟".
+- Compared the committed fixtures with fresh code output.
+**Result:**
+- 16/16 tests pass. All 8 changed files are Jason's.
+- Peer and YoY gaps (e.g. EVT001 Hailing 2025-08: −3.66 / −9.14 pp) and the weather values are now whitelisted.
+  SIM-WEATHER appears in the sources for every event.
+- For a missing-weather month, the fact sheet says the data is missing and uses no values.
+- "旅客张伟" is now redacted. The fixtures match the code output.
+- Merged to `main`; tests still pass there.
+- Risk levels now: EVT001 Medium, EVT002 Low, EVT003 Can't tell, EVT004 Low, EVT005 Low.
+**Anomalies:**
+- EVT002 (Beiling, sustained pressure) and EVT004 (Nanwan, thunderstorm risk) come out Low. That is defensible from
+  the monthly data, but the team should confirm it is the intended reading before the demo.
+- Jason's commit timestamp (01:13) is ahead of real time (about 00:10); his machine clock or time zone looks off.
+
 ## 2026-10-24 — Review of Jonathan's R1–R3 spec and explainer: sound and optional, but out of date on repo state and roles
 
 **Setup:** Read `R1-R3_BUILD_SPEC.md` (573 lines) and `R1-R3_EXPLAINED.pdf` (10 pages, text plus a rendered page),
