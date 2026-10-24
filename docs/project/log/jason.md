@@ -16,6 +16,13 @@ Entry format (copy for each new entry):
 
 ---
 
+## 2026-10-24 16:18 — Fact sheets whitelist detector signals and event-text numbers
+
+**Setup:** Confirmed no tracked changes, fetched origin, switched to `jason`, and pulled `origin/jason` (already up to date). Added each quoted detector month's signal count to its SIM-BASE fact and number list, and added Arabic numeric literals from sanitized `weather_text`, `ops_text`, `known`, `unknown`, and `notes` with the event ID as source. Regenerated the five EVT001–EVT005 fact-sheet fixtures.
+**Result:** `.venv\Scripts\python.exe -m unittest discover -s tests -v` ran 18 tests: OK, including new tests for every quoted detector month and all five event-text fields. `git diff --check` exited 0.
+**Anomalies:** None. Pre-existing untracked exports and script were left untouched.
+**AI:** Codex updated the fact builder, added regression tests, regenerated fixtures, and checked the test and diff results.
+
 ## 2026-10-24 16:15 — ClawsGO cross-check agrees; D05 and D03 prepared
 
 **Setup:** Fetched origin, stayed on `jason`, and fast-forwarded to `origin/main` at 396598b. Extracted five zip files into `evidence/ai/clawsgo/crosscheck/`, verified their staged bytes against the extracted files, removed the requested zip, and committed that folder. Added `scripts/crosscheck_detector.py` and its generated report, then wrote D05 and the D03 skeleton in separate commits.

@@ -1,7 +1,7 @@
 {
   "event": {
     "id": "EVT004",
-    "name": "旅客沟通准备",
+    "name": "旅客[REDACTED]",
     "time_text": "第6天下午15:00",
     "airport": "南湾机场",
     "weather_text": "预计傍晚有短时雷雨",
@@ -189,7 +189,7 @@
     "facts": [
       {
         "id": "F01",
-        "text": "Nanwan Airport 2025-12: completion 82.65% versus own average 82.78% (-0.13 pp); peer gap +0.30 pp; YoY gap -2.71 pp.",
+        "text": "Nanwan Airport 2025-12: completion 82.65% versus own average 82.78% (-0.13 pp); peer gap +0.30 pp; YoY gap -2.71 pp; 0 detector signals.",
         "source": "SIM-BASE",
         "value": 82.65,
         "unit": "%"
@@ -245,6 +245,13 @@
         "value": -2.71,
         "unit": "pp",
         "display": "-2.71 pp",
+        "source": "SIM-BASE",
+        "fact_id": "F01"
+      },
+      {
+        "value": 0,
+        "unit": "signals",
+        "display": "0 signals",
         "source": "SIM-BASE",
         "fact_id": "F01"
       },
@@ -319,7 +326,7 @@
       "can_tell": true,
       "can_tell_zh": "可判断"
     },
-    "pii_redacted": false,
+    "pii_redacted": true,
     "feedback_matches": [
       {
         "event_id": "EVT004",

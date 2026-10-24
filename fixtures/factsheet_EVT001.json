@@ -240,14 +240,14 @@
     "facts": [
       {
         "id": "F01",
-        "text": "Hailing International Airport 2025-08: completion 73.16% versus own average 84.15% (-10.99 pp); peer gap -3.66 pp; YoY gap -9.14 pp.",
+        "text": "Hailing International Airport 2025-08: completion 73.16% versus own average 84.15% (-10.99 pp); peer gap -3.66 pp; YoY gap -9.14 pp; 2 detector signals.",
         "source": "SIM-BASE",
         "value": 73.16,
         "unit": "%"
       },
       {
         "id": "F02",
-        "text": "Hailing International Airport 2025-07: completion 69.49% versus own average 85.11% (-15.62 pp); peer gap -5.46 pp; YoY gap -11.48 pp.",
+        "text": "Hailing International Airport 2025-07: completion 69.49% versus own average 85.11% (-15.62 pp); peer gap -5.46 pp; YoY gap -11.48 pp; 3 detector signals.",
         "source": "SIM-BASE",
         "value": 69.49,
         "unit": "%"
@@ -307,6 +307,13 @@
         "fact_id": "F01"
       },
       {
+        "value": 2,
+        "unit": "signals",
+        "display": "2 signals",
+        "source": "SIM-BASE",
+        "fact_id": "F01"
+      },
+      {
         "value": 69.49,
         "unit": "%",
         "display": "69.49%",
@@ -338,6 +345,13 @@
         "value": -11.48,
         "unit": "pp",
         "display": "-11.48 pp",
+        "source": "SIM-BASE",
+        "fact_id": "F02"
+      },
+      {
+        "value": 3,
+        "unit": "signals",
+        "display": "3 signals",
         "source": "SIM-BASE",
         "fact_id": "F02"
       },
