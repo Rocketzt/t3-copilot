@@ -5,7 +5,20 @@ it on `main` only: pull first, make one small commit, push immediately (`ROLES.m
 conflict on merge. Newest first. All times are China time (UTC+8). The entries below, written before 2026-10-23 23:30 China time,
 are project-setup history; they were dated with this PC's UTC−5 clock, so their dates can be up to 13 h behind.
 
-## 2026-10-24 18:45 — Gate merge 2: Jason ac024c0 + Jonathan b4ba664/51cabb9 into main; 41/41 tests, exam 21/21
+## 2026-10-24 18:40 — Ziyu's partial D04 saved and merged; D01/D04/D06/D07 handed to Jason
+
+**Setup:** Ziyu's OpenCode (GLM-5.3) run hit its usage limit while drafting the documents and had committed
+nothing. Its unsaved D04 edit (+172 lines: sections 1–2, data and disruption definition) was committed on `ziyu`
+(74b6771), pushed, and merged into `main` (e4dd256).
+**Result:** The draft's numbers match the verified figures: 192 / 12 / 13 / 179·11·1·1; Hailing −15.62 / −5.46 /
+−11.48; Yunchuan +5.47 peer; the 4 missing-weather rows. D01, D06 and D07 are still stubs. Jason now owns all four
+(DECISIONS.md).
+**Anomalies:**
+- The previous entry's heading said 18:45; the actual time was about 18:36 China time. Corrected.
+- In `docs/AI_USAGE.md`, Ziyu's three entries show 03:05 / 03:17 / 03:36. Those are this PC's UTC−5 times; in China
+  time they are 16:05 / 16:17 / 16:36.
+
+## 2026-10-24 18:36 — Gate merge 2: Jason ac024c0 + Jonathan b4ba664/51cabb9 into main; 41/41 tests, exam 21/21
 
 **Setup:** In a scratch worktree, merged `origin/jason` (D03/D05 evidence, submission draft, a fact-sheet tweak) and
 `origin/jonathan` (UI fixes, README, D08, screenshots, network map) into `main`. Ran the unit tests and

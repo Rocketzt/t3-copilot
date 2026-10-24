@@ -2,6 +2,14 @@
 
 Newest first. A reversal is a new entry.
 
+## 2026-10-24 18:40 — D01, D04, D06 and D07 handed from Ziyu to Jason
+
+**Decision:** Jason (with his agent) finishes D04 from Ziyu's saved partial draft, then writes D06, D07 and the D01
+slide outline. Ziyu reviews; Claude checks the numbers.
+**Why:** Ziyu's OpenCode run hit its usage limit (about 2 h until it resets) after half of D04, and feature freeze
+is 21:00. Jason's D03, D05 and submission draft are already done.
+**Consequence:** ROLES.md now lists Jason as the owner of those four files.
+
 ## 2026-10-23 — Roles v2: build work moves to Jason and Jonathan; Ziyu becomes tech lead; Excel exports cut
 
 **Decision:**
