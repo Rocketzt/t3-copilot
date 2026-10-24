@@ -153,14 +153,14 @@
     "facts": [
       {
         "id": "F01",
-        "text": "Beiling Airport 2025-12: completion 78.49% versus own average 83.23% (-4.74 pp); peer gap -3.86 pp; YoY gap -5.59 pp.",
+        "text": "Beiling Airport 2025-12: completion 78.49% versus own average 83.23% (-4.74 pp); peer gap -3.86 pp; YoY gap -5.59 pp; 1 detector signals.",
         "source": "SIM-BASE",
         "value": 78.49,
         "unit": "%"
       },
       {
         "id": "F02",
-        "text": "Beiling Airport 2025-08: completion 78.20% versus own average 83.81% (-5.61 pp); peer gap -1.38 pp; YoY gap -3.32 pp.",
+        "text": "Beiling Airport 2025-08: completion 78.20% versus own average 83.81% (-5.61 pp); peer gap -1.38 pp; YoY gap -3.32 pp; 1 detector signals.",
         "source": "SIM-BASE",
         "value": 78.2,
         "unit": "%"
@@ -220,6 +220,13 @@
         "fact_id": "F01"
       },
       {
+        "value": 1,
+        "unit": "signals",
+        "display": "1 signals",
+        "source": "SIM-BASE",
+        "fact_id": "F01"
+      },
+      {
         "value": 78.2,
         "unit": "%",
         "display": "78.20%",
@@ -251,6 +258,13 @@
         "value": -3.32,
         "unit": "pp",
         "display": "-3.32 pp",
+        "source": "SIM-BASE",
+        "fact_id": "F02"
+      },
+      {
+        "value": 1,
+        "unit": "signals",
+        "display": "1 signals",
         "source": "SIM-BASE",
         "fact_id": "F02"
       },

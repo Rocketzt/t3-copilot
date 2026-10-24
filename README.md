@@ -7,25 +7,48 @@ operational disruptions at key airports.
 > (`Track 3 Data.xlsx`). The assistant gives decision support only: flight safety, release, cancellation, dispatch,
 > maintenance and compensation are decided by qualified people, and passenger drafts are reviewed by a person.
 
+## Status (Jonathan's branch, 2026-10-24)
+
+The web app runs on the Python standard library with no network and no live model. The engine currently reads
+**generated fixtures** because the data/detector/rules/facts modules (Jason) and the checker (Ziyu) are not merged
+yet; the pipeline already imports them when they appear and reports `engine_mode` so the UI can show which mode it
+is in. The UI says "not checked" rather than faking a checker pass, and "runner not available" until the exam
+runner lands.
+
+What works end to end: event picker (EVT001–EVT005), new-event form, 17-field output with source tags and three
+audience drafts, detector card, fact sheet with assumptions/unknowns/missing data, feedback bar posting to an
+append-only log, bounded question panel, detector tab (192-row ranking + Hailing/Yunchuan SVG chart), exam tab
+(waits for the runner), feedback tab and about tab. All pages carry the `模拟 / SIMULATED` badge.
+
+## Run it
+
+```bash
+# from the repo root; Python 3.10+ standard library only
+python app/server.py          # http://127.0.0.1:8803  (override with T3_PORT)
+```
+
+or on Windows: `run_app.bat`. The build-time packages (`requirements.txt`) are only for the workbook scripts; the
+app does not need them. The full exam runner will be wired by `tests/run_tests.py` when it lands; `run_tests.bat`
+calls it if present.
+
 ## What it does
 
 Staff pick an organizer event (EVT001–EVT005) or type a new one. The assistant:
 
-1. **Detects how unusual the airport's situation is.** It makes three comparisons (own 12-month average, same-size
-   airports, same month last year) and gives a verdict with a confidence level.
-2. **Writes fact-checked advice.** Code builds a fact sheet in which every number has a source ID. The writer turns
-   it into the organizers' 17-field template, including three drafts: operations, airport coordination and
-   passengers. A checker blocks any number that is not in the fact sheet.
-3. **Learns from staff.** Accept / edit / reject decisions are appended to a log and quoted the next time a similar
-   event comes up.
-4. **Is exam-tested.** It runs the 15 official tests, our own unseen events and adversarial inputs, and reports
-   pass/fail with evidence.
+1. **Detects how unusual the airport's situation is.** Three comparisons (own 12-month average, same-size peers,
+   same month last year) → 0–3 signals → normal / watch / unusual / clearly unusual + confidence.
+2. **Writes fact-checked advice.** The fact sheet gives every number a source ID; the offline writer turns it into
+   the organizer's 17-field template and three audience drafts. Ziyu's checker will block any number that is not in
+   the fact sheet; until it is merged the app shows "not checked".
+3. **Records human decisions.** Accept / edit / reject + reason is appended to `data/feedback.jsonl` and quoted for a
+   similar event; the original is never overwritten.
+4. **Is exam-tested.** The exam tab is wired to the runner; until Jason's runner lands it reports that clearly.
 
-## Status
+## API (all JSON, stdlib server)
 
-Planning done, no code yet. The build follows [`EXECUTION_PLAN.md`](EXECUTION_PLAN.md) (who does what and when) and
-[`CONTRACT.md`](CONTRACT.md) (module APIs and JSON shapes). Known errors in both are listed in
-[`docs/planning/ERRATA.md`](docs/planning/ERRATA.md).
+`GET /api/health` · `GET /api/bootstrap` · `GET /api/detector/ranking` · `GET /api/detector/chart?airports=海陵国际机场,云川国际机场`
+· `GET /api/detector/airport?name=海陵国际机场` · `POST /api/analyze` · `POST /api/ask` · `GET|POST /api/feedback`
+· `POST /api/tests/run` · `POST /api/checker/demo`. Shapes follow `CONTRACT.md` §8.
 
 ## Repository layout
 
@@ -36,30 +59,26 @@ Planning done, no code yet. The build follows [`EXECUTION_PLAN.md`](EXECUTION_PL
 | `scripts/` | One-off build scripts: data export, detector cross-check, chart, Excel exports |
 | `tests/` | Exam runner, official test cases, our own events |
 | `data/` | Generated JSON from the workbook and the feedback log |
-| `fixtures/` | Sample JSON shapes used while modules are built in parallel |
+| `fixtures/` | Mock JSON produced from the workbook while modules are built in parallel (`mock_*.json`, `output_*.json`) |
 | `exports/` | Generated evidence: test results, cross-check report, chart, filled organizer sheets |
 | `evidence/` | Screenshots, raw AI-assisted outputs, test-run history |
 | `docs/` | Deliverables D01, D03–D07, AI-use log, planning material and project records |
 | `Track 3 Data.xlsx` | Organizer workbook, read-only. Never edit it; exports are copies |
 
-## Running it (planned commands, from `CONTRACT.md`)
+## Fixtures vs real modules
 
-```bash
-pip install -r requirements.txt        # build-time only: openpyxl, pandas, Pillow
-python scripts/build_data.py           # workbook -> data/track3.json
-python app/server.py                   # http://127.0.0.1:8803
-python tests/run_tests.py --writer-mode offline --out exports/test_results.json
-```
-
-Any Python 3.10+ environment works (the repo's `.venv`, or a conda env if you already use conda). The app itself
-needs only the standard library. The optional live-AI writer reads its settings from
-`.env` (copy `.env.example`). Never commit a real key.
+- `fixtures/mock_bootstrap.json`, `mock_detector_ranking.json`, `mock_chart.json`, `mock_factsheets.json` are
+  generated from the organizer workbook (192 airport-months, 12 rules, 15 tests, 5 events, 3 feedback seeds).
+- `engine/pipeline.py` tries to import `engine.data`, `detector`, `rules`, `facts`, `feedback` and `engine.checker`;
+  when they are missing it falls back to the fixtures and sets `engine_mode = "fixture"`.
+- Regenerate the fixtures from the workbook when needed (build-time only, requires `openpyxl`):
+  the one-off generator was used from outside the repo; the checked-in JSON files are the source the app reads.
+- Never edit `Track 3 Data.xlsx`; never commit `.env` or a real key.
 
 ## Team
 
 Ziyu (engine and AI core) · Jonathan (product and integration) · Jason (evidence and delivery). File owners and the
-git workflow: [`ROLES.md`](ROLES.md).
-Each person commits from their own GitHub account on their own branch; branches are merged to `main` at each gate.
+git workflow: [`ROLES.md`](ROLES.md). Each person commits from their own GitHub account on their own branch.
 
 ## Use of AI tools
 

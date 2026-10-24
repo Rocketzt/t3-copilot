@@ -154,7 +154,7 @@
     "facts": [
       {
         "id": "F01",
-        "text": "Gaoyuan Airport 2025-02: completion 72.88% versus own average 78.98% (-6.10 pp); peer gap -4.14 pp; YoY gap -1.14 pp.",
+        "text": "Gaoyuan Airport 2025-02: completion 72.88% versus own average 78.98% (-6.10 pp); peer gap -4.14 pp; YoY gap -1.14 pp; 1 detector signals.",
         "source": "SIM-BASE",
         "value": 72.88,
         "unit": "%"
@@ -210,6 +210,13 @@
         "value": -1.14,
         "unit": "pp",
         "display": "-1.14 pp",
+        "source": "SIM-BASE",
+        "fact_id": "F01"
+      },
+      {
+        "value": 1,
+        "unit": "signals",
+        "display": "1 signals",
         "source": "SIM-BASE",
         "fact_id": "F01"
       },

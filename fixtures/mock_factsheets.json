@@ -1,0 +1,3201 @@
+{
+ "EVT001": {
+  "event_id": "EVT001",
+  "mock": true,
+  "detector": {
+   "airport": "海陵国际机场",
+   "airport_en": "Hailing International Airport",
+   "year": 2025,
+   "month": 8,
+   "month_label": "2025-08",
+   "tier": "大型机场",
+   "tier_en": "Large airport",
+   "comparisons": [
+    {
+     "key": "own",
+     "label": "Own 12-month average",
+     "value_pp": -10.99,
+     "threshold_pp": -5.0,
+     "signal": true,
+     "detail": "73.16% vs own 12-month average 84.15% -> -10.99 pp"
+    },
+    {
+     "key": "peer",
+     "label": "Same-size peer average",
+     "value_pp": -3.66,
+     "threshold_pp": -5.0,
+     "signal": false,
+     "detail": "73.16% vs same-class average 76.82% -> -3.66 pp"
+    },
+    {
+     "key": "yoy",
+     "label": "Same month last year",
+     "value_pp": -9.14,
+     "threshold_pp": -5.0,
+     "signal": true,
+     "detail": "year-on-year change -9.14 pp"
+    }
+   ],
+   "signal_count": 2,
+   "verdict": "unusual",
+   "confidence": 1.0,
+   "confidence_notes": [
+    "3 of 3 comparisons available",
+    "weather record present"
+   ],
+   "weather_missing": false,
+   "selection_reason": "latest anomalous month used as context",
+   "recent_anomalies": [
+    {
+     "year": 2025,
+     "month": 7,
+     "month_label": "2025-07",
+     "delta_pp": -15.62,
+     "signal_count": 3,
+     "verdict": "clearly unusual"
+    },
+    {
+     "year": 2025,
+     "month": 8,
+     "month_label": "2025-08",
+     "delta_pp": -10.99,
+     "signal_count": 2,
+     "verdict": "unusual"
+    }
+   ],
+   "flagged_airport_months": [
+    {
+     "airport": "海陵国际机场",
+     "airport_en": "Hailing International Airport",
+     "year": 2025,
+     "month": 7,
+     "month_label": "2025-07",
+     "tier": "大型机场",
+     "tier_en": "Large airport",
+     "completion_pct": 69.49,
+     "release_pct": 72.21,
+     "peer_pct": 74.95,
+     "own_avg_pct": 85.11,
+     "delta_pp": -15.62,
+     "peer_delta_pp": -5.46,
+     "yoy_delta_pp": -11.48,
+     "signals": {
+      "own": true,
+      "peer": true,
+      "yoy": true
+     },
+     "signal_count": 3,
+     "comparisons_available": 3,
+     "weather_missing": false,
+     "verdict": "clearly unusual",
+     "confidence": 1.0,
+     "importance": "高",
+     "importance_en": "High"
+    },
+    {
+     "airport": "海陵国际机场",
+     "airport_en": "Hailing International Airport",
+     "year": 2025,
+     "month": 8,
+     "month_label": "2025-08",
+     "tier": "大型机场",
+     "tier_en": "Large airport",
+     "completion_pct": 73.16,
+     "release_pct": 76.24,
+     "peer_pct": 76.82,
+     "own_avg_pct": 84.15,
+     "delta_pp": -10.99,
+     "peer_delta_pp": -3.66,
+     "yoy_delta_pp": -9.14,
+     "signals": {
+      "own": true,
+      "peer": false,
+      "yoy": true
+     },
+     "signal_count": 2,
+     "comparisons_available": 3,
+     "weather_missing": false,
+     "verdict": "unusual",
+     "confidence": 1.0,
+     "importance": "高",
+     "importance_en": "High"
+    }
+   ]
+  },
+  "rules": [
+   {
+    "id": "RULE002",
+    "topic": "天气风险",
+    "topic_en": "Weather risk",
+    "trigger": "天气提示达到中高风险但尚无正式运行状态",
+    "trigger_en": "weather notice shows medium/high risk but no formal operating status",
+    "checks": "核查机场保障、前序运行和后续航班集中程度",
+    "checks_en": "Verify airport ground support, preceding operations and how concentrated later flights are.",
+    "action": "准备监测清单与沟通草案",
+    "action_en": "Prepare a monitoring checklist and communication drafts.",
+    "escalate_to": "运行协调人员",
+    "escalate_to_en": "Operations Coordinator",
+    "manual_approval": true,
+    "forbidden": "不得声称航班一定延误",
+    "forbidden_en": "Must not claim that flights will certainly be delayed.",
+    "source": "organizer rule table",
+    "status": "valid"
+   },
+   {
+    "id": "RULE003",
+    "topic": "异常波动",
+    "topic_en": "Anomalous fluctuation",
+    "trigger": "当前指标低于过去十二个月平均五个百分点以上",
+    "trigger_en": "current metric more than 5 percentage points below its own 12-month average",
+    "checks": "核查数据完整性和同类机场变化",
+    "checks_en": "Verify data completeness and how same-size airports changed.",
+    "action": "标记为重点复核",
+    "action_en": "Flag the month for priority review.",
+    "escalate_to": "运营分析人员",
+    "escalate_to_en": "Operations Analyst",
+    "manual_approval": false,
+    "forbidden": "不得直接归因于天气",
+    "forbidden_en": "Must not attribute the fluctuation directly to weather.",
+    "source": "organizer rule table",
+    "status": "valid"
+   },
+   {
+    "id": "RULE005",
+    "topic": "旅客沟通",
+    "topic_en": "Passenger communication",
+    "trigger": "存在风险但没有正式航班状态",
+    "trigger_en": "risk exists but there is no formal flight status",
+    "checks": "核查可公开事实和更新时间",
+    "checks_en": "Verify publicly shareable facts and their update time.",
+    "action": "生成明确标注“草案”的提示",
+    "action_en": "Generate a notice clearly marked as a DRAFT.",
+    "escalate_to": "旅客服务负责人",
+    "escalate_to_en": "Passenger Services Lead",
+    "manual_approval": true,
+    "forbidden": "不得作为正式通知自动发送",
+    "forbidden_en": "Must not send it as an official notification.",
+    "source": "organizer rule table",
+    "status": "valid"
+   },
+   {
+    "id": "RULE007",
+    "topic": "重大运行决定",
+    "topic_en": "Major operational decisions",
+    "trigger": "涉及取消、放行、调度、维修或赔付",
+    "trigger_en": "involves cancellation, release, dispatch, maintenance or compensation",
+    "checks": "停止自动建议并指向人工负责人",
+    "checks_en": "Stop automated advice and point to the accountable human.",
+    "action": "仅整理所需信息",
+    "action_en": "Only organise the information required by the responsible professional.",
+    "escalate_to": "相应专业负责人",
+    "escalate_to_en": "Relevant professional lead (Operations Manager)",
+    "manual_approval": true,
+    "forbidden": "不得自动作出决定",
+    "forbidden_en": "Must not make the decision automatically.",
+    "source": "organizer rule table",
+    "status": "valid"
+   },
+   {
+    "id": "RULE008",
+    "topic": "高风险升级",
+    "topic_en": "High-risk escalation",
+    "trigger": "多个独立风险信号同时存在且影响范围可能扩大",
+    "trigger_en": "multiple independent risk signals with a possible expansion of impact",
+    "checks": "核查信息是否至少来自两个可靠来源",
+    "checks_en": "Verify that the information comes from at least two reliable sources.",
+    "action": "建议升级并说明触发依据",
+    "action_en": "Recommend escalation and state the triggering basis.",
+    "escalate_to": "运营负责人",
+    "escalate_to_en": "Operations Lead",
+    "manual_approval": true,
+    "forbidden": "不得跳过人工审批",
+    "forbidden_en": "Must not skip human approval.",
+    "source": "organizer rule table",
+    "status": "valid"
+   },
+   {
+    "id": "RULE009",
+    "topic": "引用要求",
+    "topic_en": "Citation requirement",
+    "trigger": "输出包含数字或正式状态",
+    "trigger_en": "the output contains numbers or a formal status",
+    "checks": "检查来源编号和时间范围",
+    "checks_en": "Check source IDs and the time range of every number.",
+    "action": "在输出中列出来源",
+    "action_en": "List all sources in the output.",
+    "escalate_to": "输出复核人",
+    "escalate_to_en": "Output Reviewer",
+    "manual_approval": true,
+    "forbidden": "不得无来源生成事实",
+    "forbidden_en": "Must not generate facts without a source.",
+    "source": "organizer rule table",
+    "status": "valid"
+   },
+   {
+    "id": "RULE010",
+    "topic": "模拟标识",
+    "topic_en": "Simulation label",
+    "trigger": "使用模拟事件或模拟数值",
+    "trigger_en": "simulated events or simulated values are used",
+    "checks": "检查页面和输出标识",
+    "checks_en": "Check the labels on every page and output.",
+    "action": "统一标注“模拟”",
+    "action_en": "Label everything as SIMULATED (模拟).",
+    "escalate_to": "项目负责人",
+    "escalate_to_en": "Project Lead",
+    "manual_approval": false,
+    "forbidden": "不得称为真实事件",
+    "forbidden_en": "Must not present the material as a real event.",
+    "source": "organizer rule table",
+    "status": "valid"
+   }
+  ],
+  "facts": [
+   {
+    "id": "F01",
+    "text": "Hailing International Airport is a large airport with 4577 ten-thousand annual passengers (45.77 million) and 70926 aircraft movements in 2025; airline business importance: High.",
+    "source": "SIM-SCALE",
+    "value": 4577,
+    "unit": null
+   },
+   {
+    "id": "F02",
+    "text": "海陵国际机场 2025-08: completion 73.16% vs own 12-month average 84.15% = -10.99 pp.",
+    "source": "SIM-BASE",
+    "value": -10.99,
+    "unit": "pp"
+   },
+   {
+    "id": "F03",
+    "text": "Same-size peer comparison 2025-08: 73.16% vs same-class average 76.82% = -3.66 pp.",
+    "source": "SIM-BASE",
+    "value": -3.66,
+    "unit": "pp"
+   },
+   {
+    "id": "F04",
+    "text": "Same month last year: 2025-08 completion 73.16% vs the same month in 2024 (82.30%) = -9.14 pp.",
+    "source": "SIM-BASE",
+    "value": -9.14,
+    "unit": "pp"
+   },
+   {
+    "id": "F05",
+    "text": "Peak anomaly for 海陵国际机场 in 2025: 2025-07 was -15.62 pp below its own 12-month average (69.49% vs 85.11%).",
+    "source": "SIM-BASE",
+    "value": -15.62,
+    "unit": "pp"
+   },
+   {
+    "id": "F06",
+    "text": "Anomaly detector: 2 of 3 comparisons signal a drop of 5.00 pp or more; verdict: unusual; confidence 1.00.",
+    "source": "DETECTOR",
+    "value": 2,
+    "unit": null
+   },
+   {
+    "id": "F07",
+    "text": "海陵国际机场 2025-08 weather background: precipitation 111.6 mm, mean temperature 21.1 C, maximum wind 15.0 m/s, 4 adverse-weather days.",
+    "source": "SIM-WEATHER",
+    "value": 111.6,
+    "unit": null
+   },
+   {
+    "id": "F08",
+    "text": "Event EVT001: weather - Heavy rain and gusts expected over the next six hours (6-hour window). Operations - Morning operations were close to the usual level; flight volume is concentrated in the afternoon.",
+    "source": "EVT001"
+   },
+   {
+    "id": "F09",
+    "text": "Network-wide monthly average completion: July 78.8%, August 78.5%, March 84.3% - summer dips are partly seasonal, so an own-history flag alone is not enough.",
+    "source": "SIM-BASE"
+   },
+   {
+    "id": "F10",
+    "text": "Previous staff decision on a similar event (EVT001, REC001): 接受. Reason: not recorded. Final action: 核查机场保障能力并保留旅客提示草案.",
+    "source": "FEEDBACK-HISTORY"
+   }
+  ],
+  "numbers": [
+   {
+    "value": 4577.0,
+    "display": "4577",
+    "source": "SIM-SCALE",
+    "fact_id": "F01"
+   },
+   {
+    "value": 45.77,
+    "display": "45.77",
+    "source": "SIM-SCALE",
+    "fact_id": "F01"
+   },
+   {
+    "value": 70926.0,
+    "display": "70926",
+    "source": "SIM-SCALE",
+    "fact_id": "F01"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-SCALE",
+    "fact_id": "F01"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": -8.0,
+    "display": "-08",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": 73.16,
+    "display": "73.16",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": 12.0,
+    "display": "12",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": 84.15,
+    "display": "84.15",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": -10.99,
+    "display": "-10.99",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-BASE",
+    "fact_id": "F03"
+   },
+   {
+    "value": -8.0,
+    "display": "-08",
+    "source": "SIM-BASE",
+    "fact_id": "F03"
+   },
+   {
+    "value": 73.16,
+    "display": "73.16",
+    "source": "SIM-BASE",
+    "fact_id": "F03"
+   },
+   {
+    "value": 76.82,
+    "display": "76.82",
+    "source": "SIM-BASE",
+    "fact_id": "F03"
+   },
+   {
+    "value": -3.66,
+    "display": "-3.66",
+    "source": "SIM-BASE",
+    "fact_id": "F03"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": -8.0,
+    "display": "-08",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": 73.16,
+    "display": "73.16",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": 2024.0,
+    "display": "2024",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": 82.3,
+    "display": "82.30",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": -9.14,
+    "display": "-9.14",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": -7.0,
+    "display": "-07",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": -15.62,
+    "display": "-15.62",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": 12.0,
+    "display": "12",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": 69.49,
+    "display": "69.49",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": 85.11,
+    "display": "85.11",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": 2.0,
+    "display": "2",
+    "source": "DETECTOR",
+    "fact_id": "F06"
+   },
+   {
+    "value": 3.0,
+    "display": "3",
+    "source": "DETECTOR",
+    "fact_id": "F06"
+   },
+   {
+    "value": 5.0,
+    "display": "5.00",
+    "source": "DETECTOR",
+    "fact_id": "F06"
+   },
+   {
+    "value": 1.0,
+    "display": "1.00",
+    "source": "DETECTOR",
+    "fact_id": "F06"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": -8.0,
+    "display": "-08",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": 111.6,
+    "display": "111.6",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": 21.1,
+    "display": "21.1",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": 15.0,
+    "display": "15.0",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": 4.0,
+    "display": "4",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": 1.0,
+    "display": "001",
+    "source": "EVT001",
+    "fact_id": "F08"
+   },
+   {
+    "value": 6.0,
+    "display": "6",
+    "source": "EVT001",
+    "fact_id": "F08"
+   },
+   {
+    "value": 4.0,
+    "display": "4",
+    "source": "EVT001",
+    "fact_id": "F08"
+   },
+   {
+    "value": 14.0,
+    "display": "14",
+    "source": "EVT001",
+    "fact_id": "F08"
+   },
+   {
+    "value": 0.0,
+    "display": "00",
+    "source": "EVT001",
+    "fact_id": "F08"
+   },
+   {
+    "value": 78.8,
+    "display": "78.8",
+    "source": "SIM-BASE",
+    "fact_id": "F09"
+   },
+   {
+    "value": 78.5,
+    "display": "78.5",
+    "source": "SIM-BASE",
+    "fact_id": "F09"
+   },
+   {
+    "value": 84.3,
+    "display": "84.3",
+    "source": "SIM-BASE",
+    "fact_id": "F09"
+   },
+   {
+    "value": 1.0,
+    "display": "001",
+    "source": "FEEDBACK-HISTORY",
+    "fact_id": "F10"
+   },
+   {
+    "value": 1.0,
+    "display": "001",
+    "source": "FEEDBACK-HISTORY",
+    "fact_id": "F10"
+   }
+  ],
+  "assumptions": [
+   "Weather conditions reduce ground-handling and apron capacity; the data cannot prove that the weather caused this event (assumption to verify).",
+   "If the weather window extends, evening rotations and the next day's first wave may be affected.",
+   "The airport's own-history flag is compared against network seasonality; a summer dip alone is not treated as abnormal."
+  ],
+  "unknowns": [
+   "Flight-by-flight schedule; aircraft rotations; crew and ground-support status.",
+   "Detailed flight-level information was not part of the input."
+  ],
+  "missing_data": [
+   "The organizer data is monthly and airport-level: it cannot identify which individual flights or crews are affected."
+  ],
+  "forbidden_actions": [
+   "Cancelling, releasing, dispatching, maintaining or compensating flights (RULE007).",
+   "Sending any passenger message as an official notification (RULE005).",
+   "Claiming that a flight is cancelled or delayed when no formal status exists (RULE002/RULE005).",
+   "Attributing the performance drop to weather as a proven cause (RULE003).",
+   "Storing or repeating passenger or employee personal data (RULE011).",
+   "Presenting simulated data or events as real (RULE010)."
+  ],
+  "sources": [
+   "SIM-BASE",
+   "SIM-SCALE",
+   "SIM-WEATHER",
+   "DETECTOR",
+   "FEEDBACK-HISTORY",
+   "EVT001",
+   "RULE002",
+   "RULE003",
+   "RULE005",
+   "RULE007",
+   "RULE008",
+   "RULE009",
+   "RULE010"
+  ],
+  "risk": {
+   "level": "Medium",
+   "level_zh": "中",
+   "score": 6.5,
+   "reasons": [
+    {
+     "text": "Anomaly detector verdict: unusual (2/3 comparisons signal a >=5 pp drop).",
+     "source": "DETECTOR",
+     "points": 2.0
+    },
+    {
+     "text": "Event weather text indicates strong weather risk.",
+     "source": "EVT001",
+     "points": 2.0
+    },
+    {
+     "text": "Operating description indicates sustained pressure.",
+     "source": "EVT001",
+     "points": 1.0
+    },
+    {
+     "text": "Airline business importance: High.",
+     "source": "SIM-SCALE",
+     "points": 1.5
+    }
+   ],
+   "can_tell": true,
+   "can_tell_zh": "可判断"
+  },
+  "pii_redacted": false,
+  "feedback_matches": [
+   {
+    "event_id": "EVT001",
+    "rec_id": "REC001",
+    "result": "接受",
+    "reason": null,
+    "final_action": "核查机场保障能力并保留旅客提示草案",
+    "outcome": "模拟：获得更新后风险仍为中等",
+    "improvement": "保持先核查后升级的顺序",
+    "reviewer": "赛事导师",
+    "date": "第4天",
+    "source": "organizer_seed"
+   }
+  ],
+  "conflict": false,
+  "sim_label": "模拟 / SIMULATED",
+  "narrative": {
+   "first_action": "Ask the airport coordination team to confirm the latest ground-support capacity and the weather update time.",
+   "follow_up": [
+    "Check how concentrated the afternoon and evening flights are.",
+    "Prepare the internal monitoring checklist and the passenger draft.",
+    "Record the decision and reason in the feedback log."
+   ],
+   "escalation": "If ground-support capacity falls and a formal operating irregularity is confirmed, escalate to the Operations Lead.",
+   "human_decisions": "Cancellation, release, dispatch, maintenance and compensation decisions, and the formal passenger notification, require the responsible qualified professional (RULE007).",
+   "impact": "Ground support and downstream rotations may come under pressure, but no formal delay status has been issued.",
+   "ops_note": "Simulated operations note: Hailing faces heavy rain and gusts over the next six hours with a concentrated afternoon peak. Check ground support first; no formal delay conclusion.",
+   "airport_note": "Simulated coordination request: please confirm the latest weather update time, ground-support capacity and the peak workload window for Hailing.",
+   "passenger_note": "Simulated draft passenger message: Hailing may experience possible delays over the next six hours. Flight status has not been confirmed. Please check official airline and airport channels for updates."
+  }
+ },
+ "EVT002": {
+  "event_id": "EVT002",
+  "mock": true,
+  "detector": {
+   "airport": "北岭机场",
+   "airport_en": "Beiling Airport",
+   "year": 2025,
+   "month": 8,
+   "month_label": "2025-08",
+   "tier": "中型机场",
+   "tier_en": "Medium airport",
+   "comparisons": [
+    {
+     "key": "own",
+     "label": "Own 12-month average",
+     "value_pp": -5.61,
+     "threshold_pp": -5.0,
+     "signal": true,
+     "detail": "78.20% vs own 12-month average 83.81% -> -5.61 pp"
+    },
+    {
+     "key": "peer",
+     "label": "Same-size peer average",
+     "value_pp": -1.38,
+     "threshold_pp": -5.0,
+     "signal": false,
+     "detail": "78.20% vs same-class average 79.58% -> -1.38 pp"
+    },
+    {
+     "key": "yoy",
+     "label": "Same month last year",
+     "value_pp": -3.32,
+     "threshold_pp": -5.0,
+     "signal": false,
+     "detail": "year-on-year change -3.32 pp"
+    }
+   ],
+   "signal_count": 1,
+   "verdict": "watch",
+   "confidence": 1.0,
+   "confidence_notes": [
+    "3 of 3 comparisons available",
+    "weather record present"
+   ],
+   "weather_missing": false,
+   "selection_reason": "latest anomalous month used as context",
+   "recent_anomalies": [
+    {
+     "year": 2025,
+     "month": 8,
+     "month_label": "2025-08",
+     "delta_pp": -5.61,
+     "signal_count": 1,
+     "verdict": "watch"
+    }
+   ],
+   "flagged_airport_months": [
+    {
+     "airport": "北岭机场",
+     "airport_en": "Beiling Airport",
+     "year": 2025,
+     "month": 8,
+     "month_label": "2025-08",
+     "tier": "中型机场",
+     "tier_en": "Medium airport",
+     "completion_pct": 78.2,
+     "release_pct": 79.42,
+     "peer_pct": 79.58,
+     "own_avg_pct": 83.81,
+     "delta_pp": -5.61,
+     "peer_delta_pp": -1.38,
+     "yoy_delta_pp": -3.32,
+     "signals": {
+      "own": true,
+      "peer": false,
+      "yoy": false
+     },
+     "signal_count": 1,
+     "comparisons_available": 3,
+     "weather_missing": false,
+     "verdict": "watch",
+     "confidence": 1.0,
+     "importance": "中",
+     "importance_en": "Medium"
+    },
+    {
+     "airport": "北岭机场",
+     "airport_en": "Beiling Airport",
+     "year": 2025,
+     "month": 12,
+     "month_label": "2025-12",
+     "tier": "中型机场",
+     "tier_en": "Medium airport",
+     "completion_pct": 78.49,
+     "release_pct": 80.54,
+     "peer_pct": 82.35,
+     "own_avg_pct": 83.23,
+     "delta_pp": -4.74,
+     "peer_delta_pp": -3.86,
+     "yoy_delta_pp": -5.59,
+     "signals": {
+      "own": false,
+      "peer": false,
+      "yoy": true
+     },
+     "signal_count": 1,
+     "comparisons_available": 3,
+     "weather_missing": false,
+     "verdict": "watch",
+     "confidence": 1.0,
+     "importance": "中",
+     "importance_en": "Medium"
+    }
+   ]
+  },
+  "rules": [
+   {
+    "id": "RULE003",
+    "topic": "异常波动",
+    "topic_en": "Anomalous fluctuation",
+    "trigger": "当前指标低于过去十二个月平均五个百分点以上",
+    "trigger_en": "current metric more than 5 percentage points below its own 12-month average",
+    "checks": "核查数据完整性和同类机场变化",
+    "checks_en": "Verify data completeness and how same-size airports changed.",
+    "action": "标记为重点复核",
+    "action_en": "Flag the month for priority review.",
+    "escalate_to": "运营分析人员",
+    "escalate_to_en": "Operations Analyst",
+    "manual_approval": false,
+    "forbidden": "不得直接归因于天气",
+    "forbidden_en": "Must not attribute the fluctuation directly to weather.",
+    "source": "organizer rule table",
+    "status": "valid"
+   },
+   {
+    "id": "RULE004",
+    "topic": "持续运行压力",
+    "topic_en": "Sustained operational pressure",
+    "trigger": "上一时段表现下降且后续任务仍集中",
+    "trigger_en": "previous period performance dropped and later workload remains concentrated",
+    "checks": "核查前序飞机、登机口和地面保障承压情况",
+    "checks_en": "Verify preceding aircraft, gate availability and ground-support pressure.",
+    "action": "按时间顺序列出核查事项",
+    "action_en": "List checks in chronological order.",
+    "escalate_to": "运营负责人",
+    "escalate_to_en": "Operations Lead",
+    "manual_approval": true,
+    "forbidden": "不得调整真实航班计划",
+    "forbidden_en": "Must not adjust real flight schedules.",
+    "source": "organizer rule table",
+    "status": "valid"
+   },
+   {
+    "id": "RULE007",
+    "topic": "重大运行决定",
+    "topic_en": "Major operational decisions",
+    "trigger": "涉及取消、放行、调度、维修或赔付",
+    "trigger_en": "involves cancellation, release, dispatch, maintenance or compensation",
+    "checks": "停止自动建议并指向人工负责人",
+    "checks_en": "Stop automated advice and point to the accountable human.",
+    "action": "仅整理所需信息",
+    "action_en": "Only organise the information required by the responsible professional.",
+    "escalate_to": "相应专业负责人",
+    "escalate_to_en": "Relevant professional lead (Operations Manager)",
+    "manual_approval": true,
+    "forbidden": "不得自动作出决定",
+    "forbidden_en": "Must not make the decision automatically.",
+    "source": "organizer rule table",
+    "status": "valid"
+   },
+   {
+    "id": "RULE009",
+    "topic": "引用要求",
+    "topic_en": "Citation requirement",
+    "trigger": "输出包含数字或正式状态",
+    "trigger_en": "the output contains numbers or a formal status",
+    "checks": "检查来源编号和时间范围",
+    "checks_en": "Check source IDs and the time range of every number.",
+    "action": "在输出中列出来源",
+    "action_en": "List all sources in the output.",
+    "escalate_to": "输出复核人",
+    "escalate_to_en": "Output Reviewer",
+    "manual_approval": true,
+    "forbidden": "不得无来源生成事实",
+    "forbidden_en": "Must not generate facts without a source.",
+    "source": "organizer rule table",
+    "status": "valid"
+   },
+   {
+    "id": "RULE010",
+    "topic": "模拟标识",
+    "topic_en": "Simulation label",
+    "trigger": "使用模拟事件或模拟数值",
+    "trigger_en": "simulated events or simulated values are used",
+    "checks": "检查页面和输出标识",
+    "checks_en": "Check the labels on every page and output.",
+    "action": "统一标注“模拟”",
+    "action_en": "Label everything as SIMULATED (模拟).",
+    "escalate_to": "项目负责人",
+    "escalate_to_en": "Project Lead",
+    "manual_approval": false,
+    "forbidden": "不得称为真实事件",
+    "forbidden_en": "Must not present the material as a real event.",
+    "source": "organizer rule table",
+    "status": "valid"
+   }
+  ],
+  "facts": [
+   {
+    "id": "F01",
+    "text": "Beiling Airport is a medium airport with 3374 ten-thousand annual passengers (33.74 million) and 51276 aircraft movements in 2025; airline business importance: Medium.",
+    "source": "SIM-SCALE",
+    "value": 3374,
+    "unit": null
+   },
+   {
+    "id": "F02",
+    "text": "北岭机场 2025-08: completion 78.20% vs own 12-month average 83.81% = -5.61 pp.",
+    "source": "SIM-BASE",
+    "value": -5.61,
+    "unit": "pp"
+   },
+   {
+    "id": "F03",
+    "text": "Same-size peer comparison 2025-08: 78.20% vs same-class average 79.58% = -1.38 pp.",
+    "source": "SIM-BASE",
+    "value": -1.38,
+    "unit": "pp"
+   },
+   {
+    "id": "F04",
+    "text": "Same month last year: 2025-08 completion 78.20% vs the same month in 2024 (81.52%) = -3.32 pp.",
+    "source": "SIM-BASE",
+    "value": -3.32,
+    "unit": "pp"
+   },
+   {
+    "id": "F05",
+    "text": "Peak anomaly for 北岭机场 in 2025: 2025-08 was -5.61 pp below its own 12-month average (78.20% vs 83.81%).",
+    "source": "SIM-BASE",
+    "value": -5.61,
+    "unit": "pp"
+   },
+   {
+    "id": "F06",
+    "text": "Anomaly detector: 1 of 3 comparisons signal a drop of 5.00 pp or more; verdict: watch; confidence 1.00.",
+    "source": "DETECTOR",
+    "value": 1,
+    "unit": null
+   },
+   {
+    "id": "F07",
+    "text": "北岭机场 2025-08 weather background: precipitation 90.5 mm, mean temperature 21.0 C, maximum wind 11.1 m/s, 3 adverse-weather days.",
+    "source": "SIM-WEATHER",
+    "value": 90.5,
+    "unit": null
+   },
+   {
+    "id": "F08",
+    "text": "Event EVT002: weather - No significant deterioration in the weather. Operations - The share of flights completed as planned dropped in the morning; many flights remain scheduled in the evening.",
+    "source": "EVT002"
+   },
+   {
+    "id": "F09",
+    "text": "Network-wide monthly average completion: July 78.8%, August 78.5%, March 84.3% - summer dips are partly seasonal, so an own-history flag alone is not enough.",
+    "source": "SIM-BASE"
+   }
+  ],
+  "numbers": [
+   {
+    "value": 3374.0,
+    "display": "3374",
+    "source": "SIM-SCALE",
+    "fact_id": "F01"
+   },
+   {
+    "value": 33.74,
+    "display": "33.74",
+    "source": "SIM-SCALE",
+    "fact_id": "F01"
+   },
+   {
+    "value": 51276.0,
+    "display": "51276",
+    "source": "SIM-SCALE",
+    "fact_id": "F01"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-SCALE",
+    "fact_id": "F01"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": -8.0,
+    "display": "-08",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": 78.2,
+    "display": "78.20",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": 12.0,
+    "display": "12",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": 83.81,
+    "display": "83.81",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": -5.61,
+    "display": "-5.61",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-BASE",
+    "fact_id": "F03"
+   },
+   {
+    "value": -8.0,
+    "display": "-08",
+    "source": "SIM-BASE",
+    "fact_id": "F03"
+   },
+   {
+    "value": 78.2,
+    "display": "78.20",
+    "source": "SIM-BASE",
+    "fact_id": "F03"
+   },
+   {
+    "value": 79.58,
+    "display": "79.58",
+    "source": "SIM-BASE",
+    "fact_id": "F03"
+   },
+   {
+    "value": -1.38,
+    "display": "-1.38",
+    "source": "SIM-BASE",
+    "fact_id": "F03"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": -8.0,
+    "display": "-08",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": 78.2,
+    "display": "78.20",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": 2024.0,
+    "display": "2024",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": 81.52,
+    "display": "81.52",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": -3.32,
+    "display": "-3.32",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": -8.0,
+    "display": "-08",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": -5.61,
+    "display": "-5.61",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": 12.0,
+    "display": "12",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": 78.2,
+    "display": "78.20",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": 83.81,
+    "display": "83.81",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": 1.0,
+    "display": "1",
+    "source": "DETECTOR",
+    "fact_id": "F06"
+   },
+   {
+    "value": 3.0,
+    "display": "3",
+    "source": "DETECTOR",
+    "fact_id": "F06"
+   },
+   {
+    "value": 5.0,
+    "display": "5.00",
+    "source": "DETECTOR",
+    "fact_id": "F06"
+   },
+   {
+    "value": 1.0,
+    "display": "1.00",
+    "source": "DETECTOR",
+    "fact_id": "F06"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": -8.0,
+    "display": "-08",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": 90.5,
+    "display": "90.5",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": 21.0,
+    "display": "21.0",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": 11.1,
+    "display": "11.1",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": 3.0,
+    "display": "3",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": 2.0,
+    "display": "002",
+    "source": "EVT002",
+    "fact_id": "F08"
+   },
+   {
+    "value": 4.0,
+    "display": "4",
+    "source": "EVT002",
+    "fact_id": "F08"
+   },
+   {
+    "value": 18.0,
+    "display": "18",
+    "source": "EVT002",
+    "fact_id": "F08"
+   },
+   {
+    "value": 30.0,
+    "display": "30",
+    "source": "EVT002",
+    "fact_id": "F08"
+   },
+   {
+    "value": 78.8,
+    "display": "78.8",
+    "source": "SIM-BASE",
+    "fact_id": "F09"
+   },
+   {
+    "value": 78.5,
+    "display": "78.5",
+    "source": "SIM-BASE",
+    "fact_id": "F09"
+   },
+   {
+    "value": 84.3,
+    "display": "84.3",
+    "source": "SIM-BASE",
+    "fact_id": "F09"
+   }
+  ],
+  "assumptions": [
+   "Weather conditions reduce ground-handling and apron capacity; the data cannot prove that the weather caused this event (assumption to verify).",
+   "If the weather window extends, evening rotations and the next day's first wave may be affected.",
+   "The airport's own-history flag is compared against network seasonality; a summer dip alone is not treated as abnormal."
+  ],
+  "unknowns": [
+   "Affected flights; gate resources; preceding aircraft positions.",
+   "Detailed flight-level information was not part of the input."
+  ],
+  "missing_data": [
+   "The organizer data is monthly and airport-level: it cannot identify which individual flights or crews are affected."
+  ],
+  "forbidden_actions": [
+   "Cancelling, releasing, dispatching, maintaining or compensating flights (RULE007).",
+   "Sending any passenger message as an official notification (RULE005).",
+   "Claiming that a flight is cancelled or delayed when no formal status exists (RULE002/RULE005).",
+   "Attributing the performance drop to weather as a proven cause (RULE003).",
+   "Storing or repeating passenger or employee personal data (RULE011).",
+   "Presenting simulated data or events as real (RULE010)."
+  ],
+  "sources": [
+   "SIM-BASE",
+   "SIM-SCALE",
+   "SIM-WEATHER",
+   "DETECTOR",
+   "FEEDBACK-HISTORY",
+   "EVT002",
+   "RULE003",
+   "RULE004",
+   "RULE007",
+   "RULE009",
+   "RULE010"
+  ],
+  "risk": {
+   "level": "Medium",
+   "level_zh": "中",
+   "score": 3.5,
+   "reasons": [
+    {
+     "text": "Anomaly detector verdict: watch (1/3 comparisons signal a >=5 pp drop).",
+     "source": "DETECTOR",
+     "points": 2.0
+    },
+    {
+     "text": "Event weather text indicates strong weather risk.",
+     "source": "EVT002",
+     "points": 2.0
+    },
+    {
+     "text": "Operating description indicates sustained pressure.",
+     "source": "EVT002",
+     "points": 1.0
+    },
+    {
+     "text": "Airline business importance: Medium.",
+     "source": "SIM-SCALE",
+     "points": 1.5
+    }
+   ],
+   "can_tell": true,
+   "can_tell_zh": "可判断"
+  },
+  "pii_redacted": false,
+  "feedback_matches": [],
+  "conflict": false,
+  "sim_label": "模拟 / SIMULATED",
+  "narrative": {
+   "first_action": "Ask operations to confirm preceding-aircraft positions, gate availability and ground-support loading for the evening peak.",
+   "follow_up": [
+    "List the checks in chronological order, starting with the preceding rotation.",
+    "Monitor gate changes and the evening flight concentration.",
+    "Record the decision and reason in the feedback log."
+   ],
+   "escalation": "If the pressure continues and a formal operating irregularity appears, escalate to the Operations Lead.",
+   "human_decisions": "Cancellation, release, dispatch, maintenance and compensation decisions, and the formal passenger notification, require the responsible qualified professional (RULE007).",
+   "impact": "Sustained pressure on gates and ground support may affect evening departures; the cause is not established.",
+   "ops_note": "Simulated operations note: Beiling shows a morning completion drop with a busy evening ahead and frequent gate changes. Verify gate and ground-support pressure first.",
+   "airport_note": "Simulated coordination request: please confirm gate availability and ground-support capacity for the evening peak at Beiling.",
+   "passenger_note": "Simulated draft passenger message: Beiling may experience possible delays this evening. Flight status has not been confirmed. Please check official airline and airport channels for updates."
+  }
+ },
+ "EVT003": {
+  "event_id": "EVT003",
+  "mock": true,
+  "detector": {
+   "airport": "云川国际机场",
+   "airport_en": "Yunchuan International Airport",
+   "year": 2025,
+   "month": 7,
+   "month_label": "2025-07",
+   "tier": "大型机场",
+   "tier_en": "Large airport",
+   "comparisons": [
+    {
+     "key": "own",
+     "label": "Own 12-month average",
+     "value_pp": -6.07,
+     "threshold_pp": -5.0,
+     "signal": true,
+     "detail": "80.42% vs own 12-month average 86.49% -> -6.07 pp"
+    },
+    {
+     "key": "peer",
+     "label": "Same-size peer average",
+     "value_pp": 5.47,
+     "threshold_pp": -5.0,
+     "signal": false,
+     "detail": "80.42% vs same-class average 74.95% -> 5.47 pp"
+    },
+    {
+     "key": "yoy",
+     "label": "Same month last year",
+     "value_pp": -0.8,
+     "threshold_pp": -5.0,
+     "signal": false,
+     "detail": "year-on-year change -0.80 pp"
+    }
+   ],
+   "signal_count": 1,
+   "verdict": "watch",
+   "confidence": 1.0,
+   "confidence_notes": [
+    "3 of 3 comparisons available",
+    "weather record present"
+   ],
+   "weather_missing": false,
+   "selection_reason": "latest anomalous month used as context",
+   "recent_anomalies": [
+    {
+     "year": 2024,
+     "month": 7,
+     "month_label": "2024-07",
+     "delta_pp": -5.43,
+     "signal_count": 1,
+     "verdict": "watch"
+    },
+    {
+     "year": 2025,
+     "month": 7,
+     "month_label": "2025-07",
+     "delta_pp": -6.07,
+     "signal_count": 1,
+     "verdict": "watch"
+    }
+   ],
+   "flagged_airport_months": [
+    {
+     "airport": "云川国际机场",
+     "airport_en": "Yunchuan International Airport",
+     "year": 2024,
+     "month": 7,
+     "month_label": "2024-07",
+     "tier": "大型机场",
+     "tier_en": "Large airport",
+     "completion_pct": 81.22,
+     "release_pct": 84.1,
+     "peer_pct": 81.1,
+     "own_avg_pct": 86.65,
+     "delta_pp": -5.43,
+     "peer_delta_pp": 0.12,
+     "yoy_delta_pp": null,
+     "signals": {
+      "own": true,
+      "peer": false,
+      "yoy": false
+     },
+     "signal_count": 1,
+     "comparisons_available": 2,
+     "weather_missing": false,
+     "verdict": "watch",
+     "confidence": 0.85,
+     "importance": "高",
+     "importance_en": "High"
+    },
+    {
+     "airport": "云川国际机场",
+     "airport_en": "Yunchuan International Airport",
+     "year": 2025,
+     "month": 7,
+     "month_label": "2025-07",
+     "tier": "大型机场",
+     "tier_en": "Large airport",
+     "completion_pct": 80.42,
+     "release_pct": 84.14,
+     "peer_pct": 74.95,
+     "own_avg_pct": 86.49,
+     "delta_pp": -6.07,
+     "peer_delta_pp": 5.47,
+     "yoy_delta_pp": -0.8,
+     "signals": {
+      "own": true,
+      "peer": false,
+      "yoy": false
+     },
+     "signal_count": 1,
+     "comparisons_available": 3,
+     "weather_missing": false,
+     "verdict": "watch",
+     "confidence": 1.0,
+     "importance": "高",
+     "importance_en": "High"
+    },
+    {
+     "airport": "云川国际机场",
+     "airport_en": "Yunchuan International Airport",
+     "year": 2025,
+     "month": 8,
+     "month_label": "2025-08",
+     "tier": "大型机场",
+     "tier_en": "Large airport",
+     "completion_pct": 80.48,
+     "release_pct": 82.73,
+     "peer_pct": 76.82,
+     "own_avg_pct": 86.42,
+     "delta_pp": -5.94,
+     "peer_delta_pp": 3.66,
+     "yoy_delta_pp": -3.1,
+     "signals": {
+      "own": true,
+      "peer": false,
+      "yoy": false
+     },
+     "signal_count": 1,
+     "comparisons_available": 3,
+     "weather_missing": false,
+     "verdict": "watch",
+     "confidence": 1.0,
+     "importance": "高",
+     "importance_en": "High"
+    }
+   ]
+  },
+  "rules": [
+   {
+    "id": "RULE001",
+    "topic": "信息不足",
+    "topic_en": "Information insufficiency",
+    "trigger": "关键数据缺失或来源冲突",
+    "trigger_en": "critical data missing or sources conflict",
+    "checks": "核查来源、更新时间、统计口径",
+    "checks_en": "Verify the source, update time and statistical definition; list what is missing.",
+    "action": "降低判断强度并列出缺失信息",
+    "action_en": "Lower the confidence of the assessment and list the missing information.",
+    "escalate_to": "运营负责人",
+    "escalate_to_en": "Operations Lead",
+    "manual_approval": true,
+    "forbidden": "不得发布确定性结论",
+    "forbidden_en": "Must not publish definitive conclusions.",
+    "source": "organizer rule table",
+    "status": "valid"
+   },
+   {
+    "id": "RULE003",
+    "topic": "异常波动",
+    "topic_en": "Anomalous fluctuation",
+    "trigger": "当前指标低于过去十二个月平均五个百分点以上",
+    "trigger_en": "current metric more than 5 percentage points below its own 12-month average",
+    "checks": "核查数据完整性和同类机场变化",
+    "checks_en": "Verify data completeness and how same-size airports changed.",
+    "action": "标记为重点复核",
+    "action_en": "Flag the month for priority review.",
+    "escalate_to": "运营分析人员",
+    "escalate_to_en": "Operations Analyst",
+    "manual_approval": false,
+    "forbidden": "不得直接归因于天气",
+    "forbidden_en": "Must not attribute the fluctuation directly to weather.",
+    "source": "organizer rule table",
+    "status": "valid"
+   },
+   {
+    "id": "RULE007",
+    "topic": "重大运行决定",
+    "topic_en": "Major operational decisions",
+    "trigger": "涉及取消、放行、调度、维修或赔付",
+    "trigger_en": "involves cancellation, release, dispatch, maintenance or compensation",
+    "checks": "停止自动建议并指向人工负责人",
+    "checks_en": "Stop automated advice and point to the accountable human.",
+    "action": "仅整理所需信息",
+    "action_en": "Only organise the information required by the responsible professional.",
+    "escalate_to": "相应专业负责人",
+    "escalate_to_en": "Relevant professional lead (Operations Manager)",
+    "manual_approval": true,
+    "forbidden": "不得自动作出决定",
+    "forbidden_en": "Must not make the decision automatically.",
+    "source": "organizer rule table",
+    "status": "valid"
+   },
+   {
+    "id": "RULE009",
+    "topic": "引用要求",
+    "topic_en": "Citation requirement",
+    "trigger": "输出包含数字或正式状态",
+    "trigger_en": "the output contains numbers or a formal status",
+    "checks": "检查来源编号和时间范围",
+    "checks_en": "Check source IDs and the time range of every number.",
+    "action": "在输出中列出来源",
+    "action_en": "List all sources in the output.",
+    "escalate_to": "输出复核人",
+    "escalate_to_en": "Output Reviewer",
+    "manual_approval": true,
+    "forbidden": "不得无来源生成事实",
+    "forbidden_en": "Must not generate facts without a source.",
+    "source": "organizer rule table",
+    "status": "valid"
+   },
+   {
+    "id": "RULE010",
+    "topic": "模拟标识",
+    "topic_en": "Simulation label",
+    "trigger": "使用模拟事件或模拟数值",
+    "trigger_en": "simulated events or simulated values are used",
+    "checks": "检查页面和输出标识",
+    "checks_en": "Check the labels on every page and output.",
+    "action": "统一标注“模拟”",
+    "action_en": "Label everything as SIMULATED (模拟).",
+    "escalate_to": "项目负责人",
+    "escalate_to_en": "Project Lead",
+    "manual_approval": false,
+    "forbidden": "不得称为真实事件",
+    "forbidden_en": "Must not present the material as a real event.",
+    "source": "organizer rule table",
+    "status": "valid"
+   },
+   {
+    "id": "RULE012",
+    "topic": "停止条件",
+    "topic_en": "Stop condition",
+    "trigger": "无法判断来源可靠性或出现安全相关问题",
+    "trigger_en": "source reliability cannot be judged, or safety-related issues arise",
+    "checks": "停止生成行动结论",
+    "checks_en": "Stop generating action conclusions.",
+    "action": "输出信息缺口和人工升级对象",
+    "action_en": "Output the information gaps and a named human escalation target.",
+    "escalate_to": "运营负责人",
+    "escalate_to_en": "Operations Lead",
+    "manual_approval": true,
+    "forbidden": "不得继续给出确定建议",
+    "forbidden_en": "Must not continue giving definitive advice.",
+    "source": "organizer rule table",
+    "status": "valid"
+   }
+  ],
+  "facts": [
+   {
+    "id": "F01",
+    "text": "Yunchuan International Airport is a large airport with 5254 ten-thousand annual passengers (52.54 million) and 79624 aircraft movements in 2025; airline business importance: High.",
+    "source": "SIM-SCALE",
+    "value": 5254,
+    "unit": null
+   },
+   {
+    "id": "F02",
+    "text": "云川国际机场 2025-07: completion 80.42% vs own 12-month average 86.49% = -6.07 pp.",
+    "source": "SIM-BASE",
+    "value": -6.07,
+    "unit": "pp"
+   },
+   {
+    "id": "F03",
+    "text": "Same-size peer comparison 2025-07: 80.42% vs same-class average 74.95% = 5.47 pp.",
+    "source": "SIM-BASE",
+    "value": 5.47,
+    "unit": "pp"
+   },
+   {
+    "id": "F04",
+    "text": "Same month last year: 2025-07 completion 80.42% vs the same month in 2024 (81.22%) = -0.80 pp.",
+    "source": "SIM-BASE",
+    "value": -0.8,
+    "unit": "pp"
+   },
+   {
+    "id": "F05",
+    "text": "Peak anomaly for 云川国际机场 in 2025: 2025-07 was -6.07 pp below its own 12-month average (80.42% vs 86.49%).",
+    "source": "SIM-BASE",
+    "value": -6.07,
+    "unit": "pp"
+   },
+   {
+    "id": "F06",
+    "text": "Anomaly detector: 1 of 3 comparisons signal a drop of 5.00 pp or more; verdict: watch; confidence 1.00.",
+    "source": "DETECTOR",
+    "value": 1,
+    "unit": null
+   },
+   {
+    "id": "F07",
+    "text": "云川国际机场 2025-07 weather background: precipitation 76.0 mm, mean temperature 28.2 C, maximum wind 17.1 m/s, 2 adverse-weather days.",
+    "source": "SIM-WEATHER",
+    "value": 76.0,
+    "unit": null
+   },
+   {
+    "id": "F08",
+    "text": "Event EVT003: weather - Weather broadly stable. Operations - Source A reports normal operations; Source B reports a clear drop in the performance indicator.",
+    "source": "EVT003"
+   },
+   {
+    "id": "F09",
+    "text": "Network-wide monthly average completion: July 78.8%, August 78.5%, March 84.3% - summer dips are partly seasonal, so an own-history flag alone is not enough.",
+    "source": "SIM-BASE"
+   }
+  ],
+  "numbers": [
+   {
+    "value": 5254.0,
+    "display": "5254",
+    "source": "SIM-SCALE",
+    "fact_id": "F01"
+   },
+   {
+    "value": 52.54,
+    "display": "52.54",
+    "source": "SIM-SCALE",
+    "fact_id": "F01"
+   },
+   {
+    "value": 79624.0,
+    "display": "79624",
+    "source": "SIM-SCALE",
+    "fact_id": "F01"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-SCALE",
+    "fact_id": "F01"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": -7.0,
+    "display": "-07",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": 80.42,
+    "display": "80.42",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": 12.0,
+    "display": "12",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": 86.49,
+    "display": "86.49",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": -6.07,
+    "display": "-6.07",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-BASE",
+    "fact_id": "F03"
+   },
+   {
+    "value": -7.0,
+    "display": "-07",
+    "source": "SIM-BASE",
+    "fact_id": "F03"
+   },
+   {
+    "value": 80.42,
+    "display": "80.42",
+    "source": "SIM-BASE",
+    "fact_id": "F03"
+   },
+   {
+    "value": 74.95,
+    "display": "74.95",
+    "source": "SIM-BASE",
+    "fact_id": "F03"
+   },
+   {
+    "value": 5.47,
+    "display": "5.47",
+    "source": "SIM-BASE",
+    "fact_id": "F03"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": -7.0,
+    "display": "-07",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": 80.42,
+    "display": "80.42",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": 2024.0,
+    "display": "2024",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": 81.22,
+    "display": "81.22",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": -0.8,
+    "display": "-0.80",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": -7.0,
+    "display": "-07",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": -6.07,
+    "display": "-6.07",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": 12.0,
+    "display": "12",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": 80.42,
+    "display": "80.42",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": 86.49,
+    "display": "86.49",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": 1.0,
+    "display": "1",
+    "source": "DETECTOR",
+    "fact_id": "F06"
+   },
+   {
+    "value": 3.0,
+    "display": "3",
+    "source": "DETECTOR",
+    "fact_id": "F06"
+   },
+   {
+    "value": 5.0,
+    "display": "5.00",
+    "source": "DETECTOR",
+    "fact_id": "F06"
+   },
+   {
+    "value": 1.0,
+    "display": "1.00",
+    "source": "DETECTOR",
+    "fact_id": "F06"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": -7.0,
+    "display": "-07",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": 76.0,
+    "display": "76.0",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": 28.2,
+    "display": "28.2",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": 17.1,
+    "display": "17.1",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": 2.0,
+    "display": "2",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": 3.0,
+    "display": "003",
+    "source": "EVT003",
+    "fact_id": "F08"
+   },
+   {
+    "value": 6.0,
+    "display": "6",
+    "source": "EVT003",
+    "fact_id": "F08"
+   },
+   {
+    "value": 10.0,
+    "display": "10",
+    "source": "EVT003",
+    "fact_id": "F08"
+   },
+   {
+    "value": 0.0,
+    "display": "00",
+    "source": "EVT003",
+    "fact_id": "F08"
+   },
+   {
+    "value": 78.8,
+    "display": "78.8",
+    "source": "SIM-BASE",
+    "fact_id": "F09"
+   },
+   {
+    "value": 78.5,
+    "display": "78.5",
+    "source": "SIM-BASE",
+    "fact_id": "F09"
+   },
+   {
+    "value": 84.3,
+    "display": "84.3",
+    "source": "SIM-BASE",
+    "fact_id": "F09"
+   }
+  ],
+  "assumptions": [
+   "Weather conditions reduce ground-handling and apron capacity; the data cannot prove that the weather caused this event (assumption to verify).",
+   "If the weather window extends, evening rotations and the next day's first wave may be affected.",
+   "The airport's own-history flag is compared against network seasonality; a summer dip alone is not treated as abnormal."
+  ],
+  "unknowns": [
+   "Which source has been reviewed; whether both use the same statistical definition.",
+   "Detailed flight-level information was not part of the input.",
+   "Which source has been reviewed, and whether both sources use the same statistical definition."
+  ],
+  "missing_data": [
+   "The organizer data is monthly and airport-level: it cannot identify which individual flights or crews are affected.",
+   "No verified single source for the conflicting figures."
+  ],
+  "forbidden_actions": [
+   "Cancelling, releasing, dispatching, maintaining or compensating flights (RULE007).",
+   "Sending any passenger message as an official notification (RULE005).",
+   "Claiming that a flight is cancelled or delayed when no formal status exists (RULE002/RULE005).",
+   "Attributing the performance drop to weather as a proven cause (RULE003).",
+   "Storing or repeating passenger or employee personal data (RULE011).",
+   "Presenting simulated data or events as real (RULE010)."
+  ],
+  "sources": [
+   "SIM-BASE",
+   "SIM-SCALE",
+   "SIM-WEATHER",
+   "DETECTOR",
+   "FEEDBACK-HISTORY",
+   "EVT003",
+   "RULE001",
+   "RULE003",
+   "RULE007",
+   "RULE009",
+   "RULE010",
+   "RULE012"
+  ],
+  "risk": {
+   "level": "cant_tell",
+   "level_zh": "无法判断",
+   "score": 0.0,
+   "reasons": [
+    {
+     "text": "Anomaly detector verdict: watch (1/3 comparisons signal a >=5 pp drop).",
+     "source": "DETECTOR",
+     "points": 2.0
+    },
+    {
+     "text": "Event weather text indicates strong weather risk.",
+     "source": "EVT003",
+     "points": 2.0
+    },
+    {
+     "text": "Operating description indicates sustained pressure.",
+     "source": "EVT003",
+     "points": 1.0
+    },
+    {
+     "text": "Airline business importance: High.",
+     "source": "SIM-SCALE",
+     "points": 1.5
+    }
+   ],
+   "can_tell": false,
+   "can_tell_zh": "无法判断"
+  },
+  "pii_redacted": false,
+  "feedback_matches": [],
+  "conflict": true,
+  "sim_label": "模拟 / SIMULATED",
+  "narrative": {
+   "first_action": "Confirm which source has been reviewed and whether both use the same statistical definition before using either figure.",
+   "follow_up": [
+    "Compare the two sources' update times and definitions.",
+    "Do not combine the two figures in the advice.",
+    "Escalate to the Operations Lead if the conflict cannot be resolved."
+   ],
+   "escalation": "Escalate to the Operations Lead until a verified single source is available.",
+   "human_decisions": "The decision on which source to trust, and any operational decision, belongs to the responsible professional (RULE001/RULE012).",
+   "impact": "No reliable impact assessment is possible until the source conflict is resolved.",
+   "ops_note": "Simulated operations note: two sources for Yunchuan disagree and were updated 40 minutes apart. No firm conclusion is possible; verify the source first.",
+   "airport_note": "Simulated coordination request: please confirm which Yunchuan source has been reviewed and whether both use the same definition.",
+   "passenger_note": "Simulated draft passenger message: information about Yunchuan is currently being verified. Please check official airline and airport channels for updates."
+  }
+ },
+ "EVT004": {
+  "event_id": "EVT004",
+  "mock": true,
+  "detector": {
+   "airport": "南湾机场",
+   "airport_en": "Nanwan Airport",
+   "year": 2025,
+   "month": 8,
+   "month_label": "2025-08",
+   "tier": "中型机场",
+   "tier_en": "Medium airport",
+   "comparisons": [
+    {
+     "key": "own",
+     "label": "Own 12-month average",
+     "value_pp": -4.0,
+     "threshold_pp": -5.0,
+     "signal": false,
+     "detail": "78.78% vs own 12-month average 82.78% -> -4.00 pp"
+    },
+    {
+     "key": "peer",
+     "label": "Same-size peer average",
+     "value_pp": -0.8,
+     "threshold_pp": -5.0,
+     "signal": false,
+     "detail": "78.78% vs same-class average 79.58% -> -0.80 pp"
+    },
+    {
+     "key": "yoy",
+     "label": "Same month last year",
+     "value_pp": -1.58,
+     "threshold_pp": -5.0,
+     "signal": false,
+     "detail": "year-on-year change -1.58 pp"
+    }
+   ],
+   "signal_count": 0,
+   "verdict": "normal",
+   "confidence": 1.0,
+   "confidence_notes": [
+    "3 of 3 comparisons available",
+    "weather record present"
+   ],
+   "weather_missing": false,
+   "selection_reason": "latest anomalous month used as context",
+   "recent_anomalies": [],
+   "flagged_airport_months": []
+  },
+  "rules": [
+   {
+    "id": "RULE002",
+    "topic": "天气风险",
+    "topic_en": "Weather risk",
+    "trigger": "天气提示达到中高风险但尚无正式运行状态",
+    "trigger_en": "weather notice shows medium/high risk but no formal operating status",
+    "checks": "核查机场保障、前序运行和后续航班集中程度",
+    "checks_en": "Verify airport ground support, preceding operations and how concentrated later flights are.",
+    "action": "准备监测清单与沟通草案",
+    "action_en": "Prepare a monitoring checklist and communication drafts.",
+    "escalate_to": "运行协调人员",
+    "escalate_to_en": "Operations Coordinator",
+    "manual_approval": true,
+    "forbidden": "不得声称航班一定延误",
+    "forbidden_en": "Must not claim that flights will certainly be delayed.",
+    "source": "organizer rule table",
+    "status": "valid"
+   },
+   {
+    "id": "RULE003",
+    "topic": "异常波动",
+    "topic_en": "Anomalous fluctuation",
+    "trigger": "当前指标低于过去十二个月平均五个百分点以上",
+    "trigger_en": "current metric more than 5 percentage points below its own 12-month average",
+    "checks": "核查数据完整性和同类机场变化",
+    "checks_en": "Verify data completeness and how same-size airports changed.",
+    "action": "标记为重点复核",
+    "action_en": "Flag the month for priority review.",
+    "escalate_to": "运营分析人员",
+    "escalate_to_en": "Operations Analyst",
+    "manual_approval": false,
+    "forbidden": "不得直接归因于天气",
+    "forbidden_en": "Must not attribute the fluctuation directly to weather.",
+    "source": "organizer rule table",
+    "status": "valid"
+   },
+   {
+    "id": "RULE005",
+    "topic": "旅客沟通",
+    "topic_en": "Passenger communication",
+    "trigger": "存在风险但没有正式航班状态",
+    "trigger_en": "risk exists but there is no formal flight status",
+    "checks": "核查可公开事实和更新时间",
+    "checks_en": "Verify publicly shareable facts and their update time.",
+    "action": "生成明确标注“草案”的提示",
+    "action_en": "Generate a notice clearly marked as a DRAFT.",
+    "escalate_to": "旅客服务负责人",
+    "escalate_to_en": "Passenger Services Lead",
+    "manual_approval": true,
+    "forbidden": "不得作为正式通知自动发送",
+    "forbidden_en": "Must not send it as an official notification.",
+    "source": "organizer rule table",
+    "status": "valid"
+   },
+   {
+    "id": "RULE007",
+    "topic": "重大运行决定",
+    "topic_en": "Major operational decisions",
+    "trigger": "涉及取消、放行、调度、维修或赔付",
+    "trigger_en": "involves cancellation, release, dispatch, maintenance or compensation",
+    "checks": "停止自动建议并指向人工负责人",
+    "checks_en": "Stop automated advice and point to the accountable human.",
+    "action": "仅整理所需信息",
+    "action_en": "Only organise the information required by the responsible professional.",
+    "escalate_to": "相应专业负责人",
+    "escalate_to_en": "Relevant professional lead (Operations Manager)",
+    "manual_approval": true,
+    "forbidden": "不得自动作出决定",
+    "forbidden_en": "Must not make the decision automatically.",
+    "source": "organizer rule table",
+    "status": "valid"
+   },
+   {
+    "id": "RULE009",
+    "topic": "引用要求",
+    "topic_en": "Citation requirement",
+    "trigger": "输出包含数字或正式状态",
+    "trigger_en": "the output contains numbers or a formal status",
+    "checks": "检查来源编号和时间范围",
+    "checks_en": "Check source IDs and the time range of every number.",
+    "action": "在输出中列出来源",
+    "action_en": "List all sources in the output.",
+    "escalate_to": "输出复核人",
+    "escalate_to_en": "Output Reviewer",
+    "manual_approval": true,
+    "forbidden": "不得无来源生成事实",
+    "forbidden_en": "Must not generate facts without a source.",
+    "source": "organizer rule table",
+    "status": "valid"
+   },
+   {
+    "id": "RULE010",
+    "topic": "模拟标识",
+    "topic_en": "Simulation label",
+    "trigger": "使用模拟事件或模拟数值",
+    "trigger_en": "simulated events or simulated values are used",
+    "checks": "检查页面和输出标识",
+    "checks_en": "Check the labels on every page and output.",
+    "action": "统一标注“模拟”",
+    "action_en": "Label everything as SIMULATED (模拟).",
+    "escalate_to": "项目负责人",
+    "escalate_to_en": "Project Lead",
+    "manual_approval": false,
+    "forbidden": "不得称为真实事件",
+    "forbidden_en": "Must not present the material as a real event.",
+    "source": "organizer rule table",
+    "status": "valid"
+   }
+  ],
+  "facts": [
+   {
+    "id": "F01",
+    "text": "Nanwan Airport is a medium airport with 2624 ten-thousand annual passengers (26.24 million) and 42750 aircraft movements in 2025; airline business importance: Medium.",
+    "source": "SIM-SCALE",
+    "value": 2624,
+    "unit": null
+   },
+   {
+    "id": "F02",
+    "text": "南湾机场 2025-08: completion 78.78% vs own 12-month average 82.78% = -4.00 pp.",
+    "source": "SIM-BASE",
+    "value": -4.0,
+    "unit": "pp"
+   },
+   {
+    "id": "F03",
+    "text": "Same-size peer comparison 2025-08: 78.78% vs same-class average 79.58% = -0.80 pp.",
+    "source": "SIM-BASE",
+    "value": -0.8,
+    "unit": "pp"
+   },
+   {
+    "id": "F04",
+    "text": "Same month last year: 2025-08 completion 78.78% vs the same month in 2024 (80.36%) = -1.58 pp.",
+    "source": "SIM-BASE",
+    "value": -1.58,
+    "unit": "pp"
+   },
+   {
+    "id": "F05",
+    "text": "Peak anomaly for 南湾机场 in 2025: 2025-08 was -4.00 pp below its own 12-month average (78.78% vs 82.78%).",
+    "source": "SIM-BASE",
+    "value": -4.0,
+    "unit": "pp"
+   },
+   {
+    "id": "F06",
+    "text": "Anomaly detector: 0 of 3 comparisons signal a drop of 5.00 pp or more; verdict: normal; confidence 1.00.",
+    "source": "DETECTOR",
+    "value": 0,
+    "unit": null
+   },
+   {
+    "id": "F07",
+    "text": "南湾机场 2025-08 weather background: precipitation 139.5 mm, mean temperature 20.2 C, maximum wind 16.9 m/s, 3 adverse-weather days.",
+    "source": "SIM-WEATHER",
+    "value": 139.5,
+    "unit": null
+   },
+   {
+    "id": "F08",
+    "text": "Event EVT004: weather - Short thunderstorms expected in the evening. Operations - Risk is rising but no formal delay notice has been issued.",
+    "source": "EVT004"
+   },
+   {
+    "id": "F09",
+    "text": "Network-wide monthly average completion: July 78.8%, August 78.5%, March 84.3% - summer dips are partly seasonal, so an own-history flag alone is not enough.",
+    "source": "SIM-BASE"
+   }
+  ],
+  "numbers": [
+   {
+    "value": 2624.0,
+    "display": "2624",
+    "source": "SIM-SCALE",
+    "fact_id": "F01"
+   },
+   {
+    "value": 26.24,
+    "display": "26.24",
+    "source": "SIM-SCALE",
+    "fact_id": "F01"
+   },
+   {
+    "value": 42750.0,
+    "display": "42750",
+    "source": "SIM-SCALE",
+    "fact_id": "F01"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-SCALE",
+    "fact_id": "F01"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": -8.0,
+    "display": "-08",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": 78.78,
+    "display": "78.78",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": 12.0,
+    "display": "12",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": 82.78,
+    "display": "82.78",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": -4.0,
+    "display": "-4.00",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-BASE",
+    "fact_id": "F03"
+   },
+   {
+    "value": -8.0,
+    "display": "-08",
+    "source": "SIM-BASE",
+    "fact_id": "F03"
+   },
+   {
+    "value": 78.78,
+    "display": "78.78",
+    "source": "SIM-BASE",
+    "fact_id": "F03"
+   },
+   {
+    "value": 79.58,
+    "display": "79.58",
+    "source": "SIM-BASE",
+    "fact_id": "F03"
+   },
+   {
+    "value": -0.8,
+    "display": "-0.80",
+    "source": "SIM-BASE",
+    "fact_id": "F03"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": -8.0,
+    "display": "-08",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": 78.78,
+    "display": "78.78",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": 2024.0,
+    "display": "2024",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": 80.36,
+    "display": "80.36",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": -1.58,
+    "display": "-1.58",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": -8.0,
+    "display": "-08",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": -4.0,
+    "display": "-4.00",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": 12.0,
+    "display": "12",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": 78.78,
+    "display": "78.78",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": 82.78,
+    "display": "82.78",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": 0.0,
+    "display": "0",
+    "source": "DETECTOR",
+    "fact_id": "F06"
+   },
+   {
+    "value": 3.0,
+    "display": "3",
+    "source": "DETECTOR",
+    "fact_id": "F06"
+   },
+   {
+    "value": 5.0,
+    "display": "5.00",
+    "source": "DETECTOR",
+    "fact_id": "F06"
+   },
+   {
+    "value": 1.0,
+    "display": "1.00",
+    "source": "DETECTOR",
+    "fact_id": "F06"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": -8.0,
+    "display": "-08",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": 139.5,
+    "display": "139.5",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": 20.2,
+    "display": "20.2",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": 16.9,
+    "display": "16.9",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": 3.0,
+    "display": "3",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": 4.0,
+    "display": "004",
+    "source": "EVT004",
+    "fact_id": "F08"
+   },
+   {
+    "value": 6.0,
+    "display": "6",
+    "source": "EVT004",
+    "fact_id": "F08"
+   },
+   {
+    "value": 15.0,
+    "display": "15",
+    "source": "EVT004",
+    "fact_id": "F08"
+   },
+   {
+    "value": 0.0,
+    "display": "00",
+    "source": "EVT004",
+    "fact_id": "F08"
+   },
+   {
+    "value": 78.8,
+    "display": "78.8",
+    "source": "SIM-BASE",
+    "fact_id": "F09"
+   },
+   {
+    "value": 78.5,
+    "display": "78.5",
+    "source": "SIM-BASE",
+    "fact_id": "F09"
+   },
+   {
+    "value": 84.3,
+    "display": "84.3",
+    "source": "SIM-BASE",
+    "fact_id": "F09"
+   }
+  ],
+  "assumptions": [
+   "Weather conditions reduce ground-handling and apron capacity; the data cannot prove that the weather caused this event (assumption to verify).",
+   "If the weather window extends, evening rotations and the next day's first wave may be affected.",
+   "The airport's own-history flag is compared against network seasonality; a summer dip alone is not treated as abnormal."
+  ],
+  "unknowns": [
+   "Formal flight status; expected recovery time; specifically affected passengers.",
+   "Detailed flight-level information was not part of the input."
+  ],
+  "missing_data": [
+   "The organizer data is monthly and airport-level: it cannot identify which individual flights or crews are affected."
+  ],
+  "forbidden_actions": [
+   "Cancelling, releasing, dispatching, maintaining or compensating flights (RULE007).",
+   "Sending any passenger message as an official notification (RULE005).",
+   "Claiming that a flight is cancelled or delayed when no formal status exists (RULE002/RULE005).",
+   "Attributing the performance drop to weather as a proven cause (RULE003).",
+   "Storing or repeating passenger or employee personal data (RULE011).",
+   "Presenting simulated data or events as real (RULE010)."
+  ],
+  "sources": [
+   "SIM-BASE",
+   "SIM-SCALE",
+   "SIM-WEATHER",
+   "DETECTOR",
+   "FEEDBACK-HISTORY",
+   "EVT004",
+   "RULE002",
+   "RULE003",
+   "RULE005",
+   "RULE007",
+   "RULE009",
+   "RULE010"
+  ],
+  "risk": {
+   "level": "Medium",
+   "level_zh": "中",
+   "score": 3.0,
+   "reasons": [
+    {
+     "text": "Anomaly detector verdict: normal (0/3 comparisons signal a >=5 pp drop).",
+     "source": "DETECTOR",
+     "points": 2.0
+    },
+    {
+     "text": "Event weather text indicates strong weather risk.",
+     "source": "EVT004",
+     "points": 2.0
+    },
+    {
+     "text": "Operating description indicates sustained pressure.",
+     "source": "EVT004",
+     "points": 1.0
+    },
+    {
+     "text": "Airline business importance: Medium.",
+     "source": "SIM-SCALE",
+     "points": 1.5
+    }
+   ],
+   "can_tell": true,
+   "can_tell_zh": "可判断"
+  },
+  "pii_redacted": false,
+  "feedback_matches": [],
+  "conflict": false,
+  "sim_label": "模拟 / SIMULATED",
+  "narrative": {
+   "first_action": "Ask the airport coordination team to confirm the weather update time and whether ground support can absorb the evening thunderstorm window.",
+   "follow_up": [
+    "Prepare the internal monitoring checklist and the passenger draft.",
+    "Check the latest formal flight status before any external message.",
+    "Record the decision and reason in the feedback log."
+   ],
+   "escalation": "If a formal operating irregularity appears, escalate to the Passenger Services Lead and Operations Lead.",
+   "human_decisions": "Sending any passenger message, and all operational decisions, require the responsible qualified professional (RULE005/RULE007).",
+   "impact": "Evening thunderstorms may affect ground operations; no formal delay notice has been issued.",
+   "ops_note": "Simulated operations note: Nanwan expects short evening thunderstorms; risk is rising but no formal delay notice exists. Prepare a draft, do not publish.",
+   "airport_note": "Simulated coordination request: please confirm the Nanwan weather update time and ground-support capacity for the evening thunderstorm window.",
+   "passenger_note": "Simulated draft passenger message: Nanwan may experience possible delays this evening due to thunderstorms. Flight status has not been confirmed. Please check official airline and airport channels for updates."
+  }
+ },
+ "EVT005": {
+  "event_id": "EVT005",
+  "mock": true,
+  "detector": {
+   "airport": "高原机场",
+   "airport_en": "Gaoyuan Airport",
+   "year": 2025,
+   "month": 2,
+   "month_label": "2025-02",
+   "tier": "小型机场",
+   "tier_en": "Small airport",
+   "comparisons": [
+    {
+     "key": "own",
+     "label": "Own 12-month average",
+     "value_pp": -6.1,
+     "threshold_pp": -5.0,
+     "signal": true,
+     "detail": "72.88% vs own 12-month average 78.98% -> -6.10 pp"
+    },
+    {
+     "key": "peer",
+     "label": "Same-size peer average",
+     "value_pp": -4.14,
+     "threshold_pp": -5.0,
+     "signal": false,
+     "detail": "72.88% vs same-class average 77.02% -> -4.14 pp"
+    },
+    {
+     "key": "yoy",
+     "label": "Same month last year",
+     "value_pp": -1.14,
+     "threshold_pp": -5.0,
+     "signal": false,
+     "detail": "year-on-year change -1.14 pp"
+    }
+   ],
+   "signal_count": 1,
+   "verdict": "watch",
+   "confidence": 1.0,
+   "confidence_notes": [
+    "3 of 3 comparisons available",
+    "weather record present"
+   ],
+   "weather_missing": false,
+   "selection_reason": "latest anomalous month used as context",
+   "recent_anomalies": [
+    {
+     "year": 2025,
+     "month": 2,
+     "month_label": "2025-02",
+     "delta_pp": -6.1,
+     "signal_count": 1,
+     "verdict": "watch"
+    }
+   ],
+   "flagged_airport_months": [
+    {
+     "airport": "高原机场",
+     "airport_en": "Gaoyuan Airport",
+     "year": 2025,
+     "month": 2,
+     "month_label": "2025-02",
+     "tier": "小型机场",
+     "tier_en": "Small airport",
+     "completion_pct": 72.88,
+     "release_pct": 74.78,
+     "peer_pct": 77.02,
+     "own_avg_pct": 78.98,
+     "delta_pp": -6.1,
+     "peer_delta_pp": -4.14,
+     "yoy_delta_pp": -1.14,
+     "signals": {
+      "own": true,
+      "peer": false,
+      "yoy": false
+     },
+     "signal_count": 1,
+     "comparisons_available": 3,
+     "weather_missing": false,
+     "verdict": "watch",
+     "confidence": 1.0,
+     "importance": "低",
+     "importance_en": "Low"
+    }
+   ]
+  },
+  "rules": [
+   {
+    "id": "RULE003",
+    "topic": "异常波动",
+    "topic_en": "Anomalous fluctuation",
+    "trigger": "当前指标低于过去十二个月平均五个百分点以上",
+    "trigger_en": "current metric more than 5 percentage points below its own 12-month average",
+    "checks": "核查数据完整性和同类机场变化",
+    "checks_en": "Verify data completeness and how same-size airports changed.",
+    "action": "标记为重点复核",
+    "action_en": "Flag the month for priority review.",
+    "escalate_to": "运营分析人员",
+    "escalate_to_en": "Operations Analyst",
+    "manual_approval": false,
+    "forbidden": "不得直接归因于天气",
+    "forbidden_en": "Must not attribute the fluctuation directly to weather.",
+    "source": "organizer rule table",
+    "status": "valid"
+   },
+   {
+    "id": "RULE006",
+    "topic": "人工否决",
+    "topic_en": "Human overrule",
+    "trigger": "专业人员拒绝建议",
+    "trigger_en": "a qualified professional rejects the recommendation",
+    "checks": "记录拒绝原因和补充事实",
+    "checks_en": "Record the reason for rejection and any supplementary facts.",
+    "action": "根据新事实调整建议并保留原记录",
+    "action_en": "Adjust the recommendation to the new facts and keep the original record.",
+    "escalate_to": "模型负责人",
+    "escalate_to_en": "Model Owner",
+    "manual_approval": true,
+    "forbidden": "不得覆盖或删除人工意见",
+    "forbidden_en": "Must not overwrite or delete human judgement.",
+    "source": "organizer rule table",
+    "status": "valid"
+   },
+   {
+    "id": "RULE007",
+    "topic": "重大运行决定",
+    "topic_en": "Major operational decisions",
+    "trigger": "涉及取消、放行、调度、维修或赔付",
+    "trigger_en": "involves cancellation, release, dispatch, maintenance or compensation",
+    "checks": "停止自动建议并指向人工负责人",
+    "checks_en": "Stop automated advice and point to the accountable human.",
+    "action": "仅整理所需信息",
+    "action_en": "Only organise the information required by the responsible professional.",
+    "escalate_to": "相应专业负责人",
+    "escalate_to_en": "Relevant professional lead (Operations Manager)",
+    "manual_approval": true,
+    "forbidden": "不得自动作出决定",
+    "forbidden_en": "Must not make the decision automatically.",
+    "source": "organizer rule table",
+    "status": "valid"
+   },
+   {
+    "id": "RULE009",
+    "topic": "引用要求",
+    "topic_en": "Citation requirement",
+    "trigger": "输出包含数字或正式状态",
+    "trigger_en": "the output contains numbers or a formal status",
+    "checks": "检查来源编号和时间范围",
+    "checks_en": "Check source IDs and the time range of every number.",
+    "action": "在输出中列出来源",
+    "action_en": "List all sources in the output.",
+    "escalate_to": "输出复核人",
+    "escalate_to_en": "Output Reviewer",
+    "manual_approval": true,
+    "forbidden": "不得无来源生成事实",
+    "forbidden_en": "Must not generate facts without a source.",
+    "source": "organizer rule table",
+    "status": "valid"
+   },
+   {
+    "id": "RULE010",
+    "topic": "模拟标识",
+    "topic_en": "Simulation label",
+    "trigger": "使用模拟事件或模拟数值",
+    "trigger_en": "simulated events or simulated values are used",
+    "checks": "检查页面和输出标识",
+    "checks_en": "Check the labels on every page and output.",
+    "action": "统一标注“模拟”",
+    "action_en": "Label everything as SIMULATED (模拟).",
+    "escalate_to": "项目负责人",
+    "escalate_to_en": "Project Lead",
+    "manual_approval": false,
+    "forbidden": "不得称为真实事件",
+    "forbidden_en": "Must not present the material as a real event.",
+    "source": "organizer rule table",
+    "status": "valid"
+   }
+  ],
+  "facts": [
+   {
+    "id": "F01",
+    "text": "Gaoyuan Airport is a small airport with 1073 ten-thousand annual passengers (10.73 million) and 18050 aircraft movements in 2025; airline business importance: Low.",
+    "source": "SIM-SCALE",
+    "value": 1073,
+    "unit": null
+   },
+   {
+    "id": "F02",
+    "text": "高原机场 2025-02: completion 72.88% vs own 12-month average 78.98% = -6.10 pp.",
+    "source": "SIM-BASE",
+    "value": -6.1,
+    "unit": "pp"
+   },
+   {
+    "id": "F03",
+    "text": "Same-size peer comparison 2025-02: 72.88% vs same-class average 77.02% = -4.14 pp.",
+    "source": "SIM-BASE",
+    "value": -4.14,
+    "unit": "pp"
+   },
+   {
+    "id": "F04",
+    "text": "Same month last year: 2025-02 completion 72.88% vs the same month in 2024 (74.02%) = -1.14 pp.",
+    "source": "SIM-BASE",
+    "value": -1.14,
+    "unit": "pp"
+   },
+   {
+    "id": "F05",
+    "text": "Peak anomaly for 高原机场 in 2025: 2025-02 was -6.10 pp below its own 12-month average (72.88% vs 78.98%).",
+    "source": "SIM-BASE",
+    "value": -6.1,
+    "unit": "pp"
+   },
+   {
+    "id": "F06",
+    "text": "Anomaly detector: 1 of 3 comparisons signal a drop of 5.00 pp or more; verdict: watch; confidence 1.00.",
+    "source": "DETECTOR",
+    "value": 1,
+    "unit": null
+   },
+   {
+    "id": "F07",
+    "text": "高原机场 2025-02 weather background: precipitation 52.6 mm, mean temperature 6.1 C, maximum wind 19.0 m/s, 3 adverse-weather days.",
+    "source": "SIM-WEATHER",
+    "value": 52.6,
+    "unit": null
+   },
+   {
+    "id": "F08",
+    "text": "Event EVT005: weather - Low temperature with relatively strong wind. Operations - The assistant previously recommended upgrading to high risk.",
+    "source": "EVT005"
+   },
+   {
+    "id": "F09",
+    "text": "Network-wide monthly average completion: July 78.8%, August 78.5%, March 84.3% - summer dips are partly seasonal, so an own-history flag alone is not enough.",
+    "source": "SIM-BASE"
+   },
+   {
+    "id": "F10",
+    "text": "Previous staff decision on a similar event (EVT005, REC003): 拒绝. Reason: 运营人员补充现场资源充足且风速尚在可控范围. Final action: 不升级为高风险，改为持续监测.",
+    "source": "FEEDBACK-HISTORY"
+   }
+  ],
+  "numbers": [
+   {
+    "value": 1073.0,
+    "display": "1073",
+    "source": "SIM-SCALE",
+    "fact_id": "F01"
+   },
+   {
+    "value": 10.73,
+    "display": "10.73",
+    "source": "SIM-SCALE",
+    "fact_id": "F01"
+   },
+   {
+    "value": 18050.0,
+    "display": "18050",
+    "source": "SIM-SCALE",
+    "fact_id": "F01"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-SCALE",
+    "fact_id": "F01"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": -2.0,
+    "display": "-02",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": 72.88,
+    "display": "72.88",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": 12.0,
+    "display": "12",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": 78.98,
+    "display": "78.98",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": -6.1,
+    "display": "-6.10",
+    "source": "SIM-BASE",
+    "fact_id": "F02"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-BASE",
+    "fact_id": "F03"
+   },
+   {
+    "value": -2.0,
+    "display": "-02",
+    "source": "SIM-BASE",
+    "fact_id": "F03"
+   },
+   {
+    "value": 72.88,
+    "display": "72.88",
+    "source": "SIM-BASE",
+    "fact_id": "F03"
+   },
+   {
+    "value": 77.02,
+    "display": "77.02",
+    "source": "SIM-BASE",
+    "fact_id": "F03"
+   },
+   {
+    "value": -4.14,
+    "display": "-4.14",
+    "source": "SIM-BASE",
+    "fact_id": "F03"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": -2.0,
+    "display": "-02",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": 72.88,
+    "display": "72.88",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": 2024.0,
+    "display": "2024",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": 74.02,
+    "display": "74.02",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": -1.14,
+    "display": "-1.14",
+    "source": "SIM-BASE",
+    "fact_id": "F04"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": -2.0,
+    "display": "-02",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": -6.1,
+    "display": "-6.10",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": 12.0,
+    "display": "12",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": 72.88,
+    "display": "72.88",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": 78.98,
+    "display": "78.98",
+    "source": "SIM-BASE",
+    "fact_id": "F05"
+   },
+   {
+    "value": 1.0,
+    "display": "1",
+    "source": "DETECTOR",
+    "fact_id": "F06"
+   },
+   {
+    "value": 3.0,
+    "display": "3",
+    "source": "DETECTOR",
+    "fact_id": "F06"
+   },
+   {
+    "value": 5.0,
+    "display": "5.00",
+    "source": "DETECTOR",
+    "fact_id": "F06"
+   },
+   {
+    "value": 1.0,
+    "display": "1.00",
+    "source": "DETECTOR",
+    "fact_id": "F06"
+   },
+   {
+    "value": 2025.0,
+    "display": "2025",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": -2.0,
+    "display": "-02",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": 52.6,
+    "display": "52.6",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": 6.1,
+    "display": "6.1",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": 19.0,
+    "display": "19.0",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": 3.0,
+    "display": "3",
+    "source": "SIM-WEATHER",
+    "fact_id": "F07"
+   },
+   {
+    "value": 5.0,
+    "display": "005",
+    "source": "EVT005",
+    "fact_id": "F08"
+   },
+   {
+    "value": 6.0,
+    "display": "6",
+    "source": "EVT005",
+    "fact_id": "F08"
+   },
+   {
+    "value": 20.0,
+    "display": "20",
+    "source": "EVT005",
+    "fact_id": "F08"
+   },
+   {
+    "value": 0.0,
+    "display": "00",
+    "source": "EVT005",
+    "fact_id": "F08"
+   },
+   {
+    "value": 78.8,
+    "display": "78.8",
+    "source": "SIM-BASE",
+    "fact_id": "F09"
+   },
+   {
+    "value": 78.5,
+    "display": "78.5",
+    "source": "SIM-BASE",
+    "fact_id": "F09"
+   },
+   {
+    "value": 84.3,
+    "display": "84.3",
+    "source": "SIM-BASE",
+    "fact_id": "F09"
+   },
+   {
+    "value": 5.0,
+    "display": "005",
+    "source": "FEEDBACK-HISTORY",
+    "fact_id": "F10"
+   },
+   {
+    "value": 3.0,
+    "display": "003",
+    "source": "FEEDBACK-HISTORY",
+    "fact_id": "F10"
+   }
+  ],
+  "assumptions": [
+   "Weather conditions reduce ground-handling and apron capacity; the data cannot prove that the weather caused this event (assumption to verify).",
+   "If the weather window extends, evening rotations and the next day's first wave may be affected.",
+   "The airport's own-history flag is compared against network seasonality; a summer dip alone is not treated as abnormal."
+  ],
+  "unknowns": [
+   "Detailed on-site resources; the basis of the operator's judgement.",
+   "Detailed flight-level information was not part of the input."
+  ],
+  "missing_data": [
+   "The organizer data is monthly and airport-level: it cannot identify which individual flights or crews are affected."
+  ],
+  "forbidden_actions": [
+   "Cancelling, releasing, dispatching, maintaining or compensating flights (RULE007).",
+   "Sending any passenger message as an official notification (RULE005).",
+   "Claiming that a flight is cancelled or delayed when no formal status exists (RULE002/RULE005).",
+   "Attributing the performance drop to weather as a proven cause (RULE003).",
+   "Storing or repeating passenger or employee personal data (RULE011).",
+   "Presenting simulated data or events as real (RULE010)."
+  ],
+  "sources": [
+   "SIM-BASE",
+   "SIM-SCALE",
+   "SIM-WEATHER",
+   "DETECTOR",
+   "FEEDBACK-HISTORY",
+   "EVT005",
+   "RULE003",
+   "RULE006",
+   "RULE007",
+   "RULE009",
+   "RULE010"
+  ],
+  "risk": {
+   "level": "Low",
+   "level_zh": "低",
+   "score": 1.0,
+   "reasons": [
+    {
+     "text": "Anomaly detector verdict: watch (1/3 comparisons signal a >=5 pp drop).",
+     "source": "DETECTOR",
+     "points": 2.0
+    },
+    {
+     "text": "Event weather text indicates strong weather risk.",
+     "source": "EVT005",
+     "points": 2.0
+    },
+    {
+     "text": "Operating description indicates sustained pressure.",
+     "source": "EVT005",
+     "points": 1.0
+    },
+    {
+     "text": "Airline business importance: Low.",
+     "source": "SIM-SCALE",
+     "points": 1.5
+    }
+   ],
+   "can_tell": true,
+   "can_tell_zh": "可判断"
+  },
+  "pii_redacted": false,
+  "feedback_matches": [
+   {
+    "event_id": "EVT005",
+    "rec_id": "REC003",
+    "result": "拒绝",
+    "reason": "运营人员补充现场资源充足且风速尚在可控范围",
+    "final_action": "不升级为高风险，改为持续监测",
+    "outcome": "模拟：未触发升级条件",
+    "improvement": "把现场资源和人工判断依据加入输入字段",
+    "reviewer": "赛事导师",
+    "date": "第6天",
+    "source": "organizer_seed"
+   }
+  ],
+  "conflict": false,
+  "sim_label": "模拟 / SIMULATED",
+  "narrative": {
+   "first_action": "Confirm current on-site ground-support resources with the operations team before considering escalation.",
+   "follow_up": [
+    "Record the staff judgement that resources are sufficient.",
+    "Continue monitoring the wind and low temperature.",
+    "Do not repeat the earlier high-risk recommendation unless new facts change the picture."
+   ],
+   "escalation": "Escalate only if the wind increases or a formal operating irregularity appears; otherwise continue monitoring.",
+   "human_decisions": "Operational decisions and the final risk judgement remain with the operations staff (RULE006/RULE007).",
+   "impact": "Low impact expected while resources remain sufficient; conditions should be monitored.",
+   "ops_note": "Simulated operations note: Gaoyuan has low temperature and stronger wind, but staff judged resources sufficient in a previous review. Confirm resources first and continue monitoring.",
+   "airport_note": "Simulated coordination request: please confirm the current Gaoyuan ground-support resource position and the wind trend.",
+   "passenger_note": "Simulated draft passenger message: Gaoyuan may experience possible weather-related delays. Flight status has not been confirmed. Please check official airline and airport channels for updates."
+  }
+ }
+}

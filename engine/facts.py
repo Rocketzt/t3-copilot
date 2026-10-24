@@ -11,6 +11,8 @@ from .i18n import AIRPORT_EN, IMPORTANCE_EN
 from .rules import CONFLICT, WEATHER, evaluate, has_any
 
 SIM_LABEL = "模拟 / SIMULATED"
+_EVENT_NUMBER = re.compile(r"(?<![0-9])[-+]?[0-9]+(?:\.[0-9]+)?(?![0-9])")
+_EVENT_TEXT_FIELDS = ("weather_text", "ops_text", "known", "unknown", "notes")
 _PII_PATTERNS = (
     re.compile(r"(?<!\d)1[3-9]\d{9}(?!\d)"),
     re.compile(r"(?<!\d)\d{17}[\dXx](?!\w)"),
@@ -34,6 +36,11 @@ def redact_text(text: str) -> str:
 def sanitize_event(event: dict) -> tuple[dict, bool]:
     clean = {key: redact_text(value) if isinstance(value, str) else value for key, value in event.items()}
     return clean, clean != event
+
+
+def _text_numbers(text: str) -> list[tuple[float, str]]:
+    """Extract only Arabic numeric literals present in sanitized event text."""
+    return [(float(token), "") for token in _EVENT_NUMBER.findall(text)]
 
 
 def _risk(event: dict, context: dict, rules: list[dict], feedback_matches: list[dict]) -> dict:
@@ -85,7 +92,7 @@ def build_facts(data: Data, event: dict, context: dict | None = None,
         fact_id = f'F{len(facts) + 1:02d}'
         facts.append({"id": fact_id, "text": text, "source": source, **({"value": values[0][0], "unit": values[0][1]} if values else {})})
         for value, unit in values:
-            display = f'{value:+.2f} {unit}' if unit == "pp" else f'{value:.2f}{unit}' if unit == "%" else f'{value:g} {unit}'
+            display = f'{value:+.2f} {unit}' if unit == "pp" else f'{value:.2f}{unit}' if unit == "%" else f'{value:g} {unit}' if unit else f'{value:g}'
             numbers.append({"value": value, "unit": unit, "display": display, "source": source, "fact_id": fact_id})
 
     for row in relevant:
@@ -98,6 +105,8 @@ def build_facts(data: Data, event: dict, context: dict | None = None,
         if row["yoy_delta_pp"] is not None:
             text += f'; YoY gap {row["yoy_delta_pp"]:+.2f} pp'
             values.append((row["yoy_delta_pp"], "pp"))
+        text += f'; {row["signal_count"]} detector signals'
+        values.append((row["signal_count"], "signals"))
         add(text + ".", "SIM-BASE", values)
     airport_info = next(a for a in data.airports if a["name"] == airport)
     add(f'{AIRPORT_EN.get(airport, airport)} is a {airport_info["tier"]} airport; airline importance {IMPORTANCE_EN.get(clean.get("importance"), clean.get("importance"))}.', "SIM-SCALE")
@@ -115,7 +124,13 @@ def build_facts(data: Data, event: dict, context: dict | None = None,
             f'precipitation {precipitation:g} mm, max wind {wind:g} m/s, '
             f'bad-weather days {bad_days:g}.',
             "SIM-WEATHER", [(precipitation, "mm"), (wind, "m/s"), (bad_days, "days")])
-    add(f'Event weather description: {clean.get("weather_text") or "not supplied"}. Forecast is not proof of per-flight impact.', source_event)
+    add(f'Event weather description: {clean.get("weather_text") or "not supplied"}. Forecast is not proof of per-flight impact.',
+        source_event, _text_numbers(str(clean.get("weather_text") or "")))
+    for field in _EVENT_TEXT_FIELDS[1:]:
+        field_text = str(clean.get(field) or "")
+        values = _text_numbers(field_text)
+        if values:
+            add(f'Event {field}: {field_text}', source_event, values)
     unknowns = [redact_text(s.strip()) for s in re.split(r"[、;,；]", str(clean.get("unknown") or "")) if s.strip()]
     missing_data = ["Monthly baselines cannot establish per-flight causation or current aircraft, crew, and gate status"]
     if context["weather_missing"]:
