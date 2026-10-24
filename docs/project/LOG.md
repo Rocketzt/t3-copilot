@@ -5,6 +5,26 @@ it on `main` only: pull first, make one small commit, push immediately (`ROLES.m
 conflict on merge. Newest first. All times are China time (UTC+8). The entries below, written before 2026-10-23 23:30 China time,
 are project-setup history; they were dated with this PC's UTC−5 clock, so their dates can be up to 13 h behind.
 
+
+## 2026-10-24 08:49 — Gate merge: jason + ziyu + jonathan into main; exam 21/21
+
+**Setup:** Merged origin/jason (fe7e0b5, network view), origin/ziyu (8ee881c, checker fixes + D01/D07 framing) and
+origin/jonathan (3d962de) onto main in a scratch worktree. Ran:
+- `python -m unittest discover -s tests`;
+- `python tests/run_tests.py --writer-mode offline`;
+- `pipeline.analyze()` for EVT001–EVT005 and bad mode;
+- `engine.network.network_view()`.
+**Result:**
+- All three merges are clean; 40/40 unit tests pass.
+- Exam 21/21: 15 official, 5 own, 1 negative. Earlier runs were 1/21, then 18/21, with fixes in between:
+  - C05 accepts "official … channels";
+  - C02 masks letters-plus-digits IDs;
+  - the fact sheet whitelists signal counts and event-text numbers;
+  - decision requests are no longer quoted.
+- Checker passes for all 5 events. Risk levels: EVT001 Medium, EVT002 Low, EVT003 Can't tell, EVT004 Low,
+  EVT005 Low. Bad mode is blocked.
+- Network view ranks Hailing first, then Yunchuan, then Beiling.
+**Anomalies:** Jonathan's network schematic was still running on his branch and is not in this merge.
 ## 2026-10-24 13:45 — Review of Jonathan's branch (2b045a3): app works offline, but the pipeline never uses the real engine; exam 0/21
 
 **Setup:**
