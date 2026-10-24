@@ -5,6 +5,29 @@ it on `main` only: pull first, make one small commit, push immediately (`ROLES.m
 conflict on merge. Newest first. All times are China time (UTC+8). The entries below, written before 2026-10-23 23:30 China time,
 are project-setup history; they were dated with this PC's UTC−5 clock, so their dates can be up to 13 h behind.
 
+## 2026-10-24 19:42 — Jason's D01, D04, D06 and D07 reviewed and merged; all numbers verified
+
+**Setup:** Read all four documents in full. Checked D04's 12-row rules table cell by cell against
+`data/track3.json`, and recomputed the network monthly averages. Trial-merged `origin/jason` into `main`, then ran
+the unit tests and the offline exam.
+**Result:**
+- All 6 changed files are Jason's (ROLES.md after the 18:40 handover). The rules table matches on 12/12 rows.
+- Every number checked is correct:
+  - network averages 84.29 / 78.80 / 78.51 %;
+  - 192 / 12 / 13 / 179·11·1·1;
+  - Hailing −15.62 / −5.46 / −11.48; Yunchuan −6.07 / +5.47 / −0.80; Beiling −4.74 / −3.86 / −5.59;
+  - the 4 missing-weather rows; 41 tests; exam 21/21.
+- D04 keeps Ziyu's sections 1–2 and adds rules, fact/assumption/unknown handling, checker C01–C13, the 17 fields
+  and limits.
+- D06 has 4 failure modes and stop conditions; D07 has shadow → assisted → monitored with gates. D01 is an
+  11-slide outline. Each document carries 模拟 and a "What we did not build" section, and none claims a real-world
+  result.
+- Merged to `main`; 41 tests OK and exam 21/21 after the merge.
+**Anomalies:**
+- D01 cites `../exam_now.json`, a file outside the repo; it should cite `exports/test_results.json`.
+- D01 notes that the saved screenshots are interim (taken before checker integration). Fresh screenshots of a
+  checker pass, the bad-AI block and the 21/21 exam are still needed.
+
 ## 2026-10-24 19:17 — Jonathan's checker-demo fix (1a1d125) merged; demo now reports blocked=True
 
 **Setup:** Merged `origin/jonathan` into `main` in a scratch worktree. The only conflict was the generated
