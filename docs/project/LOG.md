@@ -5,6 +5,33 @@ it on `main` only: pull first, make one small commit, push immediately (`ROLES.m
 conflict on merge. Newest first. All times are China time (UTC+8). The entries below, written before 2026-10-23 23:30 China time,
 are project-setup history; they were dated with this PC's UTC−5 clock, so their dates can be up to 13 h behind.
 
+## 2026-10-24 13:45 — Review of Jonathan's branch (2b045a3): app works offline, but the pipeline never uses the real engine; exam 0/21
+
+**Setup:**
+- Checked out `origin/jonathan` in a scratch worktree and merged `origin/main` into it locally (clean merge; not
+  pushed).
+- Ran the unit tests and `tests/run_tests.py --writer-mode offline`.
+- Started `app/server.py` on port 8817 and called `/`, `/api/health`, `/api/bootstrap`, `/api/detector/ranking`,
+  `/api/analyze`, `/api/checker/demo`, `/api/ask` and `/api/feedback`.
+**Result:**
+- The 8 commits are credited to chrochrohoho. 17 of the 18 changed files are his; the new `docs/planning/IDEAS.md`
+  is in the shared folder.
+- 16/16 unit tests pass. The server serves the UI (with 模拟) and all 8 endpoints return 200 offline.
+- **Exam: 0/21.** Four causes:
+  1. **Interface mismatch.** `pipeline.ask()` takes `event_id=` / `custom=`, but CONTRACT §6 and Jason's runner call
+     `ask(question, event=...)`. That gives a TypeError on 14 of 15 official tests.
+  2. **The real engine is never used.** `analyze()` sets `engine_mode = "fixture"` on every path, even though
+     Jason's modules now import. Custom events go through a stand-in fact sheet (`_custom_factsheet`). As a result:
+     - personal data is **not redacted** ("Passenger 张伟 13812345678" is echoed back in `event`);
+     - risk labels are lowercase (`medium`, `cant_tell`) instead of CONTRACT's "Medium" / "Can't tell".
+  3. **No checker yet.** `engine/checker.py` (Ziyu's) is not on any branch, so `check.passed` is null everywhere
+     and the bad-writer test is not blocked. This is expected until the checker lands.
+  4. **The writer trips Jason's forbidden pattern.** It writes "the data cannot prove that weather caused this
+     event", which the plain `weather caused` pattern flags (OWN002, OWN003, OWN005).
+- Privacy: commit 8191d3d has Jonathan's personal email as its author address. It is on the public `jonathan`
+  branch.
+**Anomalies:** None.
+
 ## 2026-10-24 13:30 — Correction: Rocketzt's PC clock is UTC−5; Jason's clock was right
 
 **Setup:** Compared `date`, `date -u` and the time zones on the commits.
