@@ -172,6 +172,22 @@
       </div>
     </div>
     <div class="stat-grid" id="det-stats"></div>
+
+    <div class="card" id="network-card">
+      <div class="card-head">
+        <h2>Network priority <span class="zh">网络优先级</span></h2>
+        <span class="hint" id="network-mode">loading…</span>
+      </div>
+      <p class="hint">Schematic — not geographic. Circle size = importance to our airline; colour = detector verdict.
+        Hover for the reason; click an airport to open its analysis in the Assistant tab.</p>
+      <div class="network-wrap" id="network-map" role="img" aria-label="Schematic network priority map"></div>
+      <div class="chart-legend" id="network-legend"></div>
+      <div class="table-wrap network-table-wrap">
+        <table class="data-table" id="network-table"></table>
+      </div>
+      <p class="hint">Priority = anomaly × importance to our airline. Ranked table below the map; all data simulated.</p>
+    </div>
+
     <div class="card">
       <div class="card-head">
         <h2>Hailing vs Yunchuan — monthly completion</h2>
@@ -245,6 +261,10 @@
         whose numbers come from the workbook, an offline <strong>writer</strong> and a <strong>checker</strong>;
         an <strong>exam</strong> runner; and an append-only <strong>feedback memory</strong>. The writer never
         computes a number, and decisions stay with qualified people.</p>
+      <p>This is the operations assistant for <strong>our airline's disruption desk</strong> — one fictional Chinese
+        domestic airline. Priority combines detector anomaly with importance to our airline. Field f14 is the
+        message to the airport coordination team; decisions on cancel, release, dispatch, maintenance and
+        compensation stay with our airline's qualified staff.</p>
       <p class="hint" id="about-counts"></p>
     </div>
     <div class="card">
@@ -261,14 +281,14 @@
         <li>The organizer data is monthly and airport-level — it cannot identify individual flights or crews.</li>
         <li>Weather is background evidence; it is not proof of causation.</li>
         <li>The demo writer is a deterministic template; the optional live-LLM writer is not enabled in this run.</li>
-        <li>This build runs on fixtures until the data/detector/fact modules are merged.</li>
+        <li>When the checker is not available, the UI shows "not checked" rather than faking a pass.</li>
       </ul>
     </div>
   </section>
 </main>
 
 <footer>
-  <span>模拟 / SIMULATED · organizer data is fictional · decision support only · <span id="footer-mode">fixtures</span></span>
+  <span>模拟 / SIMULATED · organizer data is fictional · decision support only · <span id="footer-mode">offline</span></span>
 </footer>
 
 <div class="toast" id="toast" hidden></div>

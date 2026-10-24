@@ -11,10 +11,13 @@ const state = {
   msgTab: "ops",
   ranking: null,
   chart: null,
+  network: null,
   exam: null,
   feedback: [],
   detectorLoaded: false,
   feedbackLoaded: false,
+  health: null,
+  engineMode: "fixtures",
 };
 
 /* ------------------------------------------------------------------ helpers */
@@ -43,13 +46,38 @@ function signed(n, digits = 2) {
   return (v > 0 ? "+" : "") + v.toFixed(digits);
 }
 
+const TAG_NAMES = ["ASSUMPTION", "UNKNOWN", "HUMAN"];
+
 function tag(text) {
   const style = { assumption: "tag-assumption", unknown: "tag-unknown", human: "tag-human" }[String(text).toLowerCase()] || "";
   return `<span class="tag-chip ${style}">${esc(text)}</span>`;
 }
 
+/* Human-readable English for labels the data layer still keeps in Chinese. */
+function humanize(text) {
+  return String(text === null || text === undefined ? "" : text)
+    .replace(/大型机场/g, "Large")
+    .replace(/中型机场/g, "Medium")
+    .replace(/小型机场/g, "Small");
+}
+
+/* Strip one leading [TAG] (the caller re-adds it as a chip). */
+function stripLeadingTag(text) {
+  return String(text === null || text === undefined ? "" : text).replace(/^\s*\[(ASSUMPTION|UNKNOWN|HUMAN)\]\s*/i, "");
+}
+
+/* Collapse a run of identical leading tags, e.g. "[ASSUMPTION] [ASSUMPTION] x" -> "[ASSUMPTION] x". */
+function collapseLeadingTags(text) {
+  let out = String(text === null || text === undefined ? "" : text);
+  TAG_NAMES.forEach((name) => {
+    const re = new RegExp("^\\s*\\[" + name + "\\]\\s*(?:\\[" + name + "\\]\\s*)+", "i");
+    out = out.replace(re, "[" + name + "] ");
+  });
+  return out;
+}
+
 function rich(text) {
-  let html = esc(text);
+  let html = esc(collapseLeadingTags(humanize(text)));
   html = html.replace(/\[FACT:\s*([A-Za-z0-9_\-\s]+)\]/g,
     (m, src) => `<span class="tag-chip tag-fact" title="Fact source">FACT · ${esc(src.trim())}</span>`);
   html = html.replace(/\[(ASSUMPTION|UNKNOWN|HUMAN)\]/g, (m, t) => tag(t));
@@ -98,21 +126,60 @@ function switchTab(name) {
 }
 
 /* ------------------------------------------------------------------ bootstrap */
+function renderEngineBadge(mode, health) {
+  state.engineMode = String(mode || "fixtures");
+  const badge = $("#engine-mode");
+  if (badge) {
+    badge.textContent = "engine: " + state.engineMode;
+    const meta = [];
+    if (health && typeof health.checker_available === "boolean") {
+      meta.push("checker " + (health.checker_available ? "available" : "not available"));
+    }
+    if (health && typeof health.runner_available === "boolean") {
+      meta.push("runner " + (health.runner_available ? "available" : "not available"));
+    }
+    if (health && health.writer_mode) meta.push("writer: " + health.writer_mode);
+    badge.title = meta.length ? meta.join(" · ") : "Mode reported by /api/health and /api/analyze";
+  }
+  const footer = $("#footer-mode");
+  if (footer) footer.textContent = state.engineMode + " / offline";
+}
+
 async function init() {
+  let health = null;
   try {
     state.bootstrap = await api("/api/bootstrap");
+    try {
+      health = await api("/api/health");
+    } catch (e) {
+      health = null; /* the badge falls back to bootstrap data; the page still works */
+    }
   } catch (err) {
     setStatus("#assistant-status", "Could not load /api/bootstrap: " + err.message, "error");
     return;
   }
   const b = state.bootstrap;
-  $("#engine-mode").textContent = "engine: " + (b.engine_mode || "fixtures");
+  state.health = health;
+  const healthMode = health && health.engine === "ready" ? "real" : "fixtures";
+  renderEngineBadge(healthMode, health || {
+    checker_available: b.checker_available,
+    runner_available: b.runner_available,
+  });
   renderEventCards();
   renderAirportSelect();
   renderAskChips();
   renderAbout();
-  $("#footer-mode").textContent = "fixtures / offline";
   setStatus("#assistant-status", `${b.counts.airports} airports · ${b.counts.airport_months} airport-months · ${b.counts.rules} rules · ${b.counts.tests} tests — all simulated.`, "ok");
+
+  /* deep links for demo/screenshots: ?tab=<name> and/or ?event=EVT00x (inert without params) */
+  const params = new URLSearchParams(window.location.search);
+  const tab = params.get("tab");
+  if (tab && document.getElementById("tab-" + tab)) switchTab(tab);
+  const eventId = params.get("event");
+  if (eventId && (b.events || []).some((ev) => ev.id === eventId)) {
+    selectEvent(eventId);
+    analyzeEvent({ event_id: eventId, writer_mode: "offline" });
+  }
 }
 
 function renderEventCards() {
@@ -196,6 +263,7 @@ async function analyzeEvent(payload) {
     state.analysis = result;
     state.lastRequest = payload;
     renderResult(result);
+    renderEngineBadge(result.engine_mode || "fixtures", state.health);
     setStatus("#assistant-status", `Analyzed ${result.event.id} (${result.event.airport_en || result.event.airport}) — engine mode: ${result.engine_mode || "fixture"}.`, "ok");
     $("#result").hidden = false;
     $("#result").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -262,14 +330,14 @@ function renderFactsCard(facts) {
   const section = (title, items, tagName) => {
     if (!items || !items.length) return "";
     return `<div class="subhead">${esc(title)}</div><div class="fact-list">` +
-      items.map((x) => `<div class="fact-item">${tagName ? tag(tagName) : ""}${esc(x)}</div>`).join("") + `</div>`;
+      items.map((x) => `<div class="fact-item">${tagName ? tag(tagName) : ""}${esc(humanize(stripLeadingTag(x)))}</div>`).join("") + `</div>`;
   };
   $("#facts-card").innerHTML = `
     <div class="card-head"><h2>Fact sheet <span class="zh">事实表</span></h2>
       <span class="hint">${factsList.length} facts · every number has a source</span></div>
     <div class="subhead">Facts</div>
     <div class="fact-list">${factsList.map((f) => `
-      <div class="fact-item"><span class="src-chip">${esc(f.source)}</span>${esc(f.text)}</div>`).join("") || '<div class="empty">No facts.</div>'}</div>
+      <div class="fact-item"><span class="src-chip">${esc(f.source)}</span>${esc(humanize(f.text))}</div>`).join("") || '<div class="empty">No facts.</div>'}</div>
     ${section("Assumptions to verify", facts.assumptions, "ASSUMPTION")}
     ${section("Known information gaps", facts.unknowns, "UNKNOWN")}
     ${section("Missing / limited data", facts.missing_data, "UNKNOWN")}
@@ -395,6 +463,13 @@ async function loadDetector() {
     renderDetectorStats(ranking);
     renderChart(chart);
     renderRanking();
+    try {
+      state.network = await api("/api/network");
+      renderNetwork(state.network);
+    } catch (networkError) {
+      $("#network-map").innerHTML = `<div class="error-banner">Network priority failed: ${esc(networkError.message)}</div>`;
+      $("#network-mode").textContent = "network: unavailable";
+    }
   } catch (err) {
     $("#det-stats").innerHTML = `<div class="error-banner">Detector load failed: ${esc(err.message)}</div>`;
   }
@@ -411,6 +486,141 @@ function renderDetectorStats(ranking) {
   ];
   $("#det-stats").innerHTML = stats.map(([n, l]) =>
     `<div class="stat-card"><div class="stat-num">${esc(n)}</div><div class="stat-label">${esc(l)}</div></div>`).join("");
+}
+
+/* ------------------------------------------------------------------ network priority map */
+const NETWORK_LAYOUT = {
+  "北岭机场": [350, 92],
+  "云川国际机场": [560, 118],
+  "海陵国际机场": [735, 192],
+  "星湖机场": [285, 195],
+  "南湾机场": [455, 292],
+  "青岚机场": [765, 322],
+  "临江机场": [170, 300],
+  "高原机场": [155, 128],
+};
+const NETWORK_COLORS = {
+  "normal": "#1f8a4c",
+  "watch": "#e6a23c",
+  "unusual": "#d97706",
+  "clearly unusual": "#b42318",
+  "can't tell": "#7b61ff",
+};
+
+function shortAirport(record) {
+  return String(record.airport_en || record.airport || "")
+    .replace(/ International/g, "")
+    .replace(/ Airport/g, "");
+}
+
+function networkColour(verdict) {
+  return NETWORK_COLORS[String(verdict || "").toLowerCase()] || "#6b7a90";
+}
+
+function networkRadius(record) {
+  const importance = String(record.importance_en || record.importance || "").toLowerCase();
+  if (importance === "high" || importance === "高") return 26;
+  if (importance === "medium" || importance === "中") return 19;
+  return 14;
+}
+
+function renderNetwork(data) {
+  const wrap = $("#network-map");
+  const airports = (data.airports || []).slice().sort((a, b) => a.priority_rank - b.priority_rank);
+  if (!airports.length) {
+    wrap.innerHTML = '<div class="empty">No network data.</div>';
+    return;
+  }
+  const isMock = data.mode === "mock";
+  $("#network-mode").textContent = `mode: ${isMock ? "mock fixture" : "real engine"} · month: ${data.month_mode || "context"} · 模拟`;
+  if (data.note) $("#network-mode").title = data.note;
+
+  const width = 900, height = 400;
+  const nodes = airports.map((record, index) => {
+    const position = NETWORK_LAYOUT[record.airport] || [140 + (index % 4) * 200, 110 + Math.floor(index / 4) * 150];
+    const [cx, cy] = position;
+    const r = networkRadius(record);
+    const short = shortAirport(record);
+    return `<g class="network-node" data-airport="${esc(record.airport)}" tabindex="0" role="button"
+        aria-label="${esc(record.airport_en || record.airport)}: ${esc(record.verdict)}, priority rank ${record.priority_rank}. ${esc(record.reason)}">
+      <title>${esc(record.reason)}</title>
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="${networkColour(record.verdict)}" fill-opacity="0.92"
+        stroke="#ffffff" stroke-width="2"></circle>
+      <text x="${cx}" y="${cy + r + 17}" text-anchor="middle" class="network-label">${esc(short)}</text>
+      <text x="${cx}" y="${cy + r + 30}" text-anchor="middle" class="network-sub">#${record.priority_rank} · ${record.signal_count} signal${record.signal_count === 1 ? "" : "s"}</text>
+    </g>`;
+  }).join("");
+
+  wrap.innerHTML = `<svg viewBox="0 0 ${width} ${height}" width="100%" height="400" role="img"
+      aria-label="Schematic network priority map: ${esc(data.mode || "mock")}">
+    <text x="16" y="24" class="network-caption">Schematic — not geographic · 模拟 / SIMULATED</text>
+    ${nodes}
+  </svg>`;
+  wrap.querySelectorAll(".network-node").forEach((element) => {
+    const airport = element.getAttribute("data-airport");
+    const record = airports.find((item) => item.airport === airport);
+    element.addEventListener("click", () => openAirportAnalysis(record));
+    element.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openAirportAnalysis(record);
+      }
+    });
+  });
+  renderNetworkLegend();
+  renderNetworkTable(airports);
+  window.__networkRendered = true;
+}
+
+function renderNetworkLegend() {
+  const verdicts = ["normal", "watch", "unusual", "clearly unusual", "can't tell"];
+  $("#network-legend").innerHTML = verdicts.map((verdict) =>
+    `<span><span class="legend-dot" style="background:${networkColour(verdict)}"></span>${esc(verdict)}</span>`).join("")
+    + `<span><span class="legend-dot legend-dot-sm" style="background:#6b7a90"></span>small importance</span>`
+    + `<span><span class="legend-dot" style="background:#6b7a90"></span>medium</span>`
+    + `<span><span class="legend-dot legend-dot-lg" style="background:#6b7a90"></span>large</span>`;
+}
+
+function renderNetworkTable(airports) {
+  const rows = airports.slice().sort((a, b) => a.priority_rank - b.priority_rank);
+  $("#network-table").innerHTML = `
+    <thead><tr><th>Rank</th><th>Airport</th><th>Month</th><th>Signals</th><th>Verdict</th>
+      <th>Importance</th><th>Reason</th></tr></thead>
+    <tbody>${rows.map((record) => `
+      <tr>
+        <td class="num">#${record.priority_rank}</td>
+        <td>${esc(record.airport_en || record.airport)}<div class="hint">${esc(record.airport)}</div></td>
+        <td class="num">${esc(record.month_label)}</td>
+        <td class="num">${record.signal_count}</td>
+        <td><span class="signal-chip ${record.signal_count > 0 ? "on" : "off"}">${esc(record.verdict)}</span></td>
+        <td>${esc(record.importance_en || record.importance)}</td>
+        <td class="hint">${esc(record.reason)}</td>
+      </tr>`).join("")}</tbody>`;
+}
+
+function openAirportAnalysis(record) {
+  if (!record) return;
+  switchTab("assistant");
+  const event = (state.bootstrap.events || []).find((item) => item.airport === record.airport);
+  if (event) {
+    selectEvent(event.id);
+    analyzeEvent({ event_id: event.id, writer_mode: "offline" });
+  } else {
+    analyzeEvent({
+      custom: {
+        airport: record.airport,
+        time_text: "selected month " + record.month_label,
+        weather_text: "see monthly baseline",
+        ops_text: "network schematic drill-down",
+        importance: record.importance,
+        notes: "",
+        known: "monthly baseline",
+        unknown: "current flight-level status",
+      },
+      writer_mode: "offline",
+    });
+  }
+  toast("Opened " + (record.airport_en || record.airport) + " in the Assistant tab");
 }
 
 function renderChart(chart) {
@@ -477,7 +687,7 @@ function renderRanking() {
       <tr class="${r.signal_count >= 2 ? "top-row" : ""}">
         <td>${esc(r.airport_en)}<div class="hint">${esc(r.airport)}</div></td>
         <td class="num">${esc(r.month_label)}</td>
-        <td>${esc(r.tier_en || r.tier)}</td>
+        <td>${esc(humanize(r.tier_en || r.tier))}</td>
         <td class="num">${fmt(r.completion_pct)}%</td>
         <td class="num">${fmt(r.peer_pct)}%</td>
         <td class="num">${signed(r.delta_pp)}</td>

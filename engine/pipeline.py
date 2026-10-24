@@ -81,6 +81,33 @@ def chart(airports: list[str] | None = None) -> dict:
     return {"months": data["months"], "series": [s for s in data["series"] if s["airport"] in wanted]}
 
 
+def network_view(year: int | None = None, month: int | None = None) -> dict:
+    """Network priority view: Jason's engine.network when present, else the owned mock fixture."""
+    try:
+        from . import network as _network  # type: ignore
+    except Exception:
+        _network = None
+    if _network is not None:
+        data = _real_data() if _REAL.get("data") else None
+        try:
+            result = dict(_network.network_view(data, year, month))
+        except TypeError:
+            result = dict(_network.network_view())
+        result["mode"] = "real"
+        return result
+    fixture = _load("mock_network.json")
+    if year is not None and month is not None:
+        key = f"{int(year)}-{int(month):02d}"
+        airports = (fixture.get("by_month") or {}).get(key)
+        if airports:
+            return {"month_mode": "fixed", "airports": airports,
+                    "sim_label": fixture.get("sim_label", SIM), "mode": "mock",
+                    "note": fixture.get("note", "")}
+    result = {key: value for key, value in fixture.items() if key != "by_month"}
+    result["mode"] = "mock"
+    return result
+
+
 def _factsheets() -> dict:
     return _load("mock_factsheets.json")
 

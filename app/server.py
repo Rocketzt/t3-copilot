@@ -120,6 +120,19 @@ class Handler(BaseHTTPRequestHandler):
                 raw = (query.get("airports") or [""])[0]
                 airports = [unquote(a.strip()) for a in raw.split(",") if a.strip()] or None
                 self._json(200, pipeline.chart(airports))
+            elif path == "/api/network":
+                year_raw = (query.get("year") or [""])[0].strip()
+                month_raw = (query.get("month") or [""])[0].strip()
+                if bool(year_raw) != bool(month_raw):
+                    self._error(400, "provide both year and month, or neither")
+                    return
+                try:
+                    year = int(year_raw) if year_raw else None
+                    month = int(month_raw) if month_raw else None
+                except ValueError:
+                    self._error(400, "year and month must be integers")
+                    return
+                self._json(200, pipeline.network_view(year, month))
             elif path == "/api/detector/airport":
                 name = unquote((query.get("name") or [""])[0]).strip()
                 if not name:

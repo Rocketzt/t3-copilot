@@ -311,6 +311,26 @@ label.block { display: block; margin: 10px 0; font-size: 12.5px; font-weight: 60
 .chart-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px; font-size: 12px; color: var(--muted); }
 .legend-swatch { display: inline-block; width: 18px; height: 3px; vertical-align: middle; margin-right: 5px; }
 
+/* ------------------------------------------------------------------ network priority map */
+.network-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #e6ebf3;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #fbfcfe 0%, #f5f8fd 100%);
+}
+.network-wrap svg { display: block; min-width: 640px; }
+.network-node { cursor: pointer; outline: none; }
+.network-node circle { transition: stroke 0.15s, stroke-width 0.15s, filter 0.15s; }
+.network-node:hover circle, .network-node:focus circle { stroke: var(--navy); stroke-width: 4; filter: drop-shadow(0 2px 3px rgba(16,33,58,0.25)); }
+.network-label { font-family: var(--sans); font-size: 12px; font-weight: 700; fill: #24344d; pointer-events: none; }
+.network-sub { font-family: var(--mono); font-size: 10px; fill: #66748a; pointer-events: none; }
+.network-caption { font-family: var(--sans); font-size: 11px; fill: #8a97a9; letter-spacing: 0.3px; }
+.legend-dot { display: inline-block; width: 11px; height: 11px; border-radius: 50%; vertical-align: middle; margin-right: 5px; }
+.legend-dot-sm { width: 8px; height: 8px; }
+.legend-dot-lg { width: 16px; height: 16px; }
+.network-table-wrap { margin-top: 12px; max-height: 360px; }
+
 /* ------------------------------------------------------------------ misc */
 .plain { margin: 6px 0 0; padding-left: 20px; font-size: 13.5px; color: #33415a; }
 .plain li { margin-bottom: 6px; }
