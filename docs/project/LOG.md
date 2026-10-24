@@ -5,6 +5,15 @@ it on `main` only: pull first, make one small commit, push immediately (`ROLES.m
 conflict on merge. Newest first. All times are China time (UTC+8). The entries below, written before 2026-10-23 23:30 China time,
 are project-setup history; they were dated with this PC's UTC−5 clock, so their dates can be up to 13 h behind.
 
+## 2026-10-24 19:17 — Jonathan's checker-demo fix (1a1d125) merged; demo now reports blocked=True
+
+**Setup:** Merged `origin/jonathan` into `main` in a scratch worktree. The only conflict was the generated
+`exports/test_results.json`; it was resolved by regenerating it with `tests/run_tests.py --writer-mode offline` on the
+merged code. Ran the unit tests and called `pipeline.run_bad_writer_demo('EVT001')`.
+**Result:** Unit tests OK; exam 21/21 (15 official, 5 own, 1 negative). `run_bad_writer_demo` returns
+`blocked: True` with failure C02, so the inverted flag from 18:36 is fixed.
+**Anomalies:** None.
+
 ## 2026-10-24 18:40 — Ziyu's partial D04 saved and merged; D01/D04/D06/D07 handed to Jason
 
 **Setup:** Ziyu's OpenCode (GLM-5.3) run hit its usage limit while drafting the documents and had committed
