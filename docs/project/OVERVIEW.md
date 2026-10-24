@@ -1,4 +1,4 @@
-# HackSHSID 2026 entry — overview (as of 2026-10-23)
+# HackSHSID 2026 entry — overview (as of 2026-10-24 pre-submission)
 
 This file describes the project's current state. For the build plan, `EXECUTION_PLAN.md` wins; for interfaces,
 `CONTRACT.md` wins; for numbers, the workbook wins (known plan errors: `docs/planning/ERRATA.md`).
@@ -18,18 +18,27 @@ assistant has four parts:
 It is a Python stdlib web app with vanilla JS.
 
 ## Status
-- Planning documents and the repo skeleton (directories plus a README in each) are in place. No code yet.
+- **Built and verified.** The full prototype (app, engine, checker, exam runner) is merged on `main`; submission
+  text is drafted in `docs/SUBMISSION_DRAFT.md`.
 - Public GitHub repo: https://github.com/Rocketzt/t3-copilot (`main`, plus branches `ziyu`, `jonathan` and `jason`).
   Collaborators: Rocketzt, chrochrohoho and JasonXiao7, all able to push.
-- Roles distributed (`ROLES.md` v2). Jason is running the ClawsGO detector cross-check.
+- D01–D08, `AI_USAGE.md`, `SUBMISSION_DRAFT.md` and the evidence folders are in place. Still open: UI polish,
+  fresh screenshots + thumbnail, the submission form and registration checks (see `TASKS.md`).
 
-## Results so far
-- `EXECUTION_PLAN.md` and `CONTRACT.md` were checked against the workbook. Their numbers are correct except for the
-  items in `docs/planning/ERRATA.md` (LOG.md 2026-10-23).
+## Results so far (from real runs; figures in `docs/NUMBERS.md` and the logs)
+- Detector: 192 airport-months verified against an independent recomputation and the ClawsGO cross-check
+  (0 mismatches; `evidence/ai/clawsgo/`).
+- Exam **21/21** — 15 official + 5 own + 1 negative (`python tests/run_tests.py --writer-mode offline`); the
+  bad-AI demo is blocked by checker C02.
+- Unit tests **56/56 OK**, re-run on 2026-10-24 also from a clean clone of the public repo (fresh venv, pip
+  install, exam, app boot, `/` and `/api/health` 200 — `docs/project/log/ziyu.md`, 2026-10-24 22:11 entry).
+- Risk labels across the five organizer events: EVT001 Medium, EVT002 Low, EVT003 Can't tell, EVT004 Low,
+  EVT005 Low; the network view ranks Hailing first.
 
 ## Open questions
-- Is the offline template the default writer? Both plans say yes; the earlier shortlist had dropped "backup mode".
-- Has every member registered on study.standardcas.org and joined one project?
+- Are all three members registered on study.standardcas.org and joined to one project?
+- Is `docs/project/DECISIONS.md` missing an explicit "offline template is the default writer" line? The default
+  is applied everywhere (README writer modes, exam runs) and `TASKS.md` records it as decided.
 
 ## Settled facts
 - The zip `HackSHSID 2026(2)(2).zip` is identical to the organizer folder (same 4 files, same sizes).
@@ -64,7 +73,8 @@ It is a Python stdlib web app with vanilla JS.
   - `log/<name>.md`, one work log per member;
   - `TASKS.md` (shared; edited on `main`, updated by Ziyu at gates);
   - `DECISIONS.md`.
-- Deliverable drafts: `docs/D01…D07`; AI-use log: `docs/AI_USAGE.md`
+- Deliverable drafts: `docs/D01…D08`; submission text: `docs/SUBMISSION_DRAFT.md`; AI-use log: `docs/AI_USAGE.md`;
+  canonical numbers: `docs/NUMBERS.md`; screenshot/demo evidence: `evidence/` (incl. `evidence/runs/`)
 - Data: `Track 3 Data.xlsx` (repo root, read-only)
 - Organizer materials (local only, git-ignored): `organizer_materials/`. The Track 1 and 2 PDFs are still in
   `HackSHSID 2026/` because they were open in another program.

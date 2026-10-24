@@ -1,5 +1,7 @@
 # Errata for EXECUTION_PLAN.md and CONTRACT.md
 
+**Items not ticked here are historical; the build followed ROLES.md and the reviewed code on main.**
+
 Checked 2026-10-23 against `Track 3 Data.xlsx` with an independent stdlib script, which reads cells by column letter.
 Each owner fixes their own file; tick an item off when it is fixed. Where a plan and the workbook disagree, the
 workbook wins.
