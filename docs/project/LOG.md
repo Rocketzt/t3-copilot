@@ -4,6 +4,28 @@
 it on `main` only: pull first, make one small commit, push immediately (`ROLES.md`). Ziyu updates it at each gate. Individual work goes in `log/<name>.md`, one file per person, so logs never
 conflict on merge. Newest first. The entries below, dated before 2026-10-23 10:30, are project-setup history.
 
+## 2026-10-24 — Review of Jonathan's R1–R3 spec and explainer: sound and optional, but out of date on repo state and roles
+
+**Setup:** Read `R1-R3_BUILD_SPEC.md` (573 lines) and `R1-R3_EXPLAINED.pdf` (10 pages, text plus a rendered page),
+both untracked in the repo root. Checked their claims against the workbook, `ROLES.md` v2, `CONTRACT.md` and the
+merged engine on `main`.
+**Result:**
+- The features are sound and optional (R1 source receipts, R2 bounded question panel, R3 re-analysis with a diff).
+  The spec itself says not to start them before G2.
+- The example numbers are correct: −15.62, 69.49, 85.11, 73.16, 84.15, −10.99 pp.
+- Errors and conflicts:
+  1. It assumes commit 05b52fd with no code, but `main` already has Jason's engine.
+  2. Its owners follow roles v1: Ziyu on the engine, and a single `feature/r1-r3` branch that edits Jason's
+     `facts.py`, Ziyu's `checker.py` and Jonathan's `pipeline.py`. That conflicts with ROLES v2's one owner per file.
+  3. Its example `row_index` 176 for Hailing 2025-07 is wrong; the real sheet row is 147.
+  4. Its master prompt points to `docs/planning/R1-R3_BUILD_SPEC.md`, but the file is in the repo root.
+  5. Its estimates disagree: the spec says about 7 h, the PDF about 4 h.
+  6. R2 largely duplicates the "Ask the assistant" box already in CONTRACT §8.
+  7. R2 needs a new `checker.check_answer()` that is not in Ziyu's checker spec.
+  8. R2's Chinese and English question pairs: the workbook has Chinese only, and Jason's cases have English only.
+  9. In the PDF, the ASCII diagram on page 2 wraps badly (cosmetic).
+**Anomalies:** None.
+
 ## 2026-10-23 — Review of Jason's overnight branch (b5f506f): detector verified on all 192 rows; two fact-sheet gaps
 
 **Setup:** Checked out `origin/jason` in a scratch worktree. Then:
