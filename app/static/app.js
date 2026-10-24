@@ -11,6 +11,7 @@ const state = {
   msgTab: "ops",
   ranking: null,
   chart: null,
+  network: null,
   exam: null,
   feedback: [],
   detectorLoaded: false,
@@ -462,6 +463,13 @@ async function loadDetector() {
     renderDetectorStats(ranking);
     renderChart(chart);
     renderRanking();
+    try {
+      state.network = await api("/api/network");
+      renderNetwork(state.network);
+    } catch (networkError) {
+      $("#network-map").innerHTML = `<div class="error-banner">Network priority failed: ${esc(networkError.message)}</div>`;
+      $("#network-mode").textContent = "network: unavailable";
+    }
   } catch (err) {
     $("#det-stats").innerHTML = `<div class="error-banner">Detector load failed: ${esc(err.message)}</div>`;
   }
@@ -478,6 +486,141 @@ function renderDetectorStats(ranking) {
   ];
   $("#det-stats").innerHTML = stats.map(([n, l]) =>
     `<div class="stat-card"><div class="stat-num">${esc(n)}</div><div class="stat-label">${esc(l)}</div></div>`).join("");
+}
+
+/* ------------------------------------------------------------------ network priority map */
+const NETWORK_LAYOUT = {
+  "北岭机场": [350, 92],
+  "云川国际机场": [560, 118],
+  "海陵国际机场": [735, 192],
+  "星湖机场": [285, 195],
+  "南湾机场": [455, 292],
+  "青岚机场": [765, 322],
+  "临江机场": [170, 300],
+  "高原机场": [155, 128],
+};
+const NETWORK_COLORS = {
+  "normal": "#1f8a4c",
+  "watch": "#e6a23c",
+  "unusual": "#d97706",
+  "clearly unusual": "#b42318",
+  "can't tell": "#7b61ff",
+};
+
+function shortAirport(record) {
+  return String(record.airport_en || record.airport || "")
+    .replace(/ International/g, "")
+    .replace(/ Airport/g, "");
+}
+
+function networkColour(verdict) {
+  return NETWORK_COLORS[String(verdict || "").toLowerCase()] || "#6b7a90";
+}
+
+function networkRadius(record) {
+  const importance = String(record.importance_en || record.importance || "").toLowerCase();
+  if (importance === "high" || importance === "高") return 26;
+  if (importance === "medium" || importance === "中") return 19;
+  return 14;
+}
+
+function renderNetwork(data) {
+  const wrap = $("#network-map");
+  const airports = (data.airports || []).slice().sort((a, b) => a.priority_rank - b.priority_rank);
+  if (!airports.length) {
+    wrap.innerHTML = '<div class="empty">No network data.</div>';
+    return;
+  }
+  const isMock = data.mode === "mock";
+  $("#network-mode").textContent = `mode: ${isMock ? "mock fixture" : "real engine"} · month: ${data.month_mode || "context"} · 模拟`;
+  if (data.note) $("#network-mode").title = data.note;
+
+  const width = 900, height = 400;
+  const nodes = airports.map((record, index) => {
+    const position = NETWORK_LAYOUT[record.airport] || [140 + (index % 4) * 200, 110 + Math.floor(index / 4) * 150];
+    const [cx, cy] = position;
+    const r = networkRadius(record);
+    const short = shortAirport(record);
+    return `<g class="network-node" data-airport="${esc(record.airport)}" tabindex="0" role="button"
+        aria-label="${esc(record.airport_en || record.airport)}: ${esc(record.verdict)}, priority rank ${record.priority_rank}. ${esc(record.reason)}">
+      <title>${esc(record.reason)}</title>
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="${networkColour(record.verdict)}" fill-opacity="0.92"
+        stroke="#ffffff" stroke-width="2"></circle>
+      <text x="${cx}" y="${cy + r + 17}" text-anchor="middle" class="network-label">${esc(short)}</text>
+      <text x="${cx}" y="${cy + r + 30}" text-anchor="middle" class="network-sub">#${record.priority_rank} · ${record.signal_count} signal${record.signal_count === 1 ? "" : "s"}</text>
+    </g>`;
+  }).join("");
+
+  wrap.innerHTML = `<svg viewBox="0 0 ${width} ${height}" width="100%" height="400" role="img"
+      aria-label="Schematic network priority map: ${esc(data.mode || "mock")}">
+    <text x="16" y="24" class="network-caption">Schematic — not geographic · 模拟 / SIMULATED</text>
+    ${nodes}
+  </svg>`;
+  wrap.querySelectorAll(".network-node").forEach((element) => {
+    const airport = element.getAttribute("data-airport");
+    const record = airports.find((item) => item.airport === airport);
+    element.addEventListener("click", () => openAirportAnalysis(record));
+    element.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openAirportAnalysis(record);
+      }
+    });
+  });
+  renderNetworkLegend();
+  renderNetworkTable(airports);
+  window.__networkRendered = true;
+}
+
+function renderNetworkLegend() {
+  const verdicts = ["normal", "watch", "unusual", "clearly unusual", "can't tell"];
+  $("#network-legend").innerHTML = verdicts.map((verdict) =>
+    `<span><span class="legend-dot" style="background:${networkColour(verdict)}"></span>${esc(verdict)}</span>`).join("")
+    + `<span><span class="legend-dot legend-dot-sm" style="background:#6b7a90"></span>small importance</span>`
+    + `<span><span class="legend-dot" style="background:#6b7a90"></span>medium</span>`
+    + `<span><span class="legend-dot legend-dot-lg" style="background:#6b7a90"></span>large</span>`;
+}
+
+function renderNetworkTable(airports) {
+  const rows = airports.slice().sort((a, b) => a.priority_rank - b.priority_rank);
+  $("#network-table").innerHTML = `
+    <thead><tr><th>Rank</th><th>Airport</th><th>Month</th><th>Signals</th><th>Verdict</th>
+      <th>Importance</th><th>Reason</th></tr></thead>
+    <tbody>${rows.map((record) => `
+      <tr>
+        <td class="num">#${record.priority_rank}</td>
+        <td>${esc(record.airport_en || record.airport)}<div class="hint">${esc(record.airport)}</div></td>
+        <td class="num">${esc(record.month_label)}</td>
+        <td class="num">${record.signal_count}</td>
+        <td><span class="signal-chip ${record.signal_count > 0 ? "on" : "off"}">${esc(record.verdict)}</span></td>
+        <td>${esc(record.importance_en || record.importance)}</td>
+        <td class="hint">${esc(record.reason)}</td>
+      </tr>`).join("")}</tbody>`;
+}
+
+function openAirportAnalysis(record) {
+  if (!record) return;
+  switchTab("assistant");
+  const event = (state.bootstrap.events || []).find((item) => item.airport === record.airport);
+  if (event) {
+    selectEvent(event.id);
+    analyzeEvent({ event_id: event.id, writer_mode: "offline" });
+  } else {
+    analyzeEvent({
+      custom: {
+        airport: record.airport,
+        time_text: "selected month " + record.month_label,
+        weather_text: "see monthly baseline",
+        ops_text: "network schematic drill-down",
+        importance: record.importance,
+        notes: "",
+        known: "monthly baseline",
+        unknown: "current flight-level status",
+      },
+      writer_mode: "offline",
+    });
+  }
+  toast("Opened " + (record.airport_en || record.airport) + " in the Assistant tab");
 }
 
 function renderChart(chart) {

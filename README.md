@@ -27,6 +27,15 @@ Four parts in one local web app:
 
 Every page and output carries the `模拟 / SIMULATED` label.
 
+## Who it is for (airline voice)
+
+This is the operations assistant for **our airline's disruption desk** — one fictional Chinese domestic airline.
+The detector's priority combines **anomaly with importance to our airline**: a large drop at a high-importance
+airport matters more than a similar drop at a small one. Field **f14** is the message to the **airport coordination
+team**; field f13 is for our own operations staff and f15 is the passenger draft. Decisions on cancellation,
+release, dispatch, maintenance and compensation stay with our airline's qualified staff; the assistant only
+prepares evidence and drafts for a human.
+
 ## Requirements
 
 - **Python 3.10+** (verified on Windows with Python 3.12.14).
@@ -66,7 +75,7 @@ Observed `GET /api/health` response:
 | Tab | What a judge sees |
 |---|---|
 | **Assistant** | Choose one of the 5 organizer events (EVT001–EVT005) or type a new event (airport, time window, weather, operations, importance, notes, known/unknown information). Analyze → risk card, detector card (three comparisons, signal chips, verdict, confidence), fact sheet (facts with source chips, assumptions, unknowns, missing data), the 17-field organizer-template advice (English + organizer Chinese labels), 3 audience drafts (operations / airport coordination / passengers) with copy buttons, the checker panel, an accept / edit / reject decision with a reason, and a bounded "ask about this event" panel. Writer selector: offline template (default) or "Demo bad AI" (fabricated number). |
-| **Detector** | Stat cards (192 airport-months, 12 own-history flags, 13 any-signal months), a Hailing-vs-Yunchuan monthly completion chart with the same-class peer line and 2025-07/08 highlighted, and a sortable/filterable ranking of all 192 airport-months with verdicts. |
+| **Detector** | Stat cards (192 airport-months, 12 own-history flags, 13 any-signal months), a **schematic network priority map** (8 airports, circle size = importance to our airline, colour = verdict, click to open the airport in the Assistant tab, with a ranked table below), a Hailing-vs-Yunchuan monthly completion chart with the same-class peer line and 2025-07/08 highlighted, and a sortable/filterable ranking of all 192 airport-months with verdicts. |
 | **Exam** | "Run exam" sends the 15 official tests + 5 own events + 1 negative test through the same pipeline; summary cards, a results table with expected / forbidden / evidence, and a JSON report download. |
 | **Feedback** | Append-only decision log with accept / edit / reject counts; each record keeps the original advice next to the human decision. |
 | **About** | What the prototype is, the four parts, data-quality notes (DQ001–DQ004), the 12 rules, counts, limitations and the `模拟` note. |

@@ -16,6 +16,32 @@ Entry format (copy for each new entry):
 
 ---
 
+## 2026-10-24 17:05 — Network priority map added; `/api/network` self-tested with a real browser
+
+**Setup:** First committed the pending working-tree polish (`b4ba664`: README, UI tag/health polish, evidence
+screenshots and D08/reproducibility docs) as instructed. Then fetched, switched to `jonathan` and pulled
+(already up to date). `engine/network.py` is **not on this branch**, so I generated
+`fixtures/mock_network.json` from the local engine with the same shape as Jason's `network_view` (8 airports,
+`priority_rank`, month, signals, verdict, confidence, own/peer/YoY gaps, weather status, reason; plus all 24
+months under `by_month` for optional `?year=&month=`); the fixture is clearly labelled `mode: "mock"` and the
+server uses `engine.network.network_view` automatically as soon as that module is present. Added
+`GET /api/network` (year+month or neither; 400 on a partial pair), a schematic SVG map on the Detector tab
+(8 circles, colour by verdict, radius by importance, hover reason, keyboard/click drill-down into the Assistant
+tab, `schematic — not geographic` caption, persistent `模拟` labels), a ranked priority table below it, and the
+airline-voice wording in README and the About tab.
+**Result:** `/api/network` returns 200 with `month_mode=context`, `mode=mock`, 8 airports, `sim_label` and ranks
+1–8; `?year=2025&month=7` returns `month_mode=fixed`, Hailing 3 signals / clearly unusual / rank 1; a partial
+query returns 400; `/api/analyze` EVT001 still returns `engine_mode=real`, risk `Medium`. Headless Chrome (CDP)
+opened `?tab=detector`: **8 network nodes, 8 table rows**, mode label `mock fixture · month: context · 模拟`, and
+clicking Hailing switched to the Assistant tab with the result visible, **17 fields**, risk `Medium` and status
+`Analyzed EVT001 ... engine mode: real` — **0 console errors**. Screenshot captured at
+`%TEMP%\t3_detector.png` (map + legend + ranked table render correctly). `node --check app/static/app.js` passes.
+**Anomalies:** `engine.network` exists on `origin/jason` and `origin/main` but is not merged into this branch;
+the mock mode is explicit and will switch to real automatically after the merge. `data/feedback.jsonl` is a
+runtime log and stays untracked. The old server on 8803 was stopped after the test.
+**AI:** DeepSeek Harness — committed the pending handover, generated the fixture, implemented `/api/network`, the
+SVG map/legend/table and the airline wording, ran the CDP browser test and wrote this entry.
+
 ## 2026-10-24 16:30 — Repo updated; self-check found 13 small issues; plain-language plan written
 
 **Setup:** Fetched every remote branch and merged `origin/main` (`396598b`) into `jonathan` — clean, one docs file
