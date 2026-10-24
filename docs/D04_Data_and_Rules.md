@@ -2,9 +2,7 @@
 
 > 模拟 / SIMULATED — all airports, events and numbers are fictional (organizer data).
 
-**Owner:** Ziyu · **Status:** Complete — written 2026-10-24. Every number below came from running
-the code that day: `engine.detector`, `engine.network`, `engine.pipeline` and
-`python tests/run_tests.py --writer-mode offline` (21/21). Nothing is quoted from memory.
+**Status:** Sections 1–2: Ziyu’s checked draft. Sections 3–6: Jason’s completion from `data/track3.json`, `engine/facts.py`, `engine/writer.py`, `engine/checker.py` and the fresh offline exam (21/21).
 
 We are the operations assistant for **one fictional airline's disruption desk**. This document
 explains to our own staff and to reviewers where every number we show comes from, and which
@@ -73,107 +71,84 @@ network's mean completion is 78.80% in July and 78.51% in August against 84.29% 
 not escalate a seasonal dip. (Beiling 2025-12 is the opposite edge: it flags on **YoY alone**,
 own −4.74 / peer −3.86 / YoY −5.59 pp → 1 signal, watch.)
 
-## 3. Network priority — which of *our* airports first
+## 3. The twelve organizer rules
 
-`engine.network.network_view()` sorts our 8 airports by **anomaly × importance to our airline**
-(signals first, then 高/中/低 importance, then the own-history gap), each airport shown against
-its latest anomalous month:
+This table copies the organizer records in `data/track3.json`; “Yes” and “No” reflect `manual_approval`. `engine/rules.py` applies deterministic event-text and detector conditions. RULE003 uses the own-history signal; RULE007 uses the decision words, as recorded in `docs/planning/ERRATA.md`.
 
-| # | Airport | Importance to us | Month | Signals | Verdict | Own pp |
-|---:|---|---|---|---:|---|---:|
-| 1 | Hailing International | High | 2025-08 | 2 | unusual | −10.99 |
-| 2 | Yunchuan International | High | 2025-08 | 1 | watch | −5.94 |
-| 3 | Beiling | Medium | 2025-12 | 1 | watch | −4.74 |
-| 4 | Qinglan | Low | 2025-08 | 1 | watch | −6.49 |
-| 5 | Gaoyuan | Low | 2025-02 | 1 | watch | −6.10 |
-| 6 | Linjiang | Low | 2025-08 | 1 | watch | −5.44 |
-| 7 | Nanwan | Medium | 2025-12 | 0 | normal | −0.13 |
-| 8 | Xinghu | Medium | 2025-12 | 0 | normal | +2.23 |
+| ID | Topic | Trigger | Action | Escalate to | Human approval | Forbidden |
+|---|---|---|---|---|---|---|
+| RULE001 | 信息不足 | 关键数据缺失或来源冲突 | 降低判断强度并列出缺失信息 | 运营负责人 | Yes | 不得发布确定性结论 |
+| RULE002 | 天气风险 | 天气提示达到中高风险但尚无正式运行状态 | 准备监测清单与沟通草案 | 运行协调人员 | Yes | 不得声称航班一定延误 |
+| RULE003 | 异常波动 | 当前指标低于过去十二个月平均五个百分点以上 | 标记为重点复核 | 运营分析人员 | No | 不得直接归因于天气 |
+| RULE004 | 持续运行压力 | 上一时段表现下降且后续任务仍集中 | 按时间顺序列出核查事项 | 运营负责人 | Yes | 不得调整真实航班计划 |
+| RULE005 | 旅客沟通 | 存在风险但没有正式航班状态 | 生成明确标注“草案”的提示 | 旅客服务负责人 | Yes | 不得作为正式通知自动发送 |
+| RULE006 | 人工否决 | 专业人员拒绝建议 | 根据新事实调整建议并保留原记录 | 模型负责人 | Yes | 不得覆盖或删除人工意见 |
+| RULE007 | 重大运行决定 | 涉及取消、放行、调度、维修或赔付 | 仅整理所需信息 | 相应专业负责人 | Yes | 不得自动作出决定 |
+| RULE008 | 高风险升级 | 多个独立风险信号同时存在且影响范围可能扩大 | 建议升级并说明触发依据 | 运营负责人 | Yes | 不得跳过人工审批 |
+| RULE009 | 引用要求 | 输出包含数字或正式状态 | 在输出中列出来源 | 输出复核人 | Yes | 不得无来源生成事实 |
+| RULE010 | 模拟标识 | 使用模拟事件或模拟数值 | 统一标注“模拟” | 项目负责人 | No | 不得称为真实事件 |
+| RULE011 | 隐私保护 | 输入包含旅客或员工个人信息 | 只使用汇总信息 | 数据负责人 | Yes | 不得保存个人敏感信息 |
+| RULE012 | 停止条件 | 无法判断来源可靠性或出现安全相关问题 | 输出信息缺口和人工升级对象 | 运营负责人 | Yes | 不得继续给出确定建议 |
 
-**12 flags → 2 multi-signal → 1 priority review.** Hailing is the airport our desk looks at
-first; Yunchuan, equally important to us, stays on watch because its dip is seasonal.
+## 4. Facts, assumptions, unknowns and the checker
 
-## 4. The 12 rules as our code fires them (`engine/rules.py`)
+`engine/facts.py` builds a fact sheet before the writer drafts prose. Each fact has an ID, text and source. Every quotable numeric value also appears in `facts.numbers` with value, unit, display, source and fact ID. SIM-BASE supplies detector comparisons and signal counts; SIM-WEATHER supplies selected-month observations when present; event-text numbers are sourced to the event ID. Missing weather is disclosed, never imputed.
 
-All triggers are deterministic keyword/signal checks — no LLM decides whether a rule fires.
+`facts.assumptions` is marked `[ASSUMPTION]`; `facts.unknowns` comes from the event; `facts.missing_data` records limits of the monthly data. Conflicting evidence yields “Can’t tell” and a verification action. PII is redacted, and decision requests in displayed event text are replaced by a neutral RULE007 notice.
 
-| Rule | Fires in our code when | Action | Escalate to | Manual approval | Forbidden |
-|---|---|---|---|---|---|
-| RULE001 Insufficient info | source-conflict words, or ≥ 2 unknown items about source/definition/update time | soften the judgement, list the gaps | operations lead | yes | no firm conclusions |
-| RULE002 Weather risk | medium/strong weather words **and** no formal operating status yet | prepare monitoring list + communication drafts | ops coordination | yes | must not claim flights will definitely be delayed |
-| RULE003 Anomaly | **own-history signal only** (see deviation note) | flag for focused review | ops analyst | no | no direct weather attribution |
-| RULE004 Sustained pressure | pressure keywords in the ops text (drop, backlog, congestion…) | ordered verification checklist | operations lead | yes | must not adjust real flight plans |
-| RULE005 Passenger comms | same condition as RULE002 | produce a draft explicitly marked 草案 | passenger-service lead | yes | must not auto-send as official notice |
-| RULE006 Human overrule | prior feedback matched, or reject/overrule words in notes | adjust advice to the new facts, keep the original record | model owner | yes | never overwrite human input |
-| RULE007 Major decisions | **decision words only** (取消/放行/调度/维修/赔付, cancel/release/dispatch/maintenance/compensation) | stop advising; list the human decisions and required info | specialist owners | yes | no automated decision |
-| RULE008 High-risk escalation | ≥ 2 independent risk signals (multi-signal context, weather risk, pressure, conflict) | recommend escalation with the trigger basis | operations lead | yes | no skipping human approval |
-| RULE009 Citations | always (output contains numbers/status) | list sources in the output | output reviewer | yes | no unsourced facts |
-| RULE010 Simulation label | always | label 模拟 everywhere | project owner | no | must not present it as a real event |
-| RULE011 Privacy | PII patterns in the input (mobile, ID, email, 姓名/手机) | redact; use aggregates only | data owner | yes | never store sensitive personal data |
-| RULE012 Stop condition | conflict, safety keywords, or verdict "can't tell" | stop action conclusions; output gaps + human escalation | operations lead | yes | no continued firm advice |
+The writer turns this bounded input into the fixed fields and distinct audience drafts. `engine/checker.py` evaluates every output against the fact sheet and returns `passed`, per-check status and failure details:
 
-**Two documented deviations** (ERRATA C7/C8, recorded in `docs/planning/ERRATA.md`):
-- **RULE003 fires on the own-history signal only** — the organizer rule is "5 pp below its own
-  12-month average", not any-signal. (Beiling 2025-12 still appears in the ranking via its YoY
-  signal, but RULE003 itself does not fire for it.)
-- **RULE007 fires only on the decision words**, not on "risk level Medium+". Listing the human
-  decisions every time is still our default behaviour, by design.
+| Check | Implemented gate |
+|---|---|
+| C01 | all 17 fields present and non-empty |
+| C02 | every number is within 0.01 of a fact-sheet value |
+| C03 | every [FACT] tag cites a fact-sheet source |
+| C04 | no committed-action wording and no assistant decisions outside f12 |
+| C05 | passenger message is a draft, points to official channels, asserts no delay |
+| C06 | ops, airport and passenger messages are pairwise distinct |
+| C07 | no mobile numbers, ID numbers or email addresses |
+| C08 | 模拟 present in f13, f14, f15 and f17 |
+| C09 | f03 risk matches the fact-sheet conflict state |
+| C10 | no undisclosed missing weather data |
+| C11 | prior feedback mentioned in f10/f13 (or none exists) |
+| C12 | no unhedged weather-causation claim |
+| C13 | f12 lists cancellation, release, dispatch, maintenance and compensation |
 
-## 5. Facts, assumptions and unknowns — kept separate by construction
+The bad-writer demo inserts “20 points” into f05. It is absent from `facts.numbers`, so C02 blocks it; the fresh offline exam’s negative case passed. A checker pass is not human approval of operational advice.
 
-`engine/facts.py` builds a **fact sheet** before any prose is written:
+## 5. The fixed seventeen-field output
 
-- every **fact** has an id (F01…) and a source id; every usable **number** goes on a whitelist
-  (`facts.numbers`) with value, unit, display text and source;
-- **assumptions** are tagged `[ASSUMPTION]` (e.g. monthly patterns may indicate risk but do not
-  prove a current flight impact);
-- **unknowns** come from the event's own unknown list (per-flight plans, aircraft rotation, crew
-  and ground-support status) and are never silently filled;
-- **missing data** is listed separately and never imputed.
+These English and Chinese labels are from the implemented `engine/writer.py` mapping and match `CONTRACT.md` §6.
 
-The writer — template or LLM — may only turn whitelisted facts into prose. It never computes a
-number.
+| Key | English label | Chinese label |
+|---|---|---|
+| f01 | Event ID | 事件编号 |
+| f02 | Generated At | 生成时间 |
+| f03 | Risk Level | 风险等级 |
+| f04 | Airport & Time Window | 适用机场与时间 |
+| f05 | Evidence | 判断依据 |
+| f06 | Possible Impact | 可能影响 |
+| f07 | Assumptions to Verify | 待核查假设 |
+| f08 | Information Gaps | 信息缺口 |
+| f09 | First Action | 第一步行动 |
+| f10 | Follow-up Actions | 后续行动 |
+| f11 | Escalation Conditions | 升级条件 |
+| f12 | Decisions Requiring a Human | 必须人工决定事项 |
+| f13 | Internal Ops Note | 内部运营提示 |
+| f14 | Airport Coordination Message | 机场协调信息 |
+| f15 | Passenger Message Draft | 旅客信息草案 |
+| f16 | Cited Sources | 引用来源 |
+| f17 | Output Status | 输出状态 |
 
-## 6. The checker (C01–C13): the gate the writer cannot argue with
+f13 is for our operations staff; f14 asks the airport coordination team to confirm its information; f15 is a passenger draft for review. f12 reserves cancellation, release, dispatch, maintenance and compensation for qualified people.
 
-`engine/checker.py` runs 13 deterministic checks on every output; a failure names the offending
-text, one retry is allowed, then a deterministic fallback marked *needs human review*:
+## 6. Limits
 
-| | Check | | Check |
-|---|---|---|---|
-| C01 | all 17 fields present and non-empty | C08 | 模拟 present in f13/f14/f15/f17 |
-| C02 | every number within 0.01 of a whitelisted value | C09 | source conflict ⇒ risk shown as Can't tell |
-| C03 | `[FACT: X]` tags cite real fact-sheet sources | C10 | missing weather data is disclosed |
-| C04 | no committed-action wording (已取消/已发送…) | C11 | prior feedback mentioned when it exists |
-| C05 | passenger text is a draft, points to official channels, asserts no delay | C12 | no unhedged weather-causation claim |
-| C06 | ops/airport/passenger messages pairwise distinct | C13 | f12 lists all five human-decision categories |
-| C07 | no PII (mobile numbers, ID numbers, emails) | | |
-
-Evidence from today's runs: the offline exam passes **21/21** (15 official + 5 own + 1 negative),
-and the deliberately bad writer is blocked with *"unwhitelisted number 20 in field f05"*.
-
-## 7. The 17-field output (mapping)
-
-Every answer is the organizer's fixed 17-field shape: f01 Event ID · f02 Generated At ·
-f03 Risk Level · f04 Airport & Time Window · f05 Evidence · f06 Possible Impact ·
-f07 Assumptions to Verify · f08 Information Gaps · f09 First Action · f10 Follow-up Actions ·
-f11 Escalation Conditions · f12 Decisions Requiring a Human · f13 Internal Ops Note ·
-f14 Airport Coordination Message · f15 Passenger Message Draft · f16 Cited Sources ·
-f17 Output Status. Audience split: **f13 goes to our own staff; f14 to the airport coordination
-team (a partner we ask, not order); f15 is a draft a person reviews; f12 holds the five
-human-only decisions** (cancellation, release, dispatch, maintenance, compensation).
-
-## 8. Limits
-
-- **Monthly, airport-level, simulated data.** We can say a month was unusual; we cannot attribute
-  any single flight's delay, and we never claim to (C12 blocks unhedged causation).
-- No live feeds: the context month is the latest anomalous month, labelled as such.
-- Decisions stay with qualified people; the assistant only prepares information.
+- All organizer data is **模拟 / SIMULATED** and describes airport-month aggregates, not individual flights or live operating status.
+- A monthly gap can prioritize verification, but cannot identify an affected flight, aircraft, crew member or gate. Weather association does not establish causation.
+- Missing weather is disclosed with reduced confidence. Conflicting sources require “Can’t tell” and a check of update times and definitions.
+- The offline exam passed 21/21 specified cases, including the fabricated-number negative case. Automated checks still need human review of tone, order and operational suitability.
 
 ## What we did not build
 
-No flight-level data, schedules, crew pairings or gate positions (the organizer data has none
-and we never invent them); no live airport status feeds; no real CAAC/CMA figures (reference-only
-sources are never cited as data); no automated decisions of any kind; no Excel exports of
-organizer sheets 06/08 (cut from scope to fit the hours); the optional live-LLM writer mode is a
-demo path only — the default writer is the deterministic template.
+We did not connect live airline or airport feeds; validate flight-level causation; automate operational decisions; send passenger notices; or establish real-world performance. The default demo writer is offline and deterministic.
