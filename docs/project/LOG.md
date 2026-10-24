@@ -2,7 +2,87 @@
 
 **Team-level events only:** gate results, merges to `main`, scope cuts, submission. This is a shared file, so edit
 it on `main` only: pull first, make one small commit, push immediately (`ROLES.md`). Ziyu updates it at each gate. Individual work goes in `log/<name>.md`, one file per person, so logs never
-conflict on merge. Newest first. The entries below, dated before 2026-10-23 10:30, are project-setup history.
+conflict on merge. Newest first. All times are China time (UTC+8). The entries below, written before 2026-10-23 23:30 China time,
+are project-setup history; they were dated with this PC's UTC−5 clock, so their dates can be up to 13 h behind.
+
+## 2026-10-24 13:30 — Correction: Rocketzt's PC clock is UTC−5; Jason's clock was right
+
+**Setup:** Compared `date`, `date -u` and the time zones on the commits.
+**Result:**
+- Rocketzt's commits carry −0500 and Jason's +0800. China time now is 2026-10-24 13:30.
+- The previous entry's anomaly ("Jason's clock looks off") was wrong; his commit at 01:13 +08:00 was correct.
+- ERRATA E9 was also wrong: EXECUTION_PLAN's 22:50 start really was the same evening, in China time.
+- About 10.5 h remain until the 23:59 deadline. In EXECUTION_PLAN terms, gate G1 (11:30) has already passed and G2
+  (15:30) is next.
+**Anomalies:** None.
+
+## 2026-10-24 — Jason's fact-sheet fixes (74fd394) reviewed and merged to main
+
+**Setup:**
+- Checked out `origin/jason` in a scratch worktree and ran the full unit-test suite.
+- For EVT001–EVT005, built the fact sheets and checked that the detector's peer and YoY gaps and the selected
+  month's weather values are in `facts.numbers` and match the workbook.
+- Checked the missing-weather path (Qinglan 2025-03) and the redaction of "旅客张伟".
+- Compared the committed fixtures with fresh code output.
+**Result:**
+- 16/16 tests pass. All 8 changed files are Jason's.
+- Peer and YoY gaps (e.g. EVT001 Hailing 2025-08: −3.66 / −9.14 pp) and the weather values are now whitelisted.
+  SIM-WEATHER appears in the sources for every event.
+- For a missing-weather month, the fact sheet says the data is missing and uses no values.
+- "旅客张伟" is now redacted. The fixtures match the code output.
+- Merged to `main`; tests still pass there.
+- Risk levels now: EVT001 Medium, EVT002 Low, EVT003 Can't tell, EVT004 Low, EVT005 Low.
+**Anomalies:**
+- EVT002 (Beiling, sustained pressure) and EVT004 (Nanwan, thunderstorm risk) come out Low. That is defensible from
+  the monthly data, but the team should confirm it is the intended reading before the demo.
+- Jason's commit timestamp (01:13) is ahead of real time (about 00:10); his machine clock or time zone looks off.
+
+## 2026-10-24 — Review of Jonathan's R1–R3 spec and explainer: sound and optional, but out of date on repo state and roles
+
+**Setup:** Read `R1-R3_BUILD_SPEC.md` (573 lines) and `R1-R3_EXPLAINED.pdf` (10 pages, text plus a rendered page),
+both untracked in the repo root. Checked their claims against the workbook, `ROLES.md` v2, `CONTRACT.md` and the
+merged engine on `main`.
+**Result:**
+- The features are sound and optional (R1 source receipts, R2 bounded question panel, R3 re-analysis with a diff).
+  The spec itself says not to start them before G2.
+- The example numbers are correct: −15.62, 69.49, 85.11, 73.16, 84.15, −10.99 pp.
+- Errors and conflicts:
+  1. It assumes commit 05b52fd with no code, but `main` already has Jason's engine.
+  2. Its owners follow roles v1: Ziyu on the engine, and a single `feature/r1-r3` branch that edits Jason's
+     `facts.py`, Ziyu's `checker.py` and Jonathan's `pipeline.py`. That conflicts with ROLES v2's one owner per file.
+  3. Its example `row_index` 176 for Hailing 2025-07 is wrong; the real sheet row is 147.
+  4. Its master prompt points to `docs/planning/R1-R3_BUILD_SPEC.md`, but the file is in the repo root.
+  5. Its estimates disagree: the spec says about 7 h, the PDF about 4 h.
+  6. R2 largely duplicates the "Ask the assistant" box already in CONTRACT §8.
+  7. R2 needs a new `checker.check_answer()` that is not in Ziyu's checker spec.
+  8. R2's Chinese and English question pairs: the workbook has Chinese only, and Jason's cases have English only.
+  9. In the PDF, the ASCII diagram on page 2 wraps badly (cosmetic).
+**Anomalies:** None.
+
+## 2026-10-23 — Review of Jason's overnight branch (b5f506f): detector verified on all 192 rows; two fact-sheet gaps
+
+**Setup:** Checked out `origin/jason` in a scratch worktree. Then:
+- listed his commits and the files they changed against ROLES.md;
+- ran `python -m unittest discover -s tests -v` and `tests/run_tests.py`;
+- reran `scripts/build_data.py` and diffed the output against the committed `data/track3.json`;
+- recomputed own / peer / YoY gaps, signal counts and missing-weather flags straight from the workbook, with a
+  separate stdlib parser, and compared them with `detector.compute_all()` (tolerance 0.02 pp);
+- read `engine/rules.py` and `engine/facts.py`.
+**Result:**
+- All 5 commits are credited to JasonXiao7, and all 26 changed files are his in ROLES.md.
+- 12/12 unit tests pass. The runner exits with code 2 and prints "pipeline not available": correct, because
+  `engine/pipeline.py` (Jonathan's) is not merged.
+- The rebuild reproduces `track3.json` exactly.
+- Detector: 192 rows, 0 mismatches.
+- No event IDs are hard-coded in the rules or the fact sheet. RULE003 is own-only and RULE007 uses the decision
+  words only, as ERRATA C7/C8 asked.
+- Gaps found:
+  1. The fact sheet's `numbers` whitelist holds only completion, own average and own gap. Peer and YoY gaps
+     (Hailing 2025-08: −3.66 / −9.14 pp) are missing, so the checker would block the writer for citing them.
+  2. No fact carries the source SIM-WEATHER, and the monthly weather values are not included. TEST002 expects a
+     SIM-WEATHER citation.
+- Minor: PII redaction catches "Passenger 张伟" but not "旅客张伟".
+**Anomalies:** The ClawsGO cross-check was skipped because its CSV is not yet in `evidence/ai/`.
 
 ## 2026-10-23 — Roles v2 applied; agent prompts for unattended runs added
 

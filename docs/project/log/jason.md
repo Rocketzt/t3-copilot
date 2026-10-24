@@ -15,3 +15,45 @@ Entry format (copy for each new entry):
 ```
 
 ---
+
+## 2026-10-24 01:13 — Fact sheets now whitelist all comparison and weather numbers
+
+**Setup:** Pulled `origin/jason` (already up to date). Added peer and available YoY gaps to each SIM-BASE month fact and number whitelist; added a selected-month SIM-WEATHER fact with precipitation, max wind, and bad-weather days, or an explicit missing-data fact without weather numbers. Redacted Chinese names after `旅客`. Regenerated the five `fixtures/factsheet_EVT001..005.json` files.
+**Result:** `.venv\Scripts\python.exe -m unittest tests.test_facts -v` ran 9 tests: OK. `.venv\Scripts\python.exe -m unittest discover -s tests -v` ran 16 tests: OK. `git diff --check` exited 0.
+**Anomalies:** The separate exam command `.venv\Scripts\python.exe tests/run_tests.py --writer-mode offline --out exports/test_results.json` still printed `pipeline not available` and exited 2 because `engine/pipeline.py` is absent; no exam result was written. Existing untracked files were untouched.
+**AI:** Codex added the source-backed facts and regression tests, then regenerated fixtures from the implementation.
+
+## 2026-10-24 00:14 — Build hand-off complete with exam integration pending
+
+**Setup:** Phase 1 exported and validated the organizer workbook, implemented the detector, and generated `docs/NUMBERS.md`. Phase 2 implemented deterministic rules, source-backed fact sheets, PII redaction, append-only feedback, and five real event fixtures. Phase 3 added the 15 official cases, five own cases, negative test, exam runner, and `docs/test_specs.md`.
+**Result:** From the repo root, set `PYTHONIOENCODING=utf-8` and rerun: `.venv\Scripts\python.exe scripts/build_data.py` (192 baselines, 192 weather rows, 5 events, 12 rules, 15 tests); `.venv\Scripts\python.exe -m unittest tests.test_detector -v` (4 tests, OK); `.venv\Scripts\python.exe -m unittest tests.test_facts -v` (5 tests, OK); `.venv\Scripts\python.exe -m unittest tests.test_runner_selfcheck -v` (3 tests, OK); `.venv\Scripts\python.exe -m unittest discover -s tests -v` (12 tests, OK).
+**Anomalies:** BLOCKED: `.venv\Scripts\python.exe tests/run_tests.py --writer-mode offline --out exports/test_results.json` printed `pipeline not available` and exited 2 because `engine/pipeline.py` is absent; no real exam pass rate exists yet. SKIPPED: no ClawsGO CSV under `evidence/ai/`, so no optional detector cross-check report was made. No other final test failures.
+**AI:** Codex implemented and verified these phases. The self-check fake pipeline is limited to `tests/test_runner_selfcheck.py` and is not an exam result.
+
+## 2026-10-24 00:13 — Phase 3 runner ready; integration run blocked
+
+**Setup:** Mapped all 15 workbook TEST IDs to English acceptance checks, added five own events plus the fabricated-number negative case, and built the exam runner against `engine.pipeline.analyze()/ask()`.
+**Result:** `python -m unittest tests.test_runner_selfcheck -v` ran 3 tests: OK. `python tests/run_tests.py --writer-mode offline --out exports/test_results.json` printed `pipeline not available` and exited 2, as required. No exam result file or pass rate was fabricated.
+**Anomalies:** `engine/pipeline.py` is not present on this branch, so the real 15 official and five own cases cannot run yet. `evidence/ai/` contains no ClawsGO CSV, so the optional cross-check was skipped.
+**AI:** Codex implemented the runner and specifications; the fake pipeline was used only in the runner self-check.
+
+## 2026-10-24 00:10 — Phase 2 fact sheets and feedback verified
+
+**Setup:** Added deterministic RULE001–012 evaluation, source-backed facts and risk, PII redaction, append-only feedback, and five generated EVT fact-sheet fixtures.
+**Result:** `python -m unittest tests.test_facts -v` ran 5 tests: OK. EVT001 is Medium; EVT003 is Can't tell with conflict; EVT005 is Low after the seed rejection and first checks current resources.
+**Anomalies:** Initial test run had a false `pii_redacted` flag and a sandbox temp-path permission error. Both were fixed; the final run passes.
+**AI:** Codex implemented and checked this phase against the contract and organizer seeds.
+
+## 2026-10-24 00:06 — Phase 1 detector matches workbook checks
+
+**Setup:** Exported all required workbook sheets with `python scripts/build_data.py`; generated `data/track3.json`, `data/feedback_seed.json`, and `docs/NUMBERS.md` from detector output.
+**Result:** `python -m unittest tests.test_detector -v` ran 4 tests: OK. Verified 192 airport-months, 12 own-history flags, 13 any-signal flags, signal counts 179/11/1/1, and the four missing-weather rows.
+**Anomalies:** None.
+**AI:** Codex implemented the export, detector, generated numbers, and tests; kept workbook values as the source of numeric claims.
+
+## 2026-10-23 23:52 — Setup completed on jason
+
+**Setup:** Merged origin/main at f70aecf. Python 3.12.8 in .venv; installed requirements.txt with openpyxl 3.1.5, pandas 3.1.0, and Pillow 13.0.0. Confirmed openpyxl and pandas import. All required source documents and workbook are present.
+**Result:** Ready for Phases 1–3. No files were present in evidence/ai/clawsgo, so there was no raw ClawsGO commit.
+**Anomalies:** Four untracked prompt copies blocked the first merge attempt. Moved them to ../agent_prompts_backup, then merged. The copies match the earlier 63325b6 prompts; only jason.md is older than the merged version.
+**AI:** Codex handled setup and verified the backup against Git blob hashes.

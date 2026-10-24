@@ -1,0 +1,301 @@
+{
+  "event": {
+    "id": "EVT005",
+    "name": "人工否决与复盘",
+    "time_text": "第6天晚上20:00",
+    "airport": "高原机场",
+    "weather_text": "低温并有较大风速",
+    "ops_text": "智能助手建议升级为高风险",
+    "importance": "低",
+    "notes": "运营人员认为当前资源和现场情况足以应对",
+    "known": "历史基线、天气、智能助手原建议",
+    "unknown": "现场资源明细和运营人员判断依据",
+    "status": "待处理",
+    "tag": "模拟",
+    "has_feedback": true,
+    "airport_en": "Gaoyuan Airport",
+    "importance_en": "Low",
+    "is_custom": false
+  },
+  "detector": {
+    "airport": "高原机场",
+    "airport_en": "Gaoyuan Airport",
+    "year": 2025,
+    "month": 2,
+    "month_label": "2025-02",
+    "tier": "小型机场",
+    "selection_reason": "Latest anomalous month used as context (1 signal); event date was not supplied",
+    "comparisons": [
+      {
+        "key": "own",
+        "label": "Own 12-month average",
+        "value_pp": -6.1,
+        "threshold_pp": -5.0,
+        "signal": true,
+        "detail": "72.88% vs 78.98% = -6.10 pp"
+      },
+      {
+        "key": "peer",
+        "label": "Same-size peer average",
+        "value_pp": -4.14,
+        "threshold_pp": -5.0,
+        "signal": false,
+        "detail": "72.88% vs 77.02% = -4.14 pp"
+      },
+      {
+        "key": "yoy",
+        "label": "Same month previous year",
+        "value_pp": -1.14,
+        "threshold_pp": -5.0,
+        "signal": false,
+        "detail": "72.88% vs 74.02% = -1.14 pp"
+      }
+    ],
+    "signal_count": 1,
+    "verdict": "watch",
+    "confidence": 1.0,
+    "confidence_notes": [
+      "3 of 3 comparisons available",
+      "weather record present"
+    ],
+    "weather_missing": false,
+    "recent_anomalies": [
+      {
+        "year": 2025,
+        "month": 2,
+        "month_label": "2025-02",
+        "signal_count": 1,
+        "delta_pp": -6.1,
+        "verdict": "watch"
+      }
+    ],
+    "flagged_airport_months": [
+      {
+        "year": 2025,
+        "month": 2,
+        "month_label": "2025-02",
+        "signal_count": 1,
+        "delta_pp": -6.1,
+        "verdict": "watch"
+      }
+    ]
+  },
+  "rules": [
+    {
+      "id": "RULE003",
+      "topic": "异常波动",
+      "topic_en": "Own-history anomaly",
+      "trigger": "当前指标低于过去十二个月平均五个百分点以上",
+      "checks": [
+        "核查数据完整性和同类机场变化"
+      ],
+      "action": "标记为重点复核",
+      "action_en": "",
+      "escalate_to": "运营分析人员",
+      "escalate_to_en": "",
+      "manual_approval": false,
+      "forbidden": "不得直接归因于天气",
+      "forbidden_en": "",
+      "source": "赛事规则"
+    },
+    {
+      "id": "RULE006",
+      "topic": "人工否决",
+      "topic_en": "Human overrule",
+      "trigger": "专业人员拒绝建议",
+      "checks": [
+        "记录拒绝原因和补充事实"
+      ],
+      "action": "根据新事实调整建议并保留原记录",
+      "action_en": "",
+      "escalate_to": "模型负责人",
+      "escalate_to_en": "",
+      "manual_approval": true,
+      "forbidden": "不得覆盖或删除人工意见",
+      "forbidden_en": "",
+      "source": "赛事规则"
+    },
+    {
+      "id": "RULE009",
+      "topic": "引用要求",
+      "topic_en": "Citations",
+      "trigger": "输出包含数字或正式状态",
+      "checks": [
+        "检查来源编号和时间范围"
+      ],
+      "action": "在输出中列出来源",
+      "action_en": "",
+      "escalate_to": "输出复核人",
+      "escalate_to_en": "",
+      "manual_approval": true,
+      "forbidden": "不得无来源生成事实",
+      "forbidden_en": "",
+      "source": "赛事规则"
+    },
+    {
+      "id": "RULE010",
+      "topic": "模拟标识",
+      "topic_en": "Simulation label",
+      "trigger": "使用模拟事件或模拟数值",
+      "checks": [
+        "检查页面和输出标识"
+      ],
+      "action": "统一标注“模拟”",
+      "action_en": "",
+      "escalate_to": "项目负责人",
+      "escalate_to_en": "",
+      "manual_approval": false,
+      "forbidden": "不得称为真实事件",
+      "forbidden_en": "",
+      "source": "赛事规则"
+    }
+  ],
+  "facts": {
+    "facts": [
+      {
+        "id": "F01",
+        "text": "Gaoyuan Airport 2025-02: completion 72.88% versus own average 78.98% (-6.10 pp); peer gap -4.14 pp; YoY gap -1.14 pp.",
+        "source": "SIM-BASE",
+        "value": 72.88,
+        "unit": "%"
+      },
+      {
+        "id": "F02",
+        "text": "Gaoyuan Airport is a 小型机场 airport; airline importance Low.",
+        "source": "SIM-SCALE"
+      },
+      {
+        "id": "F03",
+        "text": "Weather observation for Gaoyuan Airport 2025-02: precipitation 52.6 mm, max wind 19 m/s, bad-weather days 3.",
+        "source": "SIM-WEATHER",
+        "value": 52.6,
+        "unit": "mm"
+      },
+      {
+        "id": "F04",
+        "text": "Event weather description: 低温并有较大风速. Forecast is not proof of per-flight impact.",
+        "source": "EVT005"
+      }
+    ],
+    "numbers": [
+      {
+        "value": 72.88,
+        "unit": "%",
+        "display": "72.88%",
+        "source": "SIM-BASE",
+        "fact_id": "F01"
+      },
+      {
+        "value": 78.98,
+        "unit": "%",
+        "display": "78.98%",
+        "source": "SIM-BASE",
+        "fact_id": "F01"
+      },
+      {
+        "value": -6.1,
+        "unit": "pp",
+        "display": "-6.10 pp",
+        "source": "SIM-BASE",
+        "fact_id": "F01"
+      },
+      {
+        "value": -4.14,
+        "unit": "pp",
+        "display": "-4.14 pp",
+        "source": "SIM-BASE",
+        "fact_id": "F01"
+      },
+      {
+        "value": -1.14,
+        "unit": "pp",
+        "display": "-1.14 pp",
+        "source": "SIM-BASE",
+        "fact_id": "F01"
+      },
+      {
+        "value": 52.6,
+        "unit": "mm",
+        "display": "52.6 mm",
+        "source": "SIM-WEATHER",
+        "fact_id": "F03"
+      },
+      {
+        "value": 19,
+        "unit": "m/s",
+        "display": "19 m/s",
+        "source": "SIM-WEATHER",
+        "fact_id": "F03"
+      },
+      {
+        "value": 3,
+        "unit": "days",
+        "display": "3 days",
+        "source": "SIM-WEATHER",
+        "fact_id": "F03"
+      }
+    ],
+    "assumptions": [
+      "[ASSUMPTION] Monthly patterns may indicate risk but do not prove a current flight impact"
+    ],
+    "unknowns": [
+      "现场资源明细和运营人员判断依据"
+    ],
+    "missing_data": [
+      "Monthly baselines cannot establish per-flight causation or current aircraft, crew, and gate status"
+    ],
+    "forbidden_actions": [
+      "Cancel, release, dispatch, maintain, or compensate flights without human approval [RULE007]",
+      "Publish a passenger notice without human review [RULE005]"
+    ],
+    "sources": [
+      "EVT005",
+      "RULE003",
+      "RULE006",
+      "RULE009",
+      "RULE010",
+      "SIM-BASE",
+      "SIM-SCALE",
+      "SIM-WEATHER"
+    ],
+    "risk": {
+      "level": "Low",
+      "level_zh": "低",
+      "score": 0.75,
+      "reasons": [
+        {
+          "text": "1 detector signals for 2025-02",
+          "source": "SIM-BASE"
+        },
+        {
+          "text": "Weather risk is described in the event, not proven flight impact",
+          "source": "EVT005"
+        },
+        {
+          "text": "Human rejection reports adequate resources; verify current resources",
+          "source": "RULE006"
+        }
+      ],
+      "can_tell": true,
+      "can_tell_zh": "可判断"
+    },
+    "pii_redacted": false,
+    "feedback_matches": [
+      {
+        "event_id": "EVT005",
+        "rec_id": "REC003",
+        "result": "Reject",
+        "reason": "运营人员补充现场资源充足且风速尚在可控范围",
+        "final_action": "不升级为高风险，改为持续监测",
+        "outcome": "模拟：未触发升级条件",
+        "improvement": "把现场资源和人工判断依据加入输入字段",
+        "reviewer": "赛事导师",
+        "date": "第6天",
+        "source": "organizer_seed"
+      }
+    ],
+    "conflict": false,
+    "sim_label": "模拟 / SIMULATED",
+    "first_action": "confirm current resources"
+  }
+}
