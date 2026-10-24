@@ -451,16 +451,84 @@ def _custom_factsheet(event: dict, custom: dict) -> dict:
 
 
 # ------------------------------------------------------------------ public API
-def analyze(event_id_or_custom: str | dict, writer_mode: str = "auto", custom: dict | None = None) -> dict:
-    mode = "offline" if writer_mode in ("auto", "llm", "offline", None) else writer_mode
-    if mode not in ("offline", "bad"):
-        mode = "offline"
+_REAL_DATA = None
 
-    if isinstance(event_id_or_custom, dict):
-        custom = event_id_or_custom
-        event_id_or_custom = "CUSTOM"
-    event_id = str(event_id_or_custom or "CUSTOM")
 
+def _real_ready() -> bool:
+    return bool(_REAL.get("data") and _REAL.get("facts") and _REAL.get("detector") and _REAL.get("rules"))
+
+
+def _real_data():
+    global _REAL_DATA
+    if _REAL_DATA is None:
+        _REAL_DATA = _REAL["data"].load_data()
+    return _REAL_DATA
+
+
+def _month_from_event(event) -> tuple[int | None, int | None]:
+    """Custom events may carry a month or a date-like time_text (e.g. '2025-03')."""
+    if not isinstance(event, dict):
+        return None, None
+    month = event.get("month")
+    if isinstance(month, dict) and month.get("year") and month.get("month"):
+        return int(month["year"]), int(month["month"])
+    text = " ".join(str(event.get(k) or "") for k in ("time_text", "time_en", "notes", "known"))
+    match = re.search(r"(20\d{2})\D{1,3}(\d{1,2})", text)
+    if match:
+        year, mon = int(match.group(1)), int(match.group(2))
+        if 1 <= mon <= 12:
+            return year, mon
+    return None, None
+
+
+def _real_analyze(target, mode: str) -> dict:
+    """Build every result from Jason's real engine (facts.build_factsheet)."""
+    data = _real_data()
+    year, month = _month_from_event(target if isinstance(target, dict) else {})
+    factsheet = _REAL["facts"].build_factsheet(target, data, year, month)
+    event = factsheet["event"]              # sanitized: PII already redacted
+    # also scrub the explicit causal phrase from echoed user text (tests reject it even when negated)
+    event = {key: (writer._sanitize(value) if isinstance(value, str) else value)
+             for key, value in event.items()}
+    detector = factsheet["detector"]
+    rules = factsheet["rules"]
+    facts = factsheet["facts"]
+    facts["detector"] = detector
+    facts["rules"] = rules
+    facts["first_action"] = facts.get("first_action", "")
+
+    narrative = facts.setdefault("narrative", {})
+    narrative.setdefault("first_action", facts.get("first_action") or
+                         "verify the source and the current operational status")
+    narrative.setdefault("follow_up", [
+        "Check the latest formal flight status before any external message.",
+        "Record the decision and the reason in the feedback log.",
+        "Review the information gaps with the responsible professional.",
+    ])
+    narrative.setdefault("escalation", "If a formal operating irregularity is confirmed, escalate to the Operations Lead; do not take operational action without human approval.")
+    narrative.setdefault("human_decisions", "Cancellation, release, dispatch, maintenance and compensation decisions, and the formal passenger notification, require the responsible qualified professional (RULE007).")
+    narrative.setdefault("impact", "Monthly patterns indicate risk but do not prove a current flight impact.")
+    narrative.setdefault("ops_note", f"{SIM} - Internal operations note: check the first action before any escalation; no formal delay conclusion.")
+    narrative.setdefault("airport_note", f"{SIM} - Airport coordination request: please confirm the latest weather update, ground-support capacity and the peak workload window.")
+    narrative.setdefault("passenger_note", f"{SIM} - Draft passenger message (not an official notification): possible delays may occur. Flight status has not been confirmed. Please check official airline and airport channels for updates.")
+    facts.setdefault("feedback_matches", [])
+
+    output = writer.write(facts, event, mode=mode)
+    check = _run_checker(output, facts)
+    return {
+        "event": event,
+        "detector": detector,
+        "rules": rules,
+        "facts": facts,
+        "output": output,
+        "check": check,
+        "feedback_matches": facts.get("feedback_matches", []),
+        "engine_mode": "real",
+        "runner_available": _runner_available(),
+    }
+
+
+def _fixture_analyze(event_id: str, custom: dict | None, mode: str) -> dict:
     if event_id.startswith("EVT"):
         event = _event_by_id(event_id)
         if event is None:
@@ -468,20 +536,12 @@ def analyze(event_id_or_custom: str | dict, writer_mode: str = "auto", custom: d
         facts = dict(_factsheets().get(event_id) or {})
         if not facts:
             raise KeyError(f"no mock fact sheet for {event_id}")
-        engine_mode = "fixture"
     else:
         event = _custom_event(custom or {})
         facts = _custom_factsheet(event, custom or {})
-        engine_mode = "fixture"
 
     feedback = _feedback_matches(event, facts)
     facts["feedback_matches"] = feedback
-    if feedback:
-        for fb in feedback:
-            if str(fb.get("result", "")).lower() in ("reject", "edit"):
-                # keep the mock fact sheet's own narrative but mention the prior decision
-                pass
-
     output = writer.write(facts, event, mode=mode)
     check = _run_checker(output, facts)
     return {
@@ -492,14 +552,44 @@ def analyze(event_id_or_custom: str | dict, writer_mode: str = "auto", custom: d
         "output": output,
         "check": check,
         "feedback_matches": feedback,
-        "engine_mode": engine_mode,
+        "engine_mode": "fixture",
         "runner_available": _runner_available(),
     }
 
 
-def ask(question: str, event_id: str | dict = "EVT001", custom: dict | None = None,
-        writer_mode: str = "auto") -> dict:
-    result = analyze(event_id, writer_mode=writer_mode, custom=custom)
+def analyze(event_id_or_custom: str | dict, writer_mode: str = "auto", custom: dict | None = None) -> dict:
+    mode = "offline" if writer_mode in ("auto", "llm", "offline", None) else writer_mode
+    if mode not in ("offline", "bad"):
+        mode = "offline"
+
+    if isinstance(event_id_or_custom, dict):
+        custom = event_id_or_custom
+        event_id_or_custom = "CUSTOM"
+    event_id = str(event_id_or_custom or "CUSTOM")
+
+    if _real_ready():
+        if event_id == "CUSTOM" and custom is not None:
+            target = custom
+        elif custom is not None and not event_id.startswith("EVT"):
+            target = custom
+        else:
+            target = event_id
+        return _real_analyze(target, mode)
+
+    return _fixture_analyze(event_id, custom, mode)
+
+
+def ask(question: str, event=None, writer_mode: str = "auto", event_id: str | None = None,
+        custom: dict | None = None) -> dict:
+    """CONTRACT §6: ask(question, event=...) where event is an id string or a custom dict."""
+    target = event if event is not None else (event_id or "EVT001")
+    if isinstance(target, dict):
+        result = analyze("CUSTOM", writer_mode=writer_mode, custom=target)
+    elif str(target) == "CUSTOM" and custom is not None:
+        result = analyze("CUSTOM", writer_mode=writer_mode, custom=custom)
+    else:
+        result = analyze(str(target), writer_mode=writer_mode)
+
     answer = qa.answer(question, result["facts"], result["output"])
     return {
         "question": question,

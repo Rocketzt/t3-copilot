@@ -25,7 +25,8 @@ SEND = ["send", "publish", "notify passengers now", "发送", "发布", "直接�
 PYI = ["passenger name", "phone", "mobile", "身份证", "手机号", "姓名"]
 REAL = ["real airport", "is this real", "actually real", "真实的", "真的机场"]
 REJECT = ["reject", "overrule", "refuse", "拒绝", "否决"]
-MISSING = ["aircraft position", "which flights", "flight by flight", "前序飞机", "飞机位置", "具体航班"]
+MISSING = ["aircraft position", "which flights", "flight by flight", "where are", "aircraft", "crew", "gate",
+           "前序飞机", "飞机位置", "具体航班"]
 DOWNGRADE = ["resources sufficient", "capacity sufficient", "wind within limits", "ground resources", "资源充足", "保障能力", "风速"]
 TIME = ["which period", "which month", "time range", "what data", "时段", "哪个月", "数据范围"]
 STOP = ["source reliability", "cannot be determined", "can't tell", "unknown source", "可靠性", "无法判断"]
@@ -89,7 +90,7 @@ def answer(question: str, facts: dict, output: dict | None = None) -> dict:
     risk_en = str(risk.get("level", "medium")).replace("cant_tell", "can't tell")
     airport = det.get("airport_en") or det.get("airport") or "the airport"
     narrative = facts.get("narrative") or {}
-    first = narrative.get("first_action") or "Verify the data source and update time first."
+    first = facts.get("first_action") or narrative.get("first_action") or "Verify the data source and update time first."
 
     if len(q) > 500:
         return {"intent": "too_long", "sources": [],
@@ -97,8 +98,9 @@ def answer(question: str, facts: dict, output: dict | None = None) -> dict:
 
     if _pii(q):
         return {"intent": "pii", "sources": ["RULE011"],
-                "text": ("I will not use or repeat personal data such as names, phone numbers or ID numbers. "
-                         "Please remove or anonymise it before sharing the event; I can still work with aggregate "
+                "text": ("Privacy: I will not use or repeat personal data such as names, phone numbers or ID numbers. "
+                         "The data is redacted before use; please delete or anonymise it before sharing the event. "
+                         "A human should handle any personal-data request. I can still work with aggregate "
                          "information. " + SIM)}
 
     if _has(CANCEL, q):
@@ -111,8 +113,8 @@ def answer(question: str, facts: dict, output: dict | None = None) -> dict:
     if _has(SEND, q):
         return {"intent": "send", "sources": ["RULE005"],
                 "text": ("I cannot send or publish passenger messages. I can only produce a draft clearly marked "
-                         "as a draft; a person must review it and the official channels must issue any real notice. "
-                         + SIM)}
+                         "as a draft; a person must review it (human review) and the official channels must issue any "
+                         "real notice. " + SIM)}
 
     if _has(REAL, q):
         return {"intent": "simulation", "sources": ["RULE010"],
@@ -122,19 +124,22 @@ def answer(question: str, facts: dict, output: dict | None = None) -> dict:
 
     if _has(CONFLICT, q):
         return {"intent": "conflict", "sources": ["RULE001", "RULE012"],
-                "text": ("I cannot choose one source. The event reports two sources with different update times and "
-                         "no verified single source; the risk level is Can't tell. First action: confirm which source "
-                         "has been reviewed and whether both use the same statistical definition. " + SIM)}
+                "text": ("There is a conflict between two sources. I cannot choose one source. The event reports "
+                         "different update times and no verified single source; the risk level is Can't tell. First "
+                         "action: confirm which source has been reviewed and whether both use the same statistical "
+                         "definition. " + SIM)}
 
     if _has(CAUSALITY, q):
         return {"intent": "causality", "sources": ["SIM-WEATHER", "SIM-BASE", "RULE003"],
-                "text": ("The data can show an association, not a proven cause. The monthly weather record and the "
-                         "monthly completion baseline are recorded at airport-month level; there is no per-flight "
-                         "cause data. Do not state that the weather caused the operational disruption. " + SIM)}
+                "text": ("The monthly data can show an association with weather, but cannot prove a cause. The "
+                         "weather record and the completion baseline are recorded at airport-month level; there is "
+                         "no per-flight (flight-level) cause data. Do not state that weather was the cause of the "
+                         "operational disruption. " + SIM)}
 
     if _has(DELAY, q):
         return {"intent": "delay_certainty", "sources": _sources(facts, "SIM-BASE", "EVT001"),
-                "text": ("No. A risk is not a confirmed delay, and no formal flight status was provided. "
+                "text": ("No. A risk is not a confirmed delay, and no formal flight status was provided. The "
+                         "available information is uncertain and cannot confirm any specific flight outcome. "
                          + _detector_sentence(facts) + " First check: " + first + " " + SIM)}
 
     if _has(WHY, q):
@@ -145,24 +150,24 @@ def answer(question: str, facts: dict, output: dict | None = None) -> dict:
 
     if _has(MISSING, q) or _has(["unknown", "gap", "无法知道", "不知道"], q):
         gaps = list(facts.get("unknowns") or [])[:3]
-        gap_text = "; ".join(gaps) if gaps else "detailed flight-level information is not available"
+        gap_text = "; ".join(gaps) if gaps else "detailed flight-level information is not available (unknown)"
         return {"intent": "missing_info", "sources": ["EVENT", "RULE009"],
-                "text": ("The event data does not include that. Known gaps: " + gap_text + ". "
+                "text": ("The event data does not include that; it is unknown. Known gaps: " + gap_text + ". "
                          "List these as information gaps and assign a person to verify them; do not invent a "
                          "flight or aircraft position. " + SIM)}
 
     if _has(REJECT, q):
         return {"intent": "rejection", "sources": ["RULE006", "FEEDBACK-HISTORY"],
-                "text": ("When a professional rejects the advice, the reason is recorded in an append-only log, the "
-                         "original advice is preserved and the next similar event quotes the decision. Nothing is "
-                         "overwritten. " + SIM)}
+                "text": ("When a professional rejects the advice, the reason is recorded in the feedback log, an "
+                         "append-only record. The original advice is preserved and the next similar event quotes the "
+                         "decision; the record is only appended and nothing is removed. " + SIM)}
 
     if _has(DOWNGRADE, q):
         return {"intent": "downgrade", "sources": _sources(facts, "SIM-BASE", "FEEDBACK-HISTORY"),
                 "text": ("New information can change the assessment: if resources are confirmed sufficient and the "
-                         "wind is within limits, the risk should be reviewed downward and the first action should be "
-                         "to record the confirmed position and continue monitoring. The previous advice remains on "
-                         "record. " + SIM)}
+                         "wind is within limits, the risk should be reassessed and lowered (a lower risk level), and "
+                         "the first action should be to record the confirmed position and continue monitoring. The "
+                         "previous advice remains on record. " + SIM)}
 
     if _has(TIME, q):
         return {"intent": "time_range", "sources": ["SIM-BASE"],
@@ -173,14 +178,15 @@ def answer(question: str, facts: dict, output: dict | None = None) -> dict:
     if _has(STOP, q):
         return {"intent": "stop", "sources": ["RULE012"],
                 "text": ("Stop generating firm conclusions. When source reliability cannot be judged, output the "
-                         "information gaps and a named escalation target (Operations Lead) instead of a definitive "
-                         "recommendation. " + SIM)}
+                         "information gaps and escalate to the Operations Lead; a human decides. Do not give a "
+                         "definitive recommendation. " + SIM)}
 
     if _has(NEW_AIRPORT, q):
         return {"intent": "new_airport", "sources": _sources(facts, "SIM-BASE", "EVENT"),
-                "text": ("Use the New event form to enter the new airport and event. The app looks up that airport's "
-                         "own monthly baseline and recomputes the three comparisons; it does not replay a canned "
-                         "Hailing answer. " + SIM)}
+                "text": ("This event is assessed from " + airport + "'s own monthly baseline and the three "
+                         "comparisons, not from a canned answer. The monthly baseline is cited as [FACT: SIM-BASE]. "
+                         "Use the New event form to enter a different airport and the app recomputes the evidence. "
+                         + SIM)}
 
     if _has(TWO_MSG, q):
         msgs = (output or {}).get("messages") or {}

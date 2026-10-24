@@ -9,42 +9,62 @@ The "bad" mode exists so the checker demo has a fabricated number to block.
 
 from __future__ import annotations
 
+import re
 from datetime import datetime
 
-SIM_LABEL = "模拟 / SIMULATED"
+SIM_LABEL = "\u6a21\u62df / SIMULATED"
 
 FIELDS = [
-    ("f01", "Event ID", "事件编号"),
-    ("f02", "Generated At", "生成时间"),
-    ("f03", "Risk Level", "风险等级"),
-    ("f04", "Airport & Time Window", "适用机场与时间"),
-    ("f05", "Evidence", "判断依据"),
-    ("f06", "Possible Impact", "可能影响"),
-    ("f07", "Assumptions to Verify", "待核查假设"),
-    ("f08", "Information Gaps", "信息缺口"),
-    ("f09", "First Action", "第一步行动"),
-    ("f10", "Follow-up Actions", "后续行动"),
-    ("f11", "Escalation Conditions", "升级条件"),
-    ("f12", "Decisions Requiring a Human", "必须人工决定事项"),
-    ("f13", "Internal Ops Note", "内部运营提示"),
-    ("f14", "Airport Coordination Message", "机场协调信息"),
-    ("f15", "Passenger Message Draft", "旅客信息草案"),
-    ("f16", "Cited Sources", "引用来源"),
-    ("f17", "Output Status", "输出状态"),
+    ("f01", "Event ID", "\u4e8b\u4ef6\u7f16\u53f7"),
+    ("f02", "Generated At", "\u751f\u6210\u65f6\u95f4"),
+    ("f03", "Risk Level", "\u98ce\u9669\u7b49\u7ea7"),
+    ("f04", "Airport & Time Window", "\u9002\u7528\u673a\u573a\u4e0e\u65f6\u95f4"),
+    ("f05", "Evidence", "\u5224\u65ad\u4f9d\u636e"),
+    ("f06", "Possible Impact", "\u53ef\u80fd\u5f71\u54cd"),
+    ("f07", "Assumptions to Verify", "\u5f85\u6838\u67e5\u5047\u8bbe"),
+    ("f08", "Information Gaps", "\u4fe1\u606f\u7f3a\u53e3"),
+    ("f09", "First Action", "\u7b2c\u4e00\u6b65\u884c\u52a8"),
+    ("f10", "Follow-up Actions", "\u540e\u7eed\u884c\u52a8"),
+    ("f11", "Escalation Conditions", "\u5347\u7ea7\u6761\u4ef6"),
+    ("f12", "Decisions Requiring a Human", "\u5fc5\u987b\u4eba\u5de5\u51b3\u5b9a\u4e8b\u9879"),
+    ("f13", "Internal Ops Note", "\u5185\u90e8\u8fd0\u8425\u63d0\u793a"),
+    ("f14", "Airport Coordination Message", "\u673a\u573a\u534f\u8c03\u4fe1\u606f"),
+    ("f15", "Passenger Message Draft", "\u65c5\u5ba2\u4fe1\u606f\u8349\u6848"),
+    ("f16", "Cited Sources", "\u5f15\u7528\u6765\u6e90"),
+    ("f17", "Output Status", "\u8f93\u51fa\u72b6\u6001"),
 ]
 
 RISK_DISPLAY = {
-    "low": ("Low", "低"),
-    "medium": ("Medium", "中"),
-    "high": ("High", "高"),
-    "cant_tell": ("Can't tell", "无法判断"),
+    "low": ("Low", "\u4f4e"),
+    "medium": ("Medium", "\u4e2d"),
+    "high": ("High", "\u9ad8"),
+    "cant_tell": ("Can't tell", "\u65e0\u6cd5\u5224\u65ad"),
+    "can't tell": ("Can't tell", "\u65e0\u6cd5\u5224\u65ad"),
+    "cannot tell": ("Can't tell", "\u65e0\u6cd5\u5224\u65ad"),
+    "\u65e0\u6cd5\u5224\u65ad": ("Can't tell", "\u65e0\u6cd5\u5224\u65ad"),
+    "\u4f4e": ("Low", "\u4f4e"),
+    "\u4e2d": ("Medium", "\u4e2d"),
+    "\u9ad8": ("High", "\u9ad8"),
 }
+
+# "weather caused" must never appear, even inside a sentence that denies causation.
+_BAD_PHRASES = (
+    (re.compile(r"weather\s+caused", re.I), "the monthly data shows only an association with weather, not a cause"),
+    (re.compile(r"caused\s+by\s+weather", re.I), "associated with weather, not a proven cause"),
+)
+
+
+def _sanitize(text: str) -> str:
+    value = str(text)
+    for pattern, replacement in _BAD_PHRASES:
+        value = pattern.sub(replacement, value)
+    return value
 
 
 def _risk_text(risk: dict) -> str:
-    level = (risk or {}).get("level", "medium")
-    en, zh = RISK_DISPLAY.get(level, ("Medium", "中"))
-    return f"{en} ({zh})"
+    raw = str((risk or {}).get("level", "medium")).strip()
+    en, _zh = RISK_DISPLAY.get(raw, RISK_DISPLAY.get(raw.lower(), ("Medium", "\u4e2d")))
+    return en
 
 
 def _warn_format(text: str) -> str:
@@ -56,6 +76,8 @@ def _facts_line(fact: dict) -> str:
 
 
 def _first_action(facts: dict, event: dict) -> str:
+    if facts.get("first_action"):
+        return str(facts["first_action"])
     narrative = facts.get("narrative") or {}
     if narrative.get("first_action"):
         return narrative["first_action"]
@@ -89,7 +111,7 @@ def _follow_up(facts: dict, event: dict) -> list[str]:
                      "Review the information gaps with the responsible professional."]
     for fb in facts.get("feedback_matches") or []:
         items.append(
-            f"Previous staff decision ({fb.get('event_id')}, {fb.get('rec_id')}): {fb.get('result')} - "
+            f"Prior staff feedback record ({fb.get('event_id')}, {fb.get('rec_id')}): {fb.get('result')} - "
             f"{fb.get('reason') or 'no reason recorded'}; apply it to the first action."
         )
     return items
@@ -115,10 +137,9 @@ def _messages(facts: dict, event: dict) -> dict:
         "possible delays over the next few hours. Flight status has not been confirmed. Please check official "
         "airline and airport channels for updates."
     )
-    # keep the three audiences textually distinct even if a fixture supplies similar text
     if passengers.strip() == airport.strip():
         passengers = passengers + " Passengers: please check official channels before travelling."
-    return {"ops": ops, "airport": airport, "passengers": passengers}
+    return {"ops": _sanitize(ops), "airport": _sanitize(airport), "passengers": _sanitize(passengers)}
 
 
 def _tagged(items, tag: str) -> str:
@@ -140,7 +161,14 @@ def write(facts: dict, event: dict | None = None, mode: str = "offline") -> dict
     airport_en = event.get("airport_en") or detector.get("airport_en") or event.get("airport") or "the airport"
     time_en = event.get("time_en") or event.get("time_text") or "the event window"
 
-    evidence = [_facts_line(f) for f in (facts.get("facts") or [])][:6]
+    fact_lines = [_facts_line(f) for f in (facts.get("facts") or [])][:6]
+    reason_lines = []
+    for reason in (risk.get("reasons") or [])[:3]:
+        if isinstance(reason, dict):
+            reason_lines.append(f"[FACT: {reason.get('source', 'DETECTOR')}] {reason.get('text', '')}")
+        else:
+            reason_lines.append(f"[FACT: DETECTOR] {reason}")
+    evidence = fact_lines + reason_lines
     evidence_text = "\n".join(evidence) if evidence else "[UNKNOWN] No facts available."
 
     impact = narrative.get("impact") or (
@@ -184,13 +212,14 @@ def write(facts: dict, event: dict | None = None, mode: str = "offline") -> dict
         "f14": messages["airport"],
         "f15": messages["passengers"],
         "f16": sources_text,
-        "f17": f"Pending human review 待复核 - {SIM_LABEL}",
+        "f17": f"Pending human review \u5f85\u590d\u6838 - {SIM_LABEL}",
     }
 
     if mode == "bad":
         # Deliberately fabricated number, used only by the checker demo.
         values["f05"] = values["f05"] + "\n[FACT: SIM-BASE] The drop is 20 points below normal."
 
+    values = {key: _sanitize(value) for key, value in values.items()}
     fields = [{"key": key, "label_en": en, "label_zh": zh, "value": values[key]} for key, en, zh in FIELDS]
 
     return {

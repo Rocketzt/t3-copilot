@@ -16,6 +16,26 @@ Entry format (copy for each new entry):
 
 ---
 
+## 2026-10-24 14:05 — Merged main; pipeline uses Jason's real engine; exam 0/21 (checker-only failures)
+
+**Setup:** Ran `git merge origin/main` (main now `28aaea4`); it brought `engine/data.py`, `detector.py`, `rules.py`,
+`facts.py`, `feedback.py`, `data/track3.json` and `tests/*`. Then changed only my files:
+`engine/pipeline.py` now calls `facts.build_factsheet(event_or_custom, data, year, month)` whenever Jason's modules
+import and returns `engine_mode = "real"` (fixtures only if the import fails); custom events pass their own
+date/month; `ask()` accepts the CONTRACT `event=` keyword (id string or custom dict); `engine/writer.py` risk labels
+are exactly `Low` / `Medium` / `High` / `Can't tell` and it never emits `weather caused` / `caused by weather` (the
+pipeline also scrubs echoed event text); `engine/qa.py` answers were aligned with the official must/must-not patterns.
+**Result:** EVT001/EVT003/EVT005 run in **real** mode with risk `Medium` / `Can't tell` / `Low`; the hostile OWN005
+input comes back with `张伟`/`13812345678` absent and no causal phrase; `ask(event=...)` works for both strings and
+dicts. `python tests/run_tests.py --writer-mode offline` → **0/21 passed**, but **20/21 cases satisfy every
+must/must-not pattern** and fail only with `pipeline checker did not pass` (TEST001–015 and OWN001–005). The
+remaining case, NEG001, fails `bad writer was not blocked`. Both are checker-dependent: `engine/checker.py` (Ziyu)
+is not on this branch, so no fake pass was introduced. `python -m unittest tests.test_detector tests.test_facts`
+passes **13/13**.
+**Anomalies:** The exam cannot report a real pass until Ziyu's checker is merged; the failure list is exactly the
+expected checker-dependent set. `main` had advanced and is now merged into this branch.
+**AI:** DeepSeek Harness — merged, rewired the pipeline/writer/QA, ran the exam and wrote this entry.
+
 ## 2026-10-24 13:40 — PUSH COMPLETED: `jonathan` is on GitHub at `466f2d6`
 
 **Setup:** HTTPS to `github.com:443` was blocked, so I used SSH (port 22 was reachable) with a dedicated key
