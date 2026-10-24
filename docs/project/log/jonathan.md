@@ -16,6 +16,28 @@ Entry format (copy for each new entry):
 
 ---
 
+## 2026-10-24 16:30 — Repo updated; self-check found 13 small issues; plain-language plan written
+
+**Setup:** Fetched every remote branch and merged `origin/main` (`396598b`) into `jonathan` — clean, one docs file
+changed. Ran the full self-check: `python -m unittest discover -s tests` (16 tests), `python tests/run_tests.py
+--writer-mode offline`, a stdlib `urllib` suite against `app/server.py` (15 endpoints), detector values against
+`EXECUTION_PLAN` Appendix A, `scripts/build_data.py` reproducibility, `node --check app.js`, and a read-only
+compatibility probe of Ziyu's checker from `origin/ziyu` (extracted to a temp file, **not merged**). Wrote
+`docs/planning/UPDATE_PLAN_2026-10-24.md` in plain language.
+**Result:** `main` has Jason's engine but **not** Ziyu's checker (`origin/ziyu` `ed1b336` has `engine/checker.py`).
+Unit tests **16/16 OK**; HTTP **15/15**; detector canonical values exact; `data/track3.json` rebuilds identically.
+Exam **0/21**, but **20/21 cases satisfy every must/must-not pattern** and fail only `pipeline checker did not
+pass`; NEG001 fails `bad writer was not blocked` — both are checker-dependent. Checker probe: EVT001–EVT005 pass
+after two writer changes (drop derived reason lines from f05; use the exact phrase "official channels"); custom
+IDs still fail C02. Plain-language bugs/plans B1–B13 include: missing checker (P0), f05 extra numbers (P0),
+passenger phrase (P0), custom IDs (P0), UI "Can't tell" shown as Medium and purple style lost (P1), detector
+tab/event cards still read fixtures while analysis uses the real engine (P1), mixed Chinese/English feedback
+seeds (P1), typed events with no ID (P1), `tests/run` missing `available`, phrase-scrub grammar, offline
+build-package note, stale docs.
+**Anomalies:** No code fixes were made in this pass — this is the plan. No `jason`/`ziyu` branch was merged; the
+checker was only evaluated read-only. `exports/test_results.json` was refreshed by the self-check.
+**AI:** DeepSeek Harness — updated the repo, ran the checks, probed the checker and wrote the plan.
+
 ## 2026-10-24 14:05 — Merged main; pipeline uses Jason's real engine; exam 0/21 (checker-only failures)
 
 **Setup:** Ran `git merge origin/main` (main now `28aaea4`); it brought `engine/data.py`, `detector.py`, `rules.py`,
