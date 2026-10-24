@@ -37,7 +37,7 @@ workbook wins.
 | E6 | §9.1, §9.2 | The demo script and Q&A state "15/15 + 5/5" and "fabrications blocked" as results | These are targets until the runner produces them; §8.4 of the same plan says so. Quote the real run |
 | E7 | §5.2 J1 | Done-when reads "`运行` shows 模拟 badge" (stray word) | "the page shows the 模拟 badge" |
 | E8 | §2.1 | "Jonathan (you)" and "your strength" — written to one reader | Use names only in a shared plan |
-| E9 | §6 timeline | Work starts at 22:50 tonight | If anyone is free earlier on 23 Oct, start the G0 tasks then. The plan's own buffer depends on it |
+| E9 | — | ~~Work starts at 22:50 tonight~~ | **Withdrawn 2026-10-24:** not an error. The reviewer's PC clock was UTC−5; 22:50 China time was correct |
 
 ## Open decision for the team
 

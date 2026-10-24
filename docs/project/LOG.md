@@ -2,7 +2,19 @@
 
 **Team-level events only:** gate results, merges to `main`, scope cuts, submission. This is a shared file, so edit
 it on `main` only: pull first, make one small commit, push immediately (`ROLES.md`). Ziyu updates it at each gate. Individual work goes in `log/<name>.md`, one file per person, so logs never
-conflict on merge. Newest first. The entries below, dated before 2026-10-23 10:30, are project-setup history.
+conflict on merge. Newest first. All times are China time (UTC+8). The entries below, written before 2026-10-23 23:30 China time,
+are project-setup history; they were dated with this PC's UTC−5 clock, so their dates can be up to 13 h behind.
+
+## 2026-10-24 13:30 — Correction: Rocketzt's PC clock is UTC−5; Jason's clock was right
+
+**Setup:** Compared `date`, `date -u` and the time zones on the commits.
+**Result:**
+- Rocketzt's commits carry −0500 and Jason's +0800. China time now is 2026-10-24 13:30.
+- The previous entry's anomaly ("Jason's clock looks off") was wrong; his commit at 01:13 +08:00 was correct.
+- ERRATA E9 was also wrong: EXECUTION_PLAN's 22:50 start really was the same evening, in China time.
+- About 10.5 h remain until the 23:59 deadline. In EXECUTION_PLAN terms, gate G1 (11:30) has already passed and G2
+  (15:30) is next.
+**Anomalies:** None.
 
 ## 2026-10-24 — Jason's fact-sheet fixes (74fd394) reviewed and merged to main
 
