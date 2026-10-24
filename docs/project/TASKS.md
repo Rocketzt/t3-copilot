@@ -5,20 +5,30 @@ The build tasks themselves (Z1–Z10, J1–J9, A1–A8) live in `EXECUTION_PLAN.
 This is a shared file: edit it on `main` only (pull, one small commit, push). Ziyu updates it at each gate.
 
 ## Team
-- [ ] **Decide the default writer** — offline template or live AI (ERRATA, open decision). `TODO` owner: whole team
-- [ ] **Fix ERRATA items** — CONTRACT C1–C9, EXECUTION_PLAN E1–E9 (`docs/planning/ERRATA.md`). `TODO` owner: author
-      of each file
-- [ ] **Register** — each member registers on study.standardcas.org with their real name. `TODO` owner: each member
-- [ ] **Create project and join** — the leader creates the project and shares the join code privately; the others join.
+- [x] **Decide the default writer** — offline template. `DONE 2026-10-24`: applied consistently (README writer
+      modes, every exam run with `--writer-mode offline`); a DECISIONS.md line to copy it verbatim is open
+      (`OVERVIEW.md` open question).
+- [x] **Fix ERRATA items** — `DONE 2026-10-24` in substance: C3/C4/C5 and C7/C8/C9 are implemented in the code
+      and layout, and the remaining plan-text items are marked historical by the top line in
+      `docs/planning/ERRATA.md` (the build followed `ROLES.md` and the reviewed code on `main`).
+- [ ] **Register** — each member registers on study.standardcas.org with their real name, and confirm all three
+      are registered and joined to one project. `TODO` owner: each member
+- [ ] **Create project and join** — folded into the registration check above until someone confirms it happened.
       `TODO` owner: leader + members
-- [ ] **Install build packages** — `pip install -r requirements.txt` in `.venv` (it has none of them). `TODO`
-      owner: whoever runs the build scripts
+- [x] **Install build packages** — `DONE 2026-10-24` (clean-clone check): a fresh venv installs
+      `requirements.txt` from PyPI without errors (Pillow 13.0.0, openpyxl 3.1.5, pandas 3.1.0); the repo `.venv`
+      remains untouched and stdlib-only, since app/engine/tests need nothing.
 - [ ] **Move the last two organizer PDFs** — close the Track 1/2 PDFs and move `HackSHSID 2026/` into
       `organizer_materials/` (both are git-ignored either way). `TODO` owner: Rocketzt
 
 ## Submission
+- [ ] **UI polish** — last look at all five tabs before screenshots. `TODO` owner: Jonathan
+- [ ] **Fresh screenshots + thumbnail** — re-capture the checker pass, the bad-AI block and the 21/21 exam after
+      the UI polish; set the thumbnail in `docs/SUBMISSION_DRAFT.md`. `TODO` owner: Jonathan + Ziyu
 - [ ] **Fill the submission form** — title, short description, track, thumbnail, description, repo link, testing
-      evidence, AI statement (from `docs/AI_USAGE.md`). Only one person edits at a time. `TODO` owner: Jason (ROLES.md)
+      evidence, AI statement (text is ready in `docs/SUBMISSION_DRAFT.md`; from `docs/AI_USAGE.md`). Only one
+      person edits at a time. `TODO` owner: Jason (ROLES.md)
+- [ ] **Confirm registration** — all 3 members registered on study.standardcas.org. `TODO` owner: whole team
 
 ## Done
 - [x] **Teammates are repo collaborators** — `DONE 2026-10-23`: chrochrohoho and JasonXiao7, checked through the GitHub API.
