@@ -45,9 +45,13 @@ message).
   (`run_all(writer_mode=...)`); the pipeline imports them in `try/except` and switches `engine_mode` when present.
   The fixtures are only the fallback, not the answer.
 **Anomalies:** `pip install -r requirements.txt` could not reach PyPI (cancelled after ~20 min); the runtime does not
-need it. `git fetch`/`ls-remote` to github.com failed with connection reset; push is attempted via the remote/API
-route and its result is in the final summary. The local branch was `Jonathan`; `git switch jonathan` resolved it and
-the merge with `origin/main` was already up to date.
+need it. `git fetch`/`ls-remote` to github.com failed with connection reset; **`git push origin jonathan` also failed
+twice** (connection reset, then "Couldn't connect to server" on port 443), so the five commits of this build are
+**local only** and the remote `origin/jonathan` still points at `d2b2700`. `https://api.github.com` is reachable and
+reads the repo, but there is no `gh` CLI and no stored GitHub credential, so an authenticated API commit/push is not
+possible from this session. The two untracked planning notes (`R1-R3_*.md`) were moved out of the repo so the working
+tree is clean. The local branch was `Jonathan`; `git switch jonathan` resolved it and the merge with `origin/main`
+was already up to date.
 **AI:** DeepSeek Harness — executed setup, generated fixtures, wrote the writer/pipeline/QA/server/UI, ran the
 self-test and this log.
 
