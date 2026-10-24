@@ -57,7 +57,7 @@ function biText(en, zh) {
   const right = zh ? String(zh) : "";
   if (!left && !right) return "";
   if (!right || left === right) return left;
-  return left + " · " + right;
+  return getLang() === "zh" ? right + " · " + left : left + " · " + right;
 }
 
 /* Pair from an explicit field table, rendered with the 译 marker when translated. */

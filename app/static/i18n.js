@@ -80,6 +80,9 @@ const UI = {
     "assistant.weather": "Weather description",
     "assistant.ops": "Operations description",
     "assistant.importance": "Airline importance",
+    "importance.medium": "Medium",
+    "importance.high": "High",
+    "importance.low": "Low",
     "assistant.notes": "On-site notes",
     "assistant.known": "Known information",
     "assistant.unknown": "Unknown information",
@@ -319,6 +322,9 @@ const UI = {
     "assistant.weather": "天气描述",
     "assistant.ops": "运行描述",
     "assistant.importance": "航司重要度",
+    "importance.medium": "中",
+    "importance.high": "高",
+    "importance.low": "低",
     "assistant.notes": "现场备注",
     "assistant.known": "已知信息",
     "assistant.unknown": "未知信息",
@@ -745,7 +751,11 @@ const PATTERNS_EN2ZH = [
   [/^Weather observation for (.+?) (\d{4}-\d{2}) is marked missing; no precipitation, wind, or bad-weather-day values are used\.$/,
     (m, ap, mon) => `${ap} ${mon} 的天气记录缺失；未使用降水、风速或恶劣天气天数数值。`],
   [/^(.+?) is a (.+?) airport; airline importance (.+)\.$/,
-    (m, ap, tier, imp) => `${ap} 为${tier === "大型机场" ? "大型" : tier === "中型机场" ? "中型" : tier === "小型机场" ? "小型" : tier}机场；航司重要度：${imp === "High" ? "高" : imp === "Medium" ? "中" : imp === "Low" ? "低" : imp}。`],
+    (m, ap, tier, imp) => {
+      const tierZh = { "大型机场": "大型", "中型机场": "中型", "小型机场": "小型", "Large": "大型", "Medium": "中型", "Small": "小型" }[tier] || tier;
+      const impZh = { "High": "高", "Medium": "中", "Low": "低" }[imp] || imp;
+      return `${ap} 为${tierZh}机场；航司重要度：${impZh}。`;
+    }],
   [/^Event weather description: (.+?)\. Forecast is not proof of per-flight impact\.$/,
     (m, w) => `事件天气描述：${w}。预报不能证明逐航班影响。`],
   [/^(\d+) detector signals for (\d{4}-\d{2})$/g, "$2 有 $1 个检测信号"],
