@@ -16,6 +16,13 @@ Entry format (copy for each new entry):
 
 ---
 
+## 2026-10-24 03:17 — C05 false positive fixed: "official airline and airport channels" now accepted
+
+**Setup:** `git status` clean, `git pull origin ziyu` up to date (GitHub was unreachable for ~2 min; retried until it connected). Loosened only `_OFFICIAL_CHANNELS` in `engine/checker.py`: `official\s+(?:\w+\s+){0,3}channels`, so up to 3 words may sit between "official" and "channels"; Chinese alternatives unchanged; no other check touched. Added `test_c05_official_channels_phrase_flexibility` in `tests/test_checker.py`: "Please check official airline and airport channels for updates." passes C05 (and every other check), while a passenger message with no channels phrase still fails C05 only.
+**Result:** `python -m unittest discover -s tests -v` ran 33 tests: OK (17 checker tests + 16 pre-existing, no regressions).
+**Anomalies:** The first three `git pull` attempts failed with connection errors to github.com (network); the fourth succeeded with no changes.
+**AI:** OpenCode (GLM-5.3) applied the one-pattern fix and the new test as specified; no other checks were loosened.
+
 ## 2026-10-24 03:05 — Checker built: all 13 rules C01-C13 block on cue and pass on a good output
 
 **Setup:** On branch `ziyu`, merged `origin/main` (fast-forward to 396598b; a locked `docs/planning/R1-R3_EXPLAINED.pdf` blocked the merge until the viewer was closed — the file was moved aside, merged back byte-identical, backup kept in the opencode temp folder). Implemented `engine/checker.py` (`check(output, facts) -> {"passed", "checks", "failures"}`) per `docs/planning/agent_prompts/ziyu.md`: C01-C13, each failure names the offending text; masks IDs (SIM-\*, RULE/EVT/TEST/REC ids, Fxx), dates (incl. Chinese dates and bare years), times, field keys and list numbering before C02 number matching (tolerance 0.01). Jonathan's `fixtures/output_*.json` do not exist, so `tests/test_checker.py` builds the good and bad outputs inline in the CONTRACT §6 "output" shape from Jason's real `fixtures/factsheet_EVT001.json` / `EVT003.json`, using only numbers from their "numbers" lists; the bad output uses "20 points" (CONTRACT §11 bad-writer mode). The checker also accepts a full pipeline payload `{"output": ...}` and a whole fact sheet and unwraps both.

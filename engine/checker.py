@@ -64,7 +64,8 @@ _DELAY_AS_FACT = re.compile(
     r"(?i)\b(?:is|are|was|were|has\s+been|have\s+been|will\s+be)\s+(?:delayed|cancelled|canceled)\b")
 _DELAY_AS_FACT_ZH = re.compile(r"(?<!可能)(?<!或)(?<!预计)(?:已延误|已取消|航班延误|航班取消)")
 _DRAFT_WORD = re.compile(r"(?i)\bdraft\b|草案")
-_OFFICIAL_CHANNELS = re.compile(r"(?i)official\s+channels|正式渠道|正式通知|以正式.{0,8}为准")
+_OFFICIAL_CHANNELS = re.compile(
+    r"(?i)official\s+(?:\w+\s+){0,3}channels|正式渠道|正式通知|以正式.{0,8}为准")
 
 # C07 (same shapes as engine/facts.py)
 _PII = (

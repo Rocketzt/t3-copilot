@@ -252,6 +252,24 @@ class CheckerTests(unittest.TestCase):
         self.assertIn("draft", self.detail_of(result, "C05"))
         self.assertIn("official channels", self.detail_of(result, "C05"))
 
+    def test_c05_official_channels_phrase_flexibility(self):
+        def flexible_channels(output):
+            text = ("模拟 / SIMULATED — Draft (草案): possible delays may occur. Please check "
+                    "official airline and airport channels for updates.")
+            self.set_field(output, "f15", text)
+            output["messages"]["passengers"] = text
+        result = self.variant(flexible_channels)
+        self.assertEqual(self.failed_ids(result), [])
+
+        def no_channels(output):
+            text = ("模拟 / SIMULATED — Draft (草案): possible delays may occur. Please check "
+                    "with your airline for updates.")
+            self.set_field(output, "f15", text)
+            output["messages"]["passengers"] = text
+        result = self.variant(no_channels)
+        self.assertOnlyFailure(result, "C05")
+        self.assertIn("official channels", self.detail_of(result, "C05"))
+
     def test_c06_two_messages_identical(self):
         def duplicate(output):
             output["messages"]["airport"] = output["messages"]["ops"]
