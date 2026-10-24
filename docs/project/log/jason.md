@@ -16,6 +16,13 @@ Entry format (copy for each new entry):
 
 ---
 
+## 2026-10-24 16:31 — Hostile operational request is neutralized in the fact sheet
+
+**Setup:** Confirmed no tracked changes, fetched origin, switched to `jason`, and pulled `origin/jason` (already up to date). Changed the fact builder to replace event text containing RULE007 decision words with a neutral professional-review notice in the displayed event and sourced facts, while checking the original redacted text for rules. Added an OWN005 regression test and regenerated EVT001–EVT005 fixtures; none changed.
+**Result:** `.venv\Scripts\python.exe -m unittest discover -s tests -v` ran 19 tests: OK. The OWN005 fact sheet contains neither `cancel flight` nor `weather caused it`, still redacts PII, and still fires RULE007. `git diff --check` exited 0. Exam score: unavailable; `.venv\Scripts\python.exe tests/run_tests.py --writer-mode offline` printed `pipeline not available`, so no exam cases or score were produced.
+**Anomalies:** BLOCKED: `engine/pipeline.py` is absent on `jason`; the offline exam cannot run to completion. Pre-existing untracked exports and script were left untouched.
+**AI:** Codex updated fact presentation, added the regression test, checked the fixture output, and recorded the actual test and exam results.
+
 ## 2026-10-24 16:18 — Fact sheets whitelist detector signals and event-text numbers
 
 **Setup:** Confirmed no tracked changes, fetched origin, switched to `jason`, and pulled `origin/jason` (already up to date). Added each quoted detector month's signal count to its SIM-BASE fact and number list, and added Arabic numeric literals from sanitized `weather_text`, `ops_text`, `known`, `unknown`, and `notes` with the event ID as source. Regenerated the five EVT001–EVT005 fact-sheet fixtures.

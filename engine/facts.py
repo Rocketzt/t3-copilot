@@ -8,11 +8,12 @@ from .data import Data, load_data
 from .detector import airport_context, compute_all
 from .feedback import match
 from .i18n import AIRPORT_EN, IMPORTANCE_EN
-from .rules import CONFLICT, WEATHER, evaluate, has_any
+from .rules import CONFLICT, DECISIONS, WEATHER, evaluate, has_any
 
 SIM_LABEL = "模拟 / SIMULATED"
 _EVENT_NUMBER = re.compile(r"(?<![0-9])[-+]?[0-9]+(?:\.[0-9]+)?(?![0-9])")
 _EVENT_TEXT_FIELDS = ("weather_text", "ops_text", "known", "unknown", "notes")
+_DECISION_NOTICE = "The event text requests an operational decision; not acted on — requires the responsible professional [RULE007]"
 _PII_PATTERNS = (
     re.compile(r"(?<!\d)1[3-9]\d{9}(?!\d)"),
     re.compile(r"(?<!\d)\d{17}[\dXx](?!\w)"),
@@ -76,6 +77,10 @@ def build_facts(data: Data, event: dict, context: dict | None = None,
         clean["has_feedback"] = True
         initial_rules = evaluate(data, clean, context)
     risk = _risk(clean, context, initial_rules, matches)
+    display_event = {**clean}
+    for field in _EVENT_TEXT_FIELDS:
+        if has_any(str(clean.get(field) or ""), DECISIONS):
+            display_event[field] = _DECISION_NOTICE
     source_event = clean.get("id", "EVENT")
     airport = clean["airport"]
     selected = next(r for r in compute_all(data) if (r["airport"], r["year"], r["month"]) ==
@@ -124,14 +129,19 @@ def build_facts(data: Data, event: dict, context: dict | None = None,
             f'precipitation {precipitation:g} mm, max wind {wind:g} m/s, '
             f'bad-weather days {bad_days:g}.',
             "SIM-WEATHER", [(precipitation, "mm"), (wind, "m/s"), (bad_days, "days")])
-    add(f'Event weather description: {clean.get("weather_text") or "not supplied"}. Forecast is not proof of per-flight impact.',
-        source_event, _text_numbers(str(clean.get("weather_text") or "")))
+    if display_event.get("weather_text") == _DECISION_NOTICE:
+        add(_DECISION_NOTICE, source_event, _text_numbers(str(clean.get("weather_text") or "")))
+    else:
+        add(f'Event weather description: {clean.get("weather_text") or "not supplied"}. Forecast is not proof of per-flight impact.',
+            source_event, _text_numbers(str(clean.get("weather_text") or "")))
     for field in _EVENT_TEXT_FIELDS[1:]:
         field_text = str(clean.get(field) or "")
         values = _text_numbers(field_text)
-        if values:
+        if display_event.get(field) == _DECISION_NOTICE:
+            add(_DECISION_NOTICE, source_event, values)
+        elif values:
             add(f'Event {field}: {field_text}', source_event, values)
-    unknowns = [redact_text(s.strip()) for s in re.split(r"[、;,；]", str(clean.get("unknown") or "")) if s.strip()]
+    unknowns = [s.strip() for s in re.split(r"[、;,；]", str(display_event.get("unknown") or "")) if s.strip()]
     missing_data = ["Monthly baselines cannot establish per-flight causation or current aircraft, crew, and gate status"]
     if context["weather_missing"]:
         missing_data.append(f'Weather row missing for {airport} {context["month_label"]}; no weather value imputed')
@@ -153,7 +163,7 @@ def build_facts(data: Data, event: dict, context: dict | None = None,
                                   "Publish a passenger notice without human review [RULE005]"],
             "sources": sources, "risk": risk, "pii_redacted": redacted,
             "feedback_matches": matches, "conflict": risk["level"] == "Can't tell",
-            "sim_label": SIM_LABEL, "first_action": first_action, "event": clean}
+            "sim_label": SIM_LABEL, "first_action": first_action, "event": display_event}
 
 
 def build_factsheet(event: dict | str, data: Data | None = None, year: int | None = None,
@@ -164,9 +174,9 @@ def build_factsheet(event: dict | str, data: Data | None = None, year: int | Non
     context = airport_context(data, clean["airport"], year, month)
     facts = build_facts(data, clean, context)
     facts["pii_redacted"] = facts["pii_redacted"] or input_redacted
-    clean = facts.pop("event")
+    display_event = facts.pop("event")
     rules = evaluate(data, {**clean, "has_feedback": bool(facts["feedback_matches"])}, context)
-    return {"event": {**clean, "airport_en": AIRPORT_EN.get(clean["airport"], clean["airport"]),
+    return {"event": {**display_event, "airport_en": AIRPORT_EN.get(clean["airport"], clean["airport"]),
                       "importance_en": IMPORTANCE_EN.get(clean.get("importance"), clean.get("importance")),
                       "is_custom": clean.get("id") not in {e["id"] for e in data.events}},
             "detector": context, "rules": rules, "facts": facts}

@@ -11,6 +11,7 @@ from engine.detector import compute_all
 from engine.facts import build_factsheet, redact_text
 from engine.feedback import append_record, load_records, match
 from engine.rules import evaluate
+from tests.own_events import OWN_EVENTS
 
 
 class FactSheetTests(unittest.TestCase):
@@ -114,6 +115,17 @@ class FactSheetTests(unittest.TestCase):
         self.assertNotIn(99, {n["value"] for n in event_numbers})
         self.assertTrue(all(any(f["id"] == n["fact_id"] and str(n["display"]) in f["text"]
                                 for f in event_facts) for n in event_numbers))
+
+    def test_hostile_own005_decision_request_is_not_quoted(self):
+        own005 = next(e for e in OWN_EVENTS if e["id"] == "OWN005")
+        sheet = build_factsheet(own005["custom"], self.data)
+        payload = json.dumps(sheet, ensure_ascii=False).lower()
+        self.assertNotIn("weather caused it", payload)
+        self.assertNotIn("cancel flight", payload)
+        self.assertNotIn("张伟", payload)
+        self.assertNotIn("13812345678", payload)
+        self.assertIn("the event text requests an operational decision", payload)
+        self.assertIn("RULE007", {rule["id"] for rule in sheet["rules"]})
 
     def test_selected_month_weather_numbers(self):
         sheet = build_factsheet("EVT001", self.data)
