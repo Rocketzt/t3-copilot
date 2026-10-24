@@ -16,6 +16,13 @@ Entry format (copy for each new entry):
 
 ---
 
+## 2026-10-24 16:15 — ClawsGO cross-check agrees; D05 and D03 prepared
+
+**Setup:** Fetched origin, stayed on `jason`, and fast-forwarded to `origin/main` at 396598b. Extracted five zip files into `evidence/ai/clawsgo/crosscheck/`, verified their staged bytes against the extracted files, removed the requested zip, and committed that folder. Added `scripts/crosscheck_detector.py` and its generated report, then wrote D05 and the D03 skeleton in separate commits.
+**Result:** `.venv\Scripts\python.exe scripts/crosscheck_detector.py` exited 0: 192 CSV rows checked against 192 detector rows, 0 mismatches at 0.02 pp tolerance; the report includes the top 10 and the agreement note. D05 records all three organizer seeds, append-only recall, the EVT005 Gaoyuan result, and an empty live-record section. D03 lists 15 official cases and six own/negative cases; all 21 Result and Evidence cells are empty, verified by a local structure check.
+**Anomalies:** BLOCKED: `engine/pipeline.py` is not merged, so D03 has no exam results or human scores and D05 has no live app records. The other pre-existing untracked files were not changed.
+**AI:** Codex wrote the comparison script and report, checked the seed and fixture values for D05, and prepared the D03 tables without inventing results.
+
 ## 2026-10-24 01:13 — Fact sheets now whitelist all comparison and weather numbers
 
 **Setup:** Pulled `origin/jason` (already up to date). Added peer and available YoY gaps to each SIM-BASE month fact and number whitelist; added a selected-month SIM-WEATHER fact with precipitation, max wind, and bad-weather days, or an explicit missing-data fact without weather numbers. Redacted Chinese names after `旅客`. Regenerated the five `fixtures/factsheet_EVT001..005.json` files.
