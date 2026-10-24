@@ -12,13 +12,19 @@
     <span class="brand-mark">T3</span>
     <span class="brand-name">OPS COPILOT</span>
   </div>
-  <div class="sim-badge" title="Every airport, event and number is organizer-generated fiction.">模拟 / SIMULATED</div>
+  <div class="topbar-right">
+    <div class="lang-switch" role="group" data-i18n-aria="common.language" aria-label="Language">
+      <button type="button" class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" class="lang-btn" data-lang="zh" aria-pressed="false">中文</button>
+    </div>
+    <div class="sim-badge" data-i18n-title="common.simTitle" title="Every airport, event and number is organizer-generated fiction.">模拟 / SIMULATED</div>
+  </div>
   <nav class="tabs" id="tabs">
-    <button class="tab-btn active" data-tab="assistant">Assistant</button>
-    <button class="tab-btn" data-tab="detector">Detector</button>
-    <button class="tab-btn" data-tab="exam">Exam</button>
-    <button class="tab-btn" data-tab="feedback">Feedback</button>
-    <button class="tab-btn" data-tab="about">About</button>
+    <button class="tab-btn active" data-tab="assistant" data-i18n="tab.assistant">Assistant</button>
+    <button class="tab-btn" data-tab="detector" data-i18n="tab.detector">Detector</button>
+    <button class="tab-btn" data-tab="exam" data-i18n="tab.exam">Exam</button>
+    <button class="tab-btn" data-tab="feedback" data-i18n="tab.feedback">Feedback</button>
+    <button class="tab-btn" data-tab="about" data-i18n="tab.about">About</button>
   </nav>
 </header>
 
@@ -27,8 +33,8 @@
   <section class="tab-panel active" id="tab-assistant">
     <div class="page-head">
       <div>
-        <h1>Disruption assistant</h1>
-        <p class="sub">Pick an organizer event or type a new one. The assistant shows the anomaly verdict, the
+        <h1 data-i18n="assistant.title">Disruption assistant</h1>
+        <p class="sub" data-i18n="assistant.sub">Pick an organizer event or type a new one. The assistant shows the anomaly verdict, the
           fact sheet, the 17-field advice and three audience drafts. Decision support only — a person decides.</p>
       </div>
       <div class="head-actions">
@@ -38,58 +44,58 @@
 
     <div class="card">
       <div class="card-head">
-        <h2>1. Choose an event</h2>
-        <span class="hint">Five organizer events (simulated)</span>
+        <h2 data-i18n="assistant.step1">1. Choose an event</h2>
+        <span class="hint" data-i18n="assistant.step1Hint">Five organizer events (simulated)</span>
       </div>
       <div class="event-grid" id="event-cards"></div>
       <div class="row-actions">
-        <button class="btn primary" id="analyze-selected" disabled>Analyze selected event</button>
-        <span class="hint" id="selected-hint">No event selected</span>
+        <button class="btn primary" id="analyze-selected" disabled data-i18n="assistant.analyzeSelected">Analyze selected event</button>
+        <span class="hint" id="selected-hint" data-i18n="assistant.noEvent">No event selected</span>
       </div>
     </div>
 
     <div class="card">
       <div class="card-head">
-        <h2>2. Or type a new event</h2>
-        <span class="hint">Unseen event — the app looks up the airport's own data</span>
+        <h2 data-i18n="assistant.step2">2. Or type a new event</h2>
+        <span class="hint" data-i18n="assistant.step2Hint">Unseen event — the app looks up the airport's own data</span>
       </div>
       <form id="custom-form" class="form-grid" autocomplete="off">
-        <label>Airport
+        <label><span data-i18n="assistant.airport">Airport</span>
           <select id="custom-airport" required></select>
         </label>
-        <label>Time window
-          <input id="custom-time" placeholder="Day 4, 14:00; next 6 hours" required>
+        <label><span data-i18n="assistant.time">Time window</span>
+          <input id="custom-time" data-i18n-placeholder="assistant.phTime" placeholder="Day 4, 14:00; next 6 hours" required>
         </label>
-        <label>Weather description
-          <input id="custom-weather" placeholder="Heavy rain and gusts expected for six hours">
+        <label><span data-i18n="assistant.weather">Weather description</span>
+          <input id="custom-weather" data-i18n-placeholder="assistant.phWeather" placeholder="Heavy rain and gusts expected for six hours">
         </label>
-        <label>Operations description
-          <input id="custom-ops" placeholder="Morning normal, afternoon flights concentrated">
+        <label><span data-i18n="assistant.ops">Operations description</span>
+          <input id="custom-ops" data-i18n-placeholder="assistant.phOps" placeholder="Morning normal, afternoon flights concentrated">
         </label>
-        <label>Airline importance
+        <label><span data-i18n="assistant.importance">Airline importance</span>
           <select id="custom-importance">
             <option value="中" selected>Medium</option>
             <option value="高">High</option>
             <option value="低">Low</option>
           </select>
         </label>
-        <label>On-site notes
-          <input id="custom-notes" placeholder="Ground-support capacity not yet confirmed">
+        <label><span data-i18n="assistant.notes">On-site notes</span>
+          <input id="custom-notes" data-i18n-placeholder="assistant.phNotes" placeholder="Ground-support capacity not yet confirmed">
         </label>
-        <label>Known information
-          <input id="custom-known" placeholder="Weather forecast; monthly baseline; airport size">
+        <label><span data-i18n="assistant.known">Known information</span>
+          <input id="custom-known" data-i18n-placeholder="assistant.phKnown" placeholder="Weather forecast; monthly baseline; airport size">
         </label>
-        <label>Unknown information
-          <input id="custom-unknown" placeholder="Flight-by-flight schedule; crew and ground-support status">
+        <label><span data-i18n="assistant.unknown">Unknown information</span>
+          <input id="custom-unknown" data-i18n-placeholder="assistant.phUnknown" placeholder="Flight-by-flight schedule; crew and ground-support status">
         </label>
         <div class="form-actions">
-          <label class="inline">Writer
+          <label class="inline"><span data-i18n="assistant.writer">Writer</span>
             <select id="writer-mode">
-              <option value="offline" selected>Offline template</option>
-              <option value="bad">Demo bad AI (invented number)</option>
+              <option value="offline" selected data-i18n="assistant.writerOffline">Offline template</option>
+              <option value="bad" data-i18n="assistant.writerBad">Demo bad AI (invented number)</option>
             </select>
           </label>
-          <button class="btn primary" type="submit" id="analyze-custom">Analyze new event</button>
+          <button class="btn primary" type="submit" id="analyze-custom" data-i18n="assistant.analyzeCustom">Analyze new event</button>
         </div>
       </form>
     </div>
@@ -105,22 +111,23 @@
 
       <div class="card">
         <div class="card-head">
-          <h2>17-field advice <span class="zh">组织者模板</span></h2>
-          <span class="hint">Every FACT carries a source ID; assumptions and unknowns are labelled.</span>
+          <h2 data-i18n="assistant.fieldsTitle">17-field advice</h2>
+          <span class="hint" data-i18n="assistant.fieldsHint">Every FACT carries a source ID; assumptions and unknowns are labelled.</span>
         </div>
         <div class="fields-grid" id="fields-grid"></div>
       </div>
 
       <div class="card">
         <div class="card-head">
-          <h2>3 audience drafts</h2>
-          <span class="hint">Drafts only — a person reviews and sends through official channels.</span>
+          <h2 data-i18n="assistant.msgTitle">3 audience drafts</h2>
+          <span class="hint" id="msg-lang-hint" data-i18n="assistant.msgHint">Drafts only — a person reviews and sends through official channels.</span>
         </div>
         <div class="msg-tabs" id="msg-tabs">
-          <button class="msg-tab active" data-msg="ops">Operations</button>
-          <button class="msg-tab" data-msg="airport">Airport coordination</button>
-          <button class="msg-tab" data-msg="passengers">Passengers</button>
-          <button class="btn ghost small" id="copy-msg">Copy</button>
+          <button class="msg-tab active" data-msg="ops" data-i18n="assistant.msgOps">Operations</button>
+          <button class="msg-tab" data-msg="airport" data-i18n="assistant.msgAirport">Airport coordination</button>
+          <button class="msg-tab" data-msg="passengers" data-i18n="assistant.msgPassengers">Passengers</button>
+          <button class="btn ghost small" id="toggle-original" hidden data-i18n="common.showOriginal">Show original</button>
+          <button class="btn ghost small" id="copy-msg" data-i18n="common.copy">Copy</button>
         </div>
         <pre class="message-box" id="msg-body"></pre>
       </div>
@@ -129,19 +136,19 @@
 
       <div class="card" id="feedback-card">
         <div class="card-head">
-          <h2>Human decision</h2>
-          <span class="hint">The log is append-only; the original advice is never overwritten.</span>
+          <h2 data-i18n="assistant.humanDecision">Human decision</h2>
+          <span class="hint" data-i18n="assistant.humanHint">The log is append-only; the original advice is never overwritten.</span>
         </div>
         <div class="feedback-row">
-          <button class="btn accept" data-feedback="Accept">Accept</button>
-          <button class="btn edit" data-feedback="Edit">Edit</button>
-          <button class="btn reject" data-feedback="Reject">Reject</button>
+          <button class="btn accept" data-feedback="Accept" data-i18n="assistant.accept">Accept</button>
+          <button class="btn edit" data-feedback="Edit" data-i18n="assistant.edit">Edit</button>
+          <button class="btn reject" data-feedback="Reject" data-i18n="assistant.reject">Reject</button>
         </div>
-        <label class="block">Reason / what you changed
-          <textarea id="feedback-reason" rows="2" placeholder="e.g. Resources are sufficient; keep monitoring."></textarea>
+        <label class="block"><span data-i18n="assistant.reasonLabel">Reason / what you changed</span>
+          <textarea id="feedback-reason" rows="2" data-i18n-placeholder="assistant.reasonPh" placeholder="e.g. Resources are sufficient; keep monitoring."></textarea>
         </label>
         <div class="feedback-row">
-          <label class="inline">Reviewer <input id="feedback-reviewer" value="Duty manager"></label>
+          <label class="inline"><span data-i18n="assistant.reviewer">Reviewer</span> <input id="feedback-reviewer" value="Duty manager"></label>
           <span class="hint" id="feedback-status"></span>
         </div>
         <div id="feedback-matches" class="feedback-matches"></div>
@@ -149,13 +156,13 @@
 
       <div class="card" id="ask-card">
         <div class="card-head">
-          <h2>Ask about this event</h2>
-          <span class="hint">Bounded question panel — answers are grounded in this event's fact sheet.</span>
+          <h2 data-i18n="assistant.askTitle">Ask about this event</h2>
+          <span class="hint" data-i18n="assistant.askHint">Bounded question panel — answers are grounded in this event's fact sheet.</span>
         </div>
         <div class="chip-row" id="ask-chips"></div>
         <div class="ask-row">
-          <input id="ask-input" placeholder="e.g. Will flights definitely be delayed?">
-          <button class="btn" id="ask-btn">Ask</button>
+          <input id="ask-input" data-i18n-placeholder="assistant.askPlaceholder" placeholder="e.g. Will flights definitely be delayed?">
+          <button class="btn" id="ask-btn" data-i18n="assistant.ask">Ask</button>
         </div>
         <div id="ask-answer" class="ask-answer"></div>
       </div>
@@ -166,8 +173,8 @@
   <section class="tab-panel" id="tab-detector">
     <div class="page-head">
       <div>
-        <h1>Is this unusual?</h1>
-        <p class="sub">Three comparisons for all 192 airport-months: own 12-month average, same-size peers and
+        <h1 data-i18n="detector.title">Is this unusual?</h1>
+        <p class="sub" data-i18n="detector.sub">Three comparisons for all 192 airport-months: own 12-month average, same-size peers and
           the same month last year. A month is a signal when it is 5.00 percentage points or more below its baseline.</p>
       </div>
     </div>
@@ -175,42 +182,42 @@
 
     <div class="card" id="network-card">
       <div class="card-head">
-        <h2>Network priority <span class="zh">网络优先级</span></h2>
-        <span class="hint" id="network-mode">loading…</span>
+        <h2 data-i18n="detector.networkTitle">Network priority</h2>
+        <span class="hint" id="network-mode" data-i18n="detector.networkLoading">loading…</span>
       </div>
-      <p class="hint">Schematic — not geographic. Circle size = importance to our airline; colour = detector verdict.
+      <p class="hint" data-i18n="detector.networkHint">Schematic — not geographic. Circle size = importance to our airline; colour = detector verdict.
         Hover for the reason; click an airport to open its analysis in the Assistant tab.</p>
       <div class="network-wrap" id="network-map" role="img" aria-label="Schematic network priority map"></div>
       <div class="chart-legend" id="network-legend"></div>
       <div class="table-wrap network-table-wrap">
         <table class="data-table" id="network-table"></table>
       </div>
-      <p class="hint">Priority = anomaly × importance to our airline. Ranked table below the map; all data simulated.</p>
+      <p class="hint" data-i18n="detector.networkNote">Priority = anomaly × importance to our airline. Ranked table below the map; all data simulated.</p>
     </div>
 
     <div class="card">
       <div class="card-head">
-        <h2>Hailing vs Yunchuan — monthly completion</h2>
-        <span class="hint">Solid: airports · dashed: same-class peer average · highlighted: 2025-07/08</span>
+        <h2 data-i18n="detector.hailingTitle">Hailing vs Yunchuan — monthly completion</h2>
+        <span class="hint" data-i18n="detector.hailingHint">Solid: airports · dashed: same-class peer average · highlighted: 2025-07/08</span>
       </div>
       <div class="chart-wrap" id="det-chart"></div>
     </div>
     <div class="card">
       <div class="card-head">
-        <h2>Airport-month ranking</h2>
+        <h2 data-i18n="detector.rankingTitle">Airport-month ranking</h2>
         <div class="table-controls">
-          <input id="det-filter" placeholder="Filter airport...">
+          <input id="det-filter" data-i18n-placeholder="detector.filter" placeholder="Filter airport...">
           <select id="det-verdict">
-            <option value="">All verdicts</option>
-            <option value="clearly unusual">clearly unusual</option>
-            <option value="unusual">unusual</option>
-            <option value="watch">watch</option>
-            <option value="normal">normal</option>
+            <option value="" data-i18n="detector.allVerdicts">All verdicts</option>
+            <option value="clearly unusual" data-i18n="verdict.clearlyUnusual">clearly unusual</option>
+            <option value="unusual" data-i18n="verdict.unusual">unusual</option>
+            <option value="watch" data-i18n="verdict.watch">watch</option>
+            <option value="normal" data-i18n="verdict.normal">normal</option>
           </select>
         </div>
       </div>
       <div class="table-wrap"><table class="data-table" id="det-table"></table></div>
-      <p class="hint">Cross-check note: the detector's ranking is independently reproduced in
+      <p class="hint" data-i18n="detector.crosscheckNote">Cross-check note: the detector's ranking is independently reproduced in
         exports/crosscheck_detector.md (Jason/Ziyu).</p>
     </div>
   </section>
@@ -219,16 +226,16 @@
   <section class="tab-panel" id="tab-exam">
     <div class="page-head">
       <div>
-        <h1>Exam</h1>
-        <p class="sub">Runs the organizer's 15 tests plus our own events through the same pipeline the website uses.
+        <h1 data-i18n="exam.title">Exam</h1>
+        <p class="sub" data-i18n="exam.sub">Runs the organizer's 15 tests plus our own events through the same pipeline the website uses.
           Results are evidence, not marketing.</p>
       </div>
-      <button class="btn primary" id="run-exam">Run exam</button>
+      <button class="btn primary" id="run-exam" data-i18n="exam.run">Run exam</button>
     </div>
     <div class="status-line" id="exam-status"></div>
     <div class="stat-grid" id="exam-summary"></div>
     <div class="card"><div class="table-wrap"><table class="data-table" id="exam-table"></table></div>
-      <div class="row-actions"><button class="btn ghost" id="download-exam" disabled>Download report (JSON)</button></div>
+      <div class="row-actions"><button class="btn ghost" id="download-exam" disabled data-i18n="exam.download">Download report (JSON)</button></div>
     </div>
   </section>
 
@@ -236,11 +243,11 @@
   <section class="tab-panel" id="tab-feedback">
     <div class="page-head">
       <div>
-        <h1>Feedback memory</h1>
-        <p class="sub">Accept / edit / reject decisions are appended, never overwritten. A similar event quotes the
+        <h1 data-i18n="feedback.title">Feedback memory</h1>
+        <p class="sub" data-i18n="feedback.sub">Accept / edit / reject decisions are appended, never overwritten. A similar event quotes the
           prior decision and changes the first action.</p>
       </div>
-      <button class="btn ghost" id="reload-feedback">Refresh</button>
+      <button class="btn ghost" id="reload-feedback" data-i18n="feedback.refresh">Refresh</button>
     </div>
     <div class="stat-grid" id="feedback-stats"></div>
     <div class="card"><div class="table-wrap"><table class="data-table" id="feedback-table"></table></div></div>
@@ -250,48 +257,50 @@
   <section class="tab-panel" id="tab-about">
     <div class="page-head">
       <div>
-        <h1>About this prototype</h1>
-        <p class="sub">Decision support for a fictional airline. Every airport, event and number is simulated by
+        <h1 data-i18n="about.title">About this prototype</h1>
+        <p class="sub" data-i18n="about.sub">Decision support for a fictional airline. Every airport, event and number is simulated by
           the organizers — never present it as real-world data.</p>
       </div>
     </div>
     <div class="card">
-      <h2>What it does</h2>
-      <p>Four parts in one app: a three-comparison <strong>anomaly detector</strong>; a <strong>fact sheet</strong>
-        whose numbers come from the workbook, an offline <strong>writer</strong> and a <strong>checker</strong>;
-        an <strong>exam</strong> runner; and an append-only <strong>feedback memory</strong>. The writer never
-        computes a number, and decisions stay with qualified people.</p>
-      <p>This is the operations assistant for <strong>our airline's disruption desk</strong> — one fictional Chinese
-        domestic airline. Priority combines detector anomaly with importance to our airline. Field f14 is the
-        message to the airport coordination team; decisions on cancel, release, dispatch, maintenance and
-        compensation stay with our airline's qualified staff.</p>
+      <h2 data-i18n="about.whatItDoes">What it does</h2>
+      <p data-i18n="about.p1">Four parts in one app: a three-comparison anomaly detector; a fact sheet whose numbers come from the workbook,
+        an offline writer and a checker; an exam runner; and an append-only feedback memory.</p>
+      <p data-i18n="about.p2">This is the operations assistant for our airline's disruption desk — one fictional Chinese domestic airline.
+        Priority combines detector anomaly with importance to our airline.</p>
       <p class="hint" id="about-counts"></p>
     </div>
     <div class="card">
-      <h2>Data quality notes</h2>
+      <h2 data-i18n="about.dq">Data quality notes</h2>
       <div id="about-dq"></div>
     </div>
     <div class="card">
-      <h2>12 operating rules</h2>
+      <h2 data-i18n="about.rules">12 operating rules</h2>
       <div class="table-wrap"><table class="data-table" id="about-rules"></table></div>
     </div>
     <div class="card">
-      <h2>Limitations</h2>
+      <h2 data-i18n="about.limitations">Limitations</h2>
       <ul class="plain">
-        <li>The organizer data is monthly and airport-level — it cannot identify individual flights or crews.</li>
-        <li>Weather is background evidence; it is not proof of causation.</li>
-        <li>The demo writer is a deterministic template; the optional live-LLM writer is not enabled in this run.</li>
-        <li>When the checker is not available, the UI shows "not checked" rather than faking a pass.</li>
+        <li data-i18n="about.li1">The organizer data is monthly and airport-level — it cannot identify individual flights or crews.</li>
+        <li data-i18n="about.li2">Weather is background evidence; it is not proof of causation.</li>
+        <li data-i18n="about.li3">The demo writer is a deterministic template; the optional live-LLM writer is not enabled in this run.</li>
+        <li data-i18n="about.li4">When the checker is not available, the UI shows "not checked" rather than faking a pass.</li>
       </ul>
+    </div>
+    <div class="card" id="translations-card">
+      <h2 data-i18n="about.translationsTitle">Translations / 翻译</h2>
+      <p data-i18n="about.translationsBody">Every source string keeps its original language.</p>
+      <p class="hint" id="lang-note"></p>
     </div>
   </section>
 </main>
 
 <footer>
-  <span>模拟 / SIMULATED · organizer data is fictional · decision support only · <span id="footer-mode">offline</span></span>
+  <span><span data-i18n="footer.line">simulated · organizer data is fictional · decision support only</span> · <span id="footer-mode">offline</span></span>
 </footer>
 
 <div class="toast" id="toast" hidden></div>
+<script src="i18n.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

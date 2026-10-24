@@ -25,6 +25,7 @@ STATIC_FILES = {
     "/": "index.html",
     "/index.html": "index.html",
     "/app.js": "app.js",
+    "/i18n.js": "i18n.js",
     "/styles.css": "styles.css",
 }
 CONTENT_TYPES = {
