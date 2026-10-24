@@ -15,6 +15,8 @@ const state = {
   feedback: [],
   detectorLoaded: false,
   feedbackLoaded: false,
+  health: null,
+  engineMode: "fixtures",
 };
 
 /* ------------------------------------------------------------------ helpers */
@@ -43,13 +45,38 @@ function signed(n, digits = 2) {
   return (v > 0 ? "+" : "") + v.toFixed(digits);
 }
 
+const TAG_NAMES = ["ASSUMPTION", "UNKNOWN", "HUMAN"];
+
 function tag(text) {
   const style = { assumption: "tag-assumption", unknown: "tag-unknown", human: "tag-human" }[String(text).toLowerCase()] || "";
   return `<span class="tag-chip ${style}">${esc(text)}</span>`;
 }
 
+/* Human-readable English for labels the data layer still keeps in Chinese. */
+function humanize(text) {
+  return String(text === null || text === undefined ? "" : text)
+    .replace(/大型机场/g, "Large")
+    .replace(/中型机场/g, "Medium")
+    .replace(/小型机场/g, "Small");
+}
+
+/* Strip one leading [TAG] (the caller re-adds it as a chip). */
+function stripLeadingTag(text) {
+  return String(text === null || text === undefined ? "" : text).replace(/^\s*\[(ASSUMPTION|UNKNOWN|HUMAN)\]\s*/i, "");
+}
+
+/* Collapse a run of identical leading tags, e.g. "[ASSUMPTION] [ASSUMPTION] x" -> "[ASSUMPTION] x". */
+function collapseLeadingTags(text) {
+  let out = String(text === null || text === undefined ? "" : text);
+  TAG_NAMES.forEach((name) => {
+    const re = new RegExp("^\\s*\\[" + name + "\\]\\s*(?:\\[" + name + "\\]\\s*)+", "i");
+    out = out.replace(re, "[" + name + "] ");
+  });
+  return out;
+}
+
 function rich(text) {
-  let html = esc(text);
+  let html = esc(collapseLeadingTags(humanize(text)));
   html = html.replace(/\[FACT:\s*([A-Za-z0-9_\-\s]+)\]/g,
     (m, src) => `<span class="tag-chip tag-fact" title="Fact source">FACT · ${esc(src.trim())}</span>`);
   html = html.replace(/\[(ASSUMPTION|UNKNOWN|HUMAN)\]/g, (m, t) => tag(t));
@@ -98,21 +125,60 @@ function switchTab(name) {
 }
 
 /* ------------------------------------------------------------------ bootstrap */
+function renderEngineBadge(mode, health) {
+  state.engineMode = String(mode || "fixtures");
+  const badge = $("#engine-mode");
+  if (badge) {
+    badge.textContent = "engine: " + state.engineMode;
+    const meta = [];
+    if (health && typeof health.checker_available === "boolean") {
+      meta.push("checker " + (health.checker_available ? "available" : "not available"));
+    }
+    if (health && typeof health.runner_available === "boolean") {
+      meta.push("runner " + (health.runner_available ? "available" : "not available"));
+    }
+    if (health && health.writer_mode) meta.push("writer: " + health.writer_mode);
+    badge.title = meta.length ? meta.join(" · ") : "Mode reported by /api/health and /api/analyze";
+  }
+  const footer = $("#footer-mode");
+  if (footer) footer.textContent = state.engineMode + " / offline";
+}
+
 async function init() {
+  let health = null;
   try {
     state.bootstrap = await api("/api/bootstrap");
+    try {
+      health = await api("/api/health");
+    } catch (e) {
+      health = null; /* the badge falls back to bootstrap data; the page still works */
+    }
   } catch (err) {
     setStatus("#assistant-status", "Could not load /api/bootstrap: " + err.message, "error");
     return;
   }
   const b = state.bootstrap;
-  $("#engine-mode").textContent = "engine: " + (b.engine_mode || "fixtures");
+  state.health = health;
+  const healthMode = health && health.engine === "ready" ? "real" : "fixtures";
+  renderEngineBadge(healthMode, health || {
+    checker_available: b.checker_available,
+    runner_available: b.runner_available,
+  });
   renderEventCards();
   renderAirportSelect();
   renderAskChips();
   renderAbout();
-  $("#footer-mode").textContent = "fixtures / offline";
   setStatus("#assistant-status", `${b.counts.airports} airports · ${b.counts.airport_months} airport-months · ${b.counts.rules} rules · ${b.counts.tests} tests — all simulated.`, "ok");
+
+  /* deep links for demo/screenshots: ?tab=<name> and/or ?event=EVT00x (inert without params) */
+  const params = new URLSearchParams(window.location.search);
+  const tab = params.get("tab");
+  if (tab && document.getElementById("tab-" + tab)) switchTab(tab);
+  const eventId = params.get("event");
+  if (eventId && (b.events || []).some((ev) => ev.id === eventId)) {
+    selectEvent(eventId);
+    analyzeEvent({ event_id: eventId, writer_mode: "offline" });
+  }
 }
 
 function renderEventCards() {
@@ -196,6 +262,7 @@ async function analyzeEvent(payload) {
     state.analysis = result;
     state.lastRequest = payload;
     renderResult(result);
+    renderEngineBadge(result.engine_mode || "fixtures", state.health);
     setStatus("#assistant-status", `Analyzed ${result.event.id} (${result.event.airport_en || result.event.airport}) — engine mode: ${result.engine_mode || "fixture"}.`, "ok");
     $("#result").hidden = false;
     $("#result").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -262,14 +329,14 @@ function renderFactsCard(facts) {
   const section = (title, items, tagName) => {
     if (!items || !items.length) return "";
     return `<div class="subhead">${esc(title)}</div><div class="fact-list">` +
-      items.map((x) => `<div class="fact-item">${tagName ? tag(tagName) : ""}${esc(x)}</div>`).join("") + `</div>`;
+      items.map((x) => `<div class="fact-item">${tagName ? tag(tagName) : ""}${esc(humanize(stripLeadingTag(x)))}</div>`).join("") + `</div>`;
   };
   $("#facts-card").innerHTML = `
     <div class="card-head"><h2>Fact sheet <span class="zh">事实表</span></h2>
       <span class="hint">${factsList.length} facts · every number has a source</span></div>
     <div class="subhead">Facts</div>
     <div class="fact-list">${factsList.map((f) => `
-      <div class="fact-item"><span class="src-chip">${esc(f.source)}</span>${esc(f.text)}</div>`).join("") || '<div class="empty">No facts.</div>'}</div>
+      <div class="fact-item"><span class="src-chip">${esc(f.source)}</span>${esc(humanize(f.text))}</div>`).join("") || '<div class="empty">No facts.</div>'}</div>
     ${section("Assumptions to verify", facts.assumptions, "ASSUMPTION")}
     ${section("Known information gaps", facts.unknowns, "UNKNOWN")}
     ${section("Missing / limited data", facts.missing_data, "UNKNOWN")}
@@ -477,7 +544,7 @@ function renderRanking() {
       <tr class="${r.signal_count >= 2 ? "top-row" : ""}">
         <td>${esc(r.airport_en)}<div class="hint">${esc(r.airport)}</div></td>
         <td class="num">${esc(r.month_label)}</td>
-        <td>${esc(r.tier_en || r.tier)}</td>
+        <td>${esc(humanize(r.tier_en || r.tier))}</td>
         <td class="num">${fmt(r.completion_pct)}%</td>
         <td class="num">${fmt(r.peer_pct)}%</td>
         <td class="num">${signed(r.delta_pp)}</td>
